@@ -4,7 +4,7 @@ import { getApiUrl } from '../config';
 
 const ContactUs = () => {
     const [formData, setFormData] = useState({
-        fullName: '',
+        name: '',
         mobile: '',
         email: '',
         message: ''
@@ -17,9 +17,9 @@ const ContactUs = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     useEffect(() => {
-        const { fullName, email, message } = formData;
+        const { name, email, message } = formData;
         const isValid =
-            fullName.trim().length > 0 &&
+            name.trim().length > 0 &&
             message.trim().length > 0 &&
             emailRegex.test(email);
 
@@ -106,14 +106,14 @@ const ContactUs = () => {
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 {/* Full Name */}
                                 <div className="space-y-1">
-                                    <label htmlFor="fullName" className="block text-sm font-semibold text-black">
+                                    <label htmlFor="name" className="block text-sm font-semibold text-black">
                                         Full Name
                                     </label>
                                     <input
                                         type="text"
-                                        id="fullName"
-                                        name="fullName"
-                                        value={formData.fullName}
+                                        id="name"
+                                        name="name"
+                                        value={formData.name}
                                         onChange={handleChange}
                                         placeholder="Enter your full name"
                                         className="w-full bg-transparent border-b border-gray-400 focus:border-black outline-none py-2 text-gray-700 placeholder-gray-400 transition-colors"
