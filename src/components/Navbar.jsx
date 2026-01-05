@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import seekkrrLogo from '../assets/mission/seekkrr_logo.svg';
+import { NAV_LINKS } from '../config';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -27,13 +28,8 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const navLinks = [
-        { name: 'Home', path: '/' },
-        { name: 'Mission', path: '/mission' },
-        { name: 'Travel Stories (coming soon)', path: '/travel-stories', disabled: true },
-        { name: 'Meet the Team', path: '/meet-the-team' },
-        { name: 'Contact Us', path: '/contact' },
-    ];
+    // Use NAV_LINKS from config
+    const navLinks = NAV_LINKS;
 
     // Determine text color:
     // Scrolled -> Black (because background is light #EBEAEC)

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import titleSvg from '../assets/contactUs/title.svg';
+import { getApiUrl } from '../config';
 
 const ContactUs = () => {
     const [formData, setFormData] = useState({
@@ -45,7 +46,7 @@ const ContactUs = () => {
             // or if there is a proxy setup. Given no info on proxy, I'll use full URL.
             // However, usually local dev might need a proxy or CORS might be an issue. 
             // I'll try fetch directly.
-            const response = await fetch('https://api.seekkrr.com/api/queries', {
+            const response = await fetch(getApiUrl('QUERIES'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -176,8 +177,8 @@ const ContactUs = () => {
                                         type="submit"
                                         disabled={!isFormValid || isSubmitting}
                                         className={`px-12 py-3 rounded-full font-medium text-sm transition-all duration-300 ${isFormValid && !isSubmitting
-                                                ? 'bg-black text-white hover:bg-gray-800 shadow-lg transform hover:-translate-y-0.5'
-                                                : 'bg-[#D1D1D1] text-gray-500 cursor-not-allowed'
+                                            ? 'bg-black text-white hover:bg-gray-800 shadow-lg transform hover:-translate-y-0.5'
+                                            : 'bg-[#D1D1D1] text-gray-500 cursor-not-allowed'
                                             }`}
                                     >
                                         {isSubmitting ? 'Submitting...' : 'Submit'}
