@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import titleSvg from '../assets/contactUs/title.svg';
+import { getApiUrl } from '../config';
 
 const ContactUs = () => {
     const [formData, setFormData] = useState({
-        fullName: '',
+        name: '',
         mobile: '',
         email: '',
         message: ''
@@ -12,13 +13,23 @@ const ContactUs = () => {
     const [isSuccess, setIsSuccess] = useState(false);
     const [isFormValid, setIsFormValid] = useState(false);
 
+    // Session tracking key
+    const SESSION_KEY = 'seekkrr_contact_submitted';
+
+    useEffect(() => {
+        // Check if already submitted in this session
+        if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+            setIsSuccess(true);
+        }
+    }, []);
+
     // Basic email regex: text + @ + domain
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     useEffect(() => {
-        const { fullName, email, message } = formData;
+        const { name, email, message } = formData;
         const isValid =
-            fullName.trim().length > 0 &&
+            name.trim().length > 0 &&
             message.trim().length > 0 &&
             emailRegex.test(email);
 
@@ -45,7 +56,7 @@ const ContactUs = () => {
             // or if there is a proxy setup. Given no info on proxy, I'll use full URL.
             // However, usually local dev might need a proxy or CORS might be an issue. 
             // I'll try fetch directly.
-            const response = await fetch('https://api.seekkrr.com/api/queries', {
+            const response = await fetch(getApiUrl('QUERIES'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -55,6 +66,7 @@ const ContactUs = () => {
 
             if (response.ok) {
                 setIsSuccess(true);
+                sessionStorage.setItem(SESSION_KEY, 'true');
             } else {
                 console.error('Failed to submit form');
                 // Optional: handle error state, but instructions just said "display the message as per design" on success.
@@ -105,14 +117,14 @@ const ContactUs = () => {
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 {/* Full Name */}
                                 <div className="space-y-1">
-                                    <label htmlFor="fullName" className="block text-sm font-semibold text-black">
+                                    <label htmlFor="name" className="block text-sm font-semibold text-black">
                                         Full Name
                                     </label>
                                     <input
                                         type="text"
-                                        id="fullName"
-                                        name="fullName"
-                                        value={formData.fullName}
+                                        id="name"
+                                        name="name"
+                                        value={formData.name}
                                         onChange={handleChange}
                                         placeholder="Enter your full name"
                                         className="w-full bg-transparent border-b border-gray-400 focus:border-black outline-none py-2 text-gray-700 placeholder-gray-400 transition-colors"
@@ -176,8 +188,8 @@ const ContactUs = () => {
                                         type="submit"
                                         disabled={!isFormValid || isSubmitting}
                                         className={`px-12 py-3 rounded-full font-medium text-sm transition-all duration-300 ${isFormValid && !isSubmitting
-                                                ? 'bg-black text-white hover:bg-gray-800 shadow-lg transform hover:-translate-y-0.5'
-                                                : 'bg-[#D1D1D1] text-gray-500 cursor-not-allowed'
+                                            ? 'bg-black text-white hover:bg-gray-800 shadow-lg transform hover:-translate-y-0.5'
+                                            : 'bg-[#D1D1D1] text-gray-500 cursor-not-allowed'
                                             }`}
                                     >
                                         {isSubmitting ? 'Submitting...' : 'Submit'}

@@ -1,32 +1,18 @@
 import React from 'react';
-import { MapPin, User, Compass, Award } from 'lucide-react'; // Placeholder icons
 import whatIsAQuest from '../../assets/homepage/what_is_a_quest.svg';
 import quote from '../../assets/homepage/quote.svg';
 import trail from '../../assets/homepage/trail.svg';
+import { QUEST_FEATURES, FEATURE_ICONS } from '../../config';
 
 const QuestInfo = () => {
-    const features = [
-        {
-            icon: <MapPin className="w-8 h-8 text-gray-800" />,
-            title: "You're Never Lost",
-            description: "Integrated maps that guide you with key insights along the way"
-        },
-        {
-            icon: <User className="w-8 h-8 text-gray-800" />,
-            title: "Curated by Local Experts",
-            description: "Every location and information is sourced by locals and travel influencers"
-        },
-        {
-            icon: <Compass className="w-8 h-8 text-gray-800" />,
-            title: "Different not Popular",
-            description: "We differentiate meaningful from popular so you travel without missing experiences"
-        },
-        {
-            icon: <Award className="w-8 h-8 text-gray-800" />,
-            title: "There's levels to it",
-            description: "Complete fun milestones and get points as you engage with the community"
-        }
-    ];
+    // Map features with their icon components
+    const features = QUEST_FEATURES.map(feature => {
+        const IconComponent = FEATURE_ICONS[feature.iconName];
+        return {
+            ...feature,
+            icon: <IconComponent className="w-8 h-8 text-gray-800" />,
+        };
+    });
 
     return (
         <section className="relative py-20 pb-[40vw] bg-[#EBEAEC] overflow-hidden">
