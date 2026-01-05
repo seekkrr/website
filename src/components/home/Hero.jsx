@@ -34,7 +34,7 @@ const Hero = () => {
 
                 <div className="flex flex-col items-center">
                     {/* Launching Text - Increased by 2 units. text-lg (18px) -> text-xl (20px) */}
-                    <p className="text-xl font-inter font-semibold text-[#000000] mb-4">Launching Soon on</p>
+                    <p className="text-xl font-inter font-semibold text-[#F6F5F4] mb-4">Launching Soon on</p>
 
                     {/* Store Icons - Increased width by 2 units. 
                         Usually height controls width. h-12 (48px) -> h-14 (56px) or h-[3.5rem]. 
