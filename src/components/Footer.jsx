@@ -12,23 +12,9 @@ const Footer = () => {
                         {APP_CONFIG.TAGLINE}
                     </p>
                 </div>
-                <div>
-                    <h3 className="text-lg font-semibold mb-4">Company</h3>
-                    <ul className="space-y-2 text-sm text-gray-400">
-                        {NAV_LINKS.map((link) => (
-                            <li key={link.name}>
-                                {link.disabled ? (
-                                    <span className="text-gray-500 cursor-default">{link.name}</span>
-                                ) : (
-                                    <Link to={link.path} className="hover:text-white">{link.name}</Link>
-                                )}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                <div>
-                    {/* More placeholder links */}
-                </div>
+                {/* Empty columns for spacing if needed, or just let grid handle it */}
+                <div></div>
+                <div></div>
                 <div>
                     <p className="text-sm text-gray-500 mt-auto">
                         © {new Date().getFullYear()} {APP_CONFIG.COMPANY} All rights reserved.

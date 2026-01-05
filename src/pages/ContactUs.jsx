@@ -13,6 +13,16 @@ const ContactUs = () => {
     const [isSuccess, setIsSuccess] = useState(false);
     const [isFormValid, setIsFormValid] = useState(false);
 
+    // Session tracking key
+    const SESSION_KEY = 'seekkrr_contact_submitted';
+
+    useEffect(() => {
+        // Check if already submitted in this session
+        if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+            setIsSuccess(true);
+        }
+    }, []);
+
     // Basic email regex: text + @ + domain
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -56,6 +66,7 @@ const ContactUs = () => {
 
             if (response.ok) {
                 setIsSuccess(true);
+                sessionStorage.setItem(SESSION_KEY, 'true');
             } else {
                 console.error('Failed to submit form');
                 // Optional: handle error state, but instructions just said "display the message as per design" on success.
