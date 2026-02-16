@@ -1,5 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Analytics } from "@vercel/analytics/react";
+import { RouteTracker } from './components/RouteTracker';
 import Layout from './components/Layout';
 
 // Lazy load pages for performance
@@ -17,6 +19,8 @@ const PageLoader = () => (
 function App() {
   return (
     <BrowserRouter>
+      <RouteTracker />
+      <Analytics />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={
