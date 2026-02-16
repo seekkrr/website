@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { track } from "@vercel/analytics";
+import { track } from "@vercel/analytics/react";
 
 export function RouteTracker() {
     const location = useLocation();
