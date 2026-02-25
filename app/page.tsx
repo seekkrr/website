@@ -1,4 +1,4 @@
-import { Navbar, HeroTripod, EarlyAccess } from "@/components/sections";
+import { Navbar, HeroTripod, EarlyAccess, Footer } from "@/components/sections";
 
 export default function HomePage() {
   return (
@@ -8,6 +8,9 @@ export default function HomePage() {
 
       {/* Early Access / Tools Section */}
       <EarlyAccess />
+
+      {/* Footer Section */}
+      <Footer />
     </div>
   );
 }

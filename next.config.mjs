@@ -15,17 +15,6 @@ const nextConfig = {
         return config;
     },
 
-    experimental: {
-        turbo: {
-            rules: {
-                "*.svg": {
-                    loaders: ["@svgr/webpack"],
-                    as: "*.js",
-                },
-            },
-        },
-    },
-
     images: {
         formats: ["image/avif", "image/webp"],
     },
