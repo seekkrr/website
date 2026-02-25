@@ -80,7 +80,10 @@ export default function RootLayout({
       className={`${inter.variable} ${outfit.variable} ${plusJakarta.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-background font-sans antialiased text-white">
+      <body
+        className="min-h-screen bg-background font-sans antialiased text-white"
+        suppressHydrationWarning
+      >
         <LenisProvider>
           <Navbar />
           <main className="relative">{children}</main>
