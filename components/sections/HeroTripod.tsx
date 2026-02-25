@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export function HeroTripod() {
     return (
-        <section className="relative w-full bg-[#FFFFF3] pt-32 pb-24 px-6 md:px-12 lg:px-24 flex justify-center">
+        <section className="relative w-full bg-[#FFFFF3] pt-32 pb-8 px-6 md:px-12 lg:px-24 flex justify-center">
             {/* Container simulating the rounded stroke card */}
             <div className="relative w-full max-w-[1240px] mx-auto rounded-[32px] border-[3px] border-black bg-[#FFFFF3] px-8 pt-12 pb-14 sm:px-12 sm:pt-14 sm:pb-16 lg:px-16 lg:pt-16 lg:pb-16 flex flex-col justify-center shadow-none">
 
