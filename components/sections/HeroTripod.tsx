@@ -30,7 +30,7 @@ export function HeroTripod() {
                     >
                         {/* The primary text wrapper */}
                         <div className="relative inline-flex flex-col mt-2 md:mt-4">
-                            <h1 className="font-jakarta text-[34px] sm:text-[44px] md:text-[50px] lg:text-[56px] xl:text-[62px] font-bold leading-none text-[#003634] drop-shadow-sm relative z-10 pb-1 whitespace-nowrap">
+                            <h1 className="font-jakarta text-[34px] sm:text-[44px] md:text-[50px] lg:text-[56px] xl:text-[62px] font-bold leading-none text-[#003634] [text-shadow:4px_4px_0_#FECD38] relative z-10 pb-[10px] md:pb-[14px] whitespace-nowrap">
                                 Travel With SeekKrr
                             </h1>
 
