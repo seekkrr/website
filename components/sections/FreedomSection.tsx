@@ -8,7 +8,7 @@ const FloatingIcon = ({
     src,
     alt,
     className = "",
-    size = "w-[76px] h-[76px] md:w-[96px] md:h-[96px]",
+    size = "w-[64px] h-[64px] md:w-[76px] md:h-[76px] lg:w-[84px] lg:h-[84px] xl:w-[96px] xl:h-[96px]",
 }: {
     src: string;
     alt: string;
@@ -42,7 +42,7 @@ const FloatingIcon = ({
 export function FreedomSection() {
     return (
         <section className="w-full bg-[#FFFFF3] overflow-hidden pt-6 pb-24 lg:pt-8 lg:pb-32 flex justify-center items-center min-h-[350px] lg:min-h-[450px]">
-            <div className="w-full max-w-[1240px] mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-[1fr_500px_1fr] xl:grid-cols-[1fr_600px_1fr] items-center gap-8 lg:gap-12">
+            <div className="w-full max-w-[1240px] mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] xl:grid-cols-[1fr_600px_1fr] items-center gap-8 lg:gap-12">
 
                 {/* Left Icons Matrix */}
                 <div className="hidden lg:flex flex-col items-center justify-center relative h-[300px] w-full">

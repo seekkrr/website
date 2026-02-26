@@ -29,8 +29,8 @@ export function HeroTripod() {
                         className="relative mt-8 sm:mt-12 lg:mt-4 self-start inline-block"
                     >
                         {/* The primary text wrapper */}
-                        <div className="relative inline-flex flex-col mt-2 md:mt-4">
-                            <h1 className="font-jakarta text-[34px] sm:text-[44px] md:text-[50px] lg:text-[56px] xl:text-[62px] font-bold leading-none text-[#003634] [text-shadow:4px_4px_0_#FECD38] relative z-10 pb-[10px] md:pb-[14px] whitespace-nowrap">
+                        <div className="relative inline-block mt-2 md:mt-4">
+                            <h1 className="font-jakarta text-[32px] sm:text-[44px] md:text-[50px] lg:text-[44px] xl:text-[62px] font-bold leading-[1.1] sm:leading-none text-[#003634] [text-shadow:4px_4px_0_#FECD38] sm:[text-shadow:4px_4px_0_#FECD38] relative z-10 pb-[10px] md:pb-[14px] xl:whitespace-nowrap">
                                 Travel With SeekKrr
                             </h1>
 
@@ -60,7 +60,7 @@ export function HeroTripod() {
                     <img
                         src="/assets/images/tripod.svg"
                         alt="Travel photographer with tripod"
-                        className="w-full h-auto max-w-[320px] sm:max-w-[400px] lg:max-w-[460px] xl:max-w-[500px] drop-shadow-[0_15px_15px_rgba(0,0,0,0.1)] object-contain"
+                        className="w-full h-auto max-w-[320px] sm:max-w-[400px] lg:max-w-[380px] xl:max-w-[460px] drop-shadow-[0_15px_15px_rgba(0,0,0,0.1)] object-contain"
                     />
                 </motion.div>
 
