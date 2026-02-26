@@ -44,7 +44,18 @@ export function EarlyAccess() {
         <section className="w-full bg-[#FFFFF3] overflow-hidden pt-6 pb-24 lg:pt-8 lg:pb-32 flex justify-center items-center min-h-[350px] lg:min-h-[450px]">
             <div className="w-full max-w-[1240px] mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] xl:grid-cols-[1fr_600px_1fr] items-center gap-8 lg:gap-12">
 
-                {/* Left Icons Matrix */}
+                {/* Mobile Top Icons (Visible < lg) */}
+                <motion.div
+                    className="flex lg:hidden w-full items-center justify-between px-2 sm:px-12 mb-4"
+                    animate={{ x: [-15, 15, -15] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                    <FloatingIcon src={CloudinaryIcons.boat} alt="Boat Icon" />
+                    <FloatingIcon src={CloudinaryIcons.sleepingBag} alt="Sleeping Bag Icon" />
+                    <FloatingIcon src={CloudinaryIcons.tent} alt="Tent Icon" />
+                </motion.div>
+
+                {/* Left Icons Matrix (Desktop) */}
                 <div className="hidden lg:flex flex-col items-center justify-center relative h-[300px] w-full">
                     {/* Top Left (Yellow Boat) - further left */}
                     <div className="absolute top-0 right-[40%] xl:right-[50%]">
@@ -92,6 +103,17 @@ export function EarlyAccess() {
                         <FloatingIcon src={CloudinaryIcons.balloon} alt="Hot Air Balloon Icon" />
                     </div>
                 </div>
+
+                {/* Mobile Bottom Icons (Visible < lg) */}
+                <motion.div
+                    className="flex lg:hidden w-full items-center justify-between px-2 sm:px-12 mt-4"
+                    animate={{ x: [15, -15, 15] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                >
+                    <FloatingIcon src={CloudinaryIcons.coffee} alt="Coffee Icon" />
+                    <FloatingIcon src={CloudinaryIcons.backpack} alt="Backpack Icon" />
+                    <FloatingIcon src={CloudinaryIcons.balloon} alt="Hot Air Balloon Icon" />
+                </motion.div>
 
             </div>
         </section>
