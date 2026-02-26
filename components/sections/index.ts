@@ -4,3 +4,5 @@ export { Navbar } from "./Navbar";
 export { HeroTripod } from "./HeroTripod";
 export { EarlyAccess } from './EarlyAccess';
 export { Footer } from './Footer';
+export { BuiltForExplorers } from './BuiltForExplorers';
+export { FreedomSection } from './FreedomSection';

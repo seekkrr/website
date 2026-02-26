@@ -39,6 +39,7 @@ const config: Config = {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
         heading: ["var(--font-outfit)", "system-ui", "sans-serif"],
         jakarta: ["var(--font-plus-jakarta)", "system-ui", "sans-serif"],
+        handwriting: ["'Figma Hand'", "var(--font-caveat)", "cursive", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
