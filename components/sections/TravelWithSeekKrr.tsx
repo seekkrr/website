@@ -18,13 +18,13 @@ const BIRD_CARDS: BirdCard[] = [
         angle: 0,
         lines: <>Download<br />the<br />SeekKrr<br />App</>,
         bg: "#FFFFF3",
-        textColor: "#003634",
+        textColor: "#000000",
     },
     {
         angle: 90,
         lines: <>Explore<br />Quests<br />With<br />Different<br />Themes</>,
         bg: "#FFFFF3",
-        textColor: "#003634",
+        textColor: "#000000",
     },
     {
         angle: 180,
@@ -36,14 +36,14 @@ const BIRD_CARDS: BirdCard[] = [
             </>
         ),
         bg: "#FECD36",
-        textColor: "#000000",
+        textColor: "#003634",
         highlight: true,
     },
     {
         angle: 270,
         lines: <>Travel<br />without<br />the<br />Worry Of<br />Itinerary</>,
         bg: "#FFFFF3",
-        textColor: "#003634",
+        textColor: "#000000",
     },
 ];
 
@@ -52,7 +52,7 @@ const BIRD_CARDS: BirdCard[] = [
 /* ------------------------------------------------------------------ */
 export function TravelWithSeekKrr() {
     return (
-        <section className="w-full bg-[#FFFFF3] overflow-hidden py-8 lg:py-12 flex flex-col items-center justify-center">
+        <section className="w-full bg-[#FFFFF3] overflow-hidden py-2 lg:py-3 flex flex-col items-center justify-center">
             <InjectBirdStyles />
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -186,7 +186,7 @@ export function InjectBirdStyles() {
 /* ------------------------------------------------------------------ */
 function InlineBirdSvg({ bodyColor, muted = false }: { bodyColor: string; muted?: boolean }) {
     const bg = "#FFFFF3";
-    const body = muted ? bg : bodyColor;
+    const body = bodyColor; // Always use the card's bg color for the body
     const blue = muted ? bg : "#8398FF";
     const orange = muted ? bg : "#FF5B25";
     const dark = "#003634";
