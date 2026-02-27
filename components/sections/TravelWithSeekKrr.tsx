@@ -31,7 +31,7 @@ const BIRD_CARDS: BirdCard[] = [
             <>
                 Purchase<br />Your<br />Favorites<br />
                 <span className="line-through opacity-70">₹500</span> = 0₹<br />
-                (Early<br />Bird<br />Offer)
+                (Early Bird<br />Offer)
             </>
         ),
         bg: "#FECD36",
@@ -60,7 +60,7 @@ export function TravelWithSeekKrr() {
                 className="relative w-full max-w-[1240px] mx-auto px-4 lg:px-8 flex items-center justify-center"
                 style={{ willChange: "transform, opacity" }}
             >
-                <div className="relative w-[500px] h-[500px] sm:w-[620px] sm:h-[620px] md:w-[740px] md:h-[740px] lg:w-[860px] lg:h-[860px]">
+                <div className="relative w-[520px] h-[520px] sm:w-[640px] sm:h-[640px] md:w-[760px] md:h-[760px] lg:w-[900px] lg:h-[900px]">
 
                     {/* Central text (static) */}
                     <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
@@ -110,12 +110,12 @@ function OrbitBird({ card }: { card: BirdCard }) {
                 // Explicitly mathematical trigonometric orbit path!
                 // 0 degrees => x=0, y=-R (Top position)
                 // Guaranteed Native JS/CSS sync without deeply nested rotation transforms.
-                "--radius": "clamp(180px, 25vw, 250px)",
+                "--radius": "clamp(190px, 26vw, 270px)",
                 transform: "translate(calc(sin(var(--angle)) * var(--radius)), calc(cos(var(--angle)) * var(--radius) * -1))",
-                marginLeft: "-60px",
-                marginTop: "-120px",
-                width: "120px",
-                height: "240px",
+                marginLeft: "-75px",
+                marginTop: "-150px",
+                width: "150px",
+                height: "300px",
                 willChange: "transform",
             } as any}
         >
@@ -143,19 +143,18 @@ function OrbitBird({ card }: { card: BirdCard }) {
                 It is physically impossible for this to tilt!
             */}
             <div
-                className="absolute flex items-center justify-center text-center"
+                className="absolute overflow-hidden flex items-center justify-center text-center"
                 style={{
-                    top: "20%",
-                    left: "14%",
-                    width: "72%",
-                    height: "45%",
-                    // No separate text bob needed. The body is rigidly static while wings flap.
+                    top: "16%",
+                    left: "16%",
+                    width: "62%",
+                    height: "66%",
                 }}
             >
-                <div className="w-full h-full flex items-center justify-center px-1">
+                <div className="w-full h-full flex items-center justify-center px-1 overflow-hidden">
                     <span
-                        className="font-jakarta font-bold text-[10px] sm:text-[11px] lg:text-[13px] leading-[1.25] drop-shadow-sm"
-                        style={{ color: card.textColor }}
+                        className="font-jakarta font-bold text-[9px] sm:text-[10px] lg:text-[12px] leading-[1.2] drop-shadow-sm"
+                        style={{ color: card.textColor, wordBreak: "break-word" }}
                     >
                         {card.lines}
                     </span>
