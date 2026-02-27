@@ -25,12 +25,16 @@ export const CloudinaryIcons = {
     guitar: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772131759/guitar_wby5hz.svg"),
     binoculars: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772131758/bino_l7bpod.svg"),
     camera: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772131758/camera_rnwp8z.svg"),
+
+    // The SeekKrr Way Icons
+    blackboardDesktop: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772137812/blackboard_desktop_zvhiot.jpg"),
+    blackboardMobile: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772137811/blackboard_mobile_huvqqb.jpg"),
 };
 
 /**
  * Ensures a cloudinary URL has optimal delivery parameters applied.
  */
-function enrichCloudinaryUrl(url: string, params: string = "f_auto,q_auto") {
+function enrichCloudinaryUrl(url: string, params: string = "f_auto/q_auto") {
     if (url.includes(params)) return url;
     // Inject parameters right after 'upload/'
     return url.replace("/upload/", `/upload/${params}/`);

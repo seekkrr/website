@@ -67,6 +67,7 @@
 }
 
 @layer utilities {
+
   /* GPU-accelerated animation helper */
   .gpu-accelerated {
     will-change: transform, opacity;
@@ -87,5 +88,63 @@
 
   .no-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Bird orbit animation — GPU-accelerated continuous rotation */
+  .orbit-spin {
+    animation: orbit-rotate 35s linear infinite;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .orbit-counter-spin {
+    animation: orbit-counter-rotate 35s linear infinite;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+}
+
+/* Orbit keyframes — outside @layer so they are always available */
+@keyframes orbit-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-counter-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes wing-flap {
+  0% {
+    transform: rotate(180deg) scaleY(1) translateY(0);
+  }
+
+  25% {
+    transform: rotate(180deg) scaleY(0.82) translateY(2px);
+  }
+
+  50% {
+    transform: rotate(180deg) scaleY(1) translateY(-1px);
+  }
+
+  75% {
+    transform: rotate(180deg) scaleY(0.82) translateY(2px);
+  }
+
+  100% {
+    transform: rotate(180deg) scaleY(1) translateY(0);
   }
 }
