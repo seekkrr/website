@@ -29,6 +29,14 @@ export const CloudinaryIcons = {
     // The SeekKrr Way Icons
     blackboardDesktop: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772137812/blackboard_desktop_zvhiot.jpg"),
     blackboardMobile: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772137811/blackboard_mobile_huvqqb.jpg"),
+
+    // What You Get Section
+    painter: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772219160/painter_atiahu.png"),
+    photographer: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772219159/photographer_mrry45.png"),
+    phoneMap: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772219161/phone_map_pvn1gd.png"),
+    route: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772219159/route_gfbbrj.png"),
+    conversation: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772219160/conversation_dldupe.png"),
+    seekkrrText: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772219159/seekkrr_text_qczfju.png"),
 };
 
 /**

@@ -50,7 +50,7 @@ const BIRD_CARDS: BirdCard[] = [
 /* ------------------------------------------------------------------ */
 export function TravelWithSeekKrr() {
     return (
-        <section className="w-full bg-[#FFFFF3] overflow-hidden py-16 lg:py-20 flex flex-col items-center justify-center">
+        <section className="w-full bg-[#FFFFF3] overflow-hidden py-8 lg:py-12 flex flex-col items-center justify-center">
             <InjectBirdStyles />
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -64,7 +64,9 @@ export function TravelWithSeekKrr() {
 
                     {/* Central text (static) */}
                     <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-                        <h2 className="font-jakarta text-[28px] sm:text-[34px] md:text-[38px] lg:text-[44px] font-bold leading-[1.15] text-center text-black whitespace-pre-line">
+                        <h2
+                            className="font-handwriting text-[32px] sm:text-[40px] md:text-[48px] lg:text-[56px] font-bold leading-[1.15] text-center text-black whitespace-pre-line [text-shadow:3px_3px_0_#FF5B25]"
+                        >
                             {"Travel\nWith\nSeekKrr"}
                         </h2>
                     </div>

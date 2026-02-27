@@ -1,4 +1,4 @@
-import { Navbar, HeroTripod, EarlyAccess, BuiltForExplorers, FreedomSection, Footer, TheSeekKrrWay, TravelWithSeekKrr } from "@/components/sections";
+import { Navbar, HeroTripod, EarlyAccess, BuiltForExplorers, WhatYouGet, FreedomSection, Footer, TheSeekKrrWay, TravelWithSeekKrr } from "@/components/sections";
 
 export default function HomePage() {
   return (
@@ -14,6 +14,9 @@ export default function HomePage() {
 
       {/* Built For Explorers Section */}
       <BuiltForExplorers />
+
+      {/* What You Get Section */}
+      <WhatYouGet />
 
       {/* Freedom Section */}
       <FreedomSection />
