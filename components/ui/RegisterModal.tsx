@@ -13,7 +13,7 @@ const AUTO_CLOSE_DELAY_MS = 4_000;
 // Strips HTML / script tags to prevent XSS when the value is ever rendered
 // or forwarded. This runs *before* zod's own validations via `.transform`.
 
-const stripTags = (v: string) => v.replace(/<[^>]*>/g, "");
+const stripTags = (v: string) => v.replace(/[<>]/g, "");
 
 // ── Zod Schema ─────────────────────────────────────────────────────────────
 
