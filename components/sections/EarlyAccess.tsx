@@ -114,7 +114,7 @@ export function EarlyAccess() {
 
                                 <button
                                     onClick={() => setIsModalOpen(true)}
-                                    className="bg-white text-black font-jakarta font-bold text-[18px] lg:text-[20px] px-8 py-3 rounded-[12px] border-[3px] border-black transition-transform hover:-translate-y-1 active:translate-y-0 [box-shadow:4px_4px_0_#8EA7FF] hover:[box-shadow:6px_6px_0_#8EA7FF] active:[box-shadow:2px_2px_0_#8EA7FF] shrink-0"
+                                    className="bg-white text-black font-jakarta font-bold text-[18px] lg:text-[20px] px-8 py-3 rounded-[12px] border-[3px] border-black transition-transform hover:-translate-y-1 active:translate-y-0 [box-shadow:4px_4px_0_var(--color-blue-accent)] hover:[box-shadow:6px_6px_0_var(--color-blue-accent)] active:[box-shadow:2px_2px_0_var(--color-blue-accent)] shrink-0"
                                 >
                                     Register
                                 </button>
