@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AnimatedSection } from "@/components/animations/AnimatedSection";
+import { siteConfig } from "@/lib/config/site";
 
 export const metadata: Metadata = {
     title: "Privacy Policy",
     description:
-        "Privacy Policy for SeekKrr. Learn about our policies regarding the collection, use, and disclosure of personal data.",
+        `Privacy Policy for ${siteConfig.name}. Learn about our policies regarding the collection, use, and disclosure of personal data.`,
 };
 
 export default function PrivacyPolicyPage() {
@@ -17,7 +18,7 @@ export default function PrivacyPolicyPage() {
                         Privacy Policy
                     </h1>
                     <p className="mt-4 text-lg text-muted-foreground">
-                        Last updated: February 9, 2026
+                        Last updated: {siteConfig.privacyLastUpdated}
                     </p>
                 </AnimatedSection>
 
@@ -78,15 +79,14 @@ export default function PrivacyPolicyPage() {
                                     <span className="font-semibold text-foreground">
                                         Application
                                     </span>{" "}
-                                    refers to SeekKrr, the software program provided by the
+                                    refers to {siteConfig.name}, the software program provided by the
                                     Company.
                                 </li>
                                 <li>
                                     <span className="font-semibold text-foreground">Company</span>{" "}
                                     (referred to as either &quot;the Company&quot;,
                                     &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in this
-                                    Agreement) refers to SOLOQUEST PRIVATE LIMITED, HIG-29A,
-                                    Kaushambi Kunj, Kalindipuram, Rajrooppur, Allahabad.
+                                    Agreement) refers to {siteConfig.company}, {siteConfig.address}.
                                 </li>
                                 <li>
                                     <span className="font-semibold text-foreground">Cookies</span>{" "}
@@ -97,7 +97,7 @@ export default function PrivacyPolicyPage() {
                                 </li>
                                 <li>
                                     <span className="font-semibold text-foreground">Country</span>{" "}
-                                    refers to: Uttar Pradesh, India
+                                    refers to: {siteConfig.jurisdiction}
                                 </li>
                                 <li>
                                     <span className="font-semibold text-foreground">Device</span>{" "}
@@ -136,12 +136,12 @@ export default function PrivacyPolicyPage() {
                                 </li>
                                 <li>
                                     <span className="font-semibold text-foreground">Website</span>{" "}
-                                    refers to SeekKrr, accessible from{" "}
+                                    refers to {siteConfig.name}, accessible from{" "}
                                     <Link
-                                        href="https://www.seekkrr.com"
+                                        href={siteConfig.url}
                                         className="text-primary hover:text-primary/80 underline font-medium transition-colors"
                                     >
-                                        www.seekkrr.com
+                                        {siteConfig.url.replace("https://", "")}
                                     </Link>
                                 </li>
                                 <li>
@@ -740,19 +740,19 @@ export default function PrivacyPolicyPage() {
                                 <li>
                                     By email:{" "}
                                     <Link
-                                        href="mailto:seekkrr@gmail.com"
+                                        href={`mailto:${siteConfig.email}`}
                                         className="text-primary hover:text-primary/80 underline font-medium transition-colors"
                                     >
-                                        seekkrr@gmail.com
+                                        {siteConfig.email}
                                     </Link>
                                 </li>
                                 <li>
                                     By visiting this page on our website:{" "}
                                     <Link
-                                        href="https://www.seekkrr.com/contact"
+                                        href={`${siteConfig.url}/contact`}
                                         className="text-primary hover:text-primary/80 underline font-medium transition-colors"
                                     >
-                                        https://www.seekkrr.com/contact
+                                        {siteConfig.url}/contact
                                     </Link>
                                 </li>
                             </ul>
