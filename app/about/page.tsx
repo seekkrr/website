@@ -54,7 +54,7 @@ export default function AboutPage() {
                 {/* Mission / Goal Box */}
                 <div className="border-[2px] border-black rounded-xl w-full max-w-[860px] mx-auto py-12 px-6 md:px-12 text-center bg-white shadow-sm mb-12">
                     <h2 className="text-xl md:text-2xl font-bold mb-6 text-black tracking-wide">Who are we?</h2>
-                    <p className="font-handwriting text-3xl md:text-[2.5rem] mb-12" style={{ textShadow: "2px 2px 0px #FECD36" }}>
+                    <p className="font-handwriting text-3xl md:text-[2.5rem] mb-12 [text-shadow:2px_2px_0_#FECD36]">
                         Corporates and Solo Travellers
                     </p>
 
