@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { AnimatedSection } from "@/components/animations/AnimatedSection";
+import { siteConfig } from "@/lib/config/site";
 
 export const metadata: Metadata = {
     title: "Creators",
     description:
-        "Meet the creators behind SeekKrr quests — local experts, adventurers, and storytellers crafting unforgettable experiences.",
+        `Meet the creators behind ${siteConfig.name} quests — local experts, adventurers, and storytellers crafting unforgettable experiences.`,
 };
 
 export default function CreatorsPage() {

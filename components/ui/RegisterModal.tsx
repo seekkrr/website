@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { z } from "zod";
 import { registerInterest } from "@/lib/api";
 import { clientState } from "@/lib/clientState";
+import { siteConfig } from "@/lib/config/site";
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -253,7 +254,7 @@ export function RegisterModal({ isOpen, onClose, onSuccess }: RegisterModalProps
                                     <h2 className="text-center text-[22px] sm:text-[26px] font-bold leading-tight text-black mb-7">
                                         Register and Get Access
                                         <br />
-                                        to SeekKrr App
+                                        to {siteConfig.name} App
                                         <br />
                                         and
                                         <br />
@@ -397,7 +398,7 @@ export function RegisterModal({ isOpen, onClose, onSuccess }: RegisterModalProps
                                     <h2 className="text-[22px] sm:text-[26px] font-bold leading-tight text-black mb-8">
                                         You will receive the details
                                         <br />
-                                        to download SeekKrr app
+                                        to download {siteConfig.name} app
                                         <br />
                                         on your Email
                                     </h2>

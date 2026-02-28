@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { siteConfig } from "@/lib/config/site";
 
 export function HeroTripod() {
     return (
@@ -31,7 +32,7 @@ export function HeroTripod() {
                         {/* The primary text wrapper */}
                         <div className="relative inline-block mt-2 md:mt-4">
                             <h1 className="font-jakarta text-[32px] sm:text-[44px] md:text-[50px] lg:text-[44px] xl:text-[62px] font-bold leading-[1.1] sm:leading-none text-theme-green [text-shadow:4px_4px_0_var(--color-yellow-accent)] sm:[text-shadow:4px_4px_0_var(--color-yellow-accent)] relative z-10 pb-[10px] md:pb-[14px] xl:whitespace-nowrap">
-                                Travel With SeekKrr
+                                Travel With {siteConfig.name}
                             </h1>
 
                             {/* Custom underline elements close to text, matching text width exactly */}

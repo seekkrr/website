@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/config/site";
 export const metadata: Metadata = {
     title: "Terms of Service",
     description:
-        "Terms of Service for SeekKrr. Rules and guidelines for using our platform.",
+        `Terms of Service for ${siteConfig.name}. Rules and guidelines for using our platform.`,
 };
 
 export default function TermsOfServicePage() {
@@ -14,7 +14,7 @@ export default function TermsOfServicePage() {
             <div className="max-w-4xl mx-auto">
                 <AnimatedSection className="text-center mb-12">
                     <h1 className="font-heading text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
-                        SeekKrr Terms of Service
+                        {siteConfig.name} Terms of Service
                     </h1>
                     <p className="mt-4 text-lg text-muted-foreground">
                         Last Updated: {siteConfig.termsLastUpdated}

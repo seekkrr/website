@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { AnimatedSection } from "@/components/animations/AnimatedSection";
+import { siteConfig } from "@/lib/config/site";
 
 export const metadata: Metadata = {
     title: "About",
     description:
-        "Learn about SeekKrr — the platform connecting explorers with extraordinary quests and unforgettable experiences.",
+        `Learn about ${siteConfig.name} — the platform connecting explorers with extraordinary quests and unforgettable experiences.`,
 };
 
 const SketchUnderline = ({ className }: { className?: string }) => (

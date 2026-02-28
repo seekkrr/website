@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { CloudinaryIcons } from "@/lib/config/assets";
+import { siteConfig } from "@/lib/config/site";
 
 /* ------------------------------------------------------------------ */
 /*  Reusable animated box wrapper                                     */
@@ -40,10 +41,10 @@ export function WhatYouGet() {
                     {/* Box 1 — "What You Get?" */}
                     <Box className="col-span-4 sm:col-span-3 lg:col-span-3 p-5 flex items-center justify-center
                         [box-shadow:5px_5px_0_var(--color-orange-accent)] min-h-[180px] lg:min-h-[220px]">
-                        <h3 className="font-handwriting text-[32px] sm:text-[36px] lg:text-[40px] font-bold leading-none
+                        <h2 className="font-handwriting text-[44px] lg:text-[56px] leading-[1] text-center
                             [text-shadow:3px_3px_0_var(--color-blue-accent)] tracking-tight">
                             What<br />You<br />Get ?
-                        </h3>
+                        </h2>
                     </Box>
 
                     {/* Box 2 — Maps: image left, text right */}
@@ -105,17 +106,18 @@ export function WhatYouGet() {
 
                     {/* Box 5 — SeekKrr */}
                     <Box className="col-span-4 sm:col-span-8 lg:col-span-4 !bg-theme-blue p-5 lg:p-6
-                        flex flex-col justify-end
+                        flex flex-col items-center justify-center text-center
                         [box-shadow:5px_5px_0_var(--color-orange-accent)] min-h-[180px] lg:min-h-[220px]">
                         <div className="relative w-full max-w-[180px] h-[56px] mb-1 pointer-events-none">
                             <Image
                                 src={CloudinaryIcons.seekkrrText}
-                                alt="SeekKrr"
+                                alt={siteConfig.name}
                                 fill
                                 className="object-contain"
                                 sizes="180px"
                             />
                         </div>
+                        <p className="text-black/70 text-xs mb-3 font-sans font-semibold">/~To -Seek~/</p>
                         <p className="text-white font-sans text-[15px] lg:text-[17px] leading-snug">
                             You <strong>Focus on Exploring</strong>, We focus on{" "}
                             <strong>When, How and Where</strong>
@@ -146,12 +148,12 @@ export function WhatYouGet() {
 
                     {/* Box 7 — Spiritual / Orange */}
                     <Box className="col-span-4 sm:col-span-4 lg:col-span-4 !bg-theme-orange p-5 lg:p-6
-                        flex flex-col justify-end
+                        flex flex-col justify-center text-center
                         [box-shadow:5px_5px_0_var(--color-blue-accent)] min-h-[180px] lg:min-h-[200px]">
-                        <h3 className="font-handwriting text-[32px] sm:text-[36px] lg:text-[40px] font-bold leading-none text-white 
+                        <p className="font-handwriting text-[28px] lg:text-[34px] leading-[1.1] mb-4
                             [text-shadow:2px_2px_0_var(--color-yellow-accent)]">
                             Spiritual Culinary Offbeat History and more . . .
-                        </h3>
+                        </p>
                         <p className="font-sans text-white text-[14px] lg:text-[16px] leading-snug font-medium">
                             Find quests based on your Travel preferences
                         </p>

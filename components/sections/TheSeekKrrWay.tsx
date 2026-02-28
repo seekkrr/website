@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { CloudinaryIcons } from "@/lib/config/assets";
+import { siteConfig } from "@/lib/config/site";
 
 export function TheSeekKrrWay() {
     return (
@@ -22,7 +23,7 @@ export function TheSeekKrrWay() {
                     <h2
                         className="font-jakarta text-[36px] sm:text-[42px] lg:text-[48px] leading-[1.1] font-semibold tracking-wide whitespace-pre-line text-theme-green [-webkit-text-stroke:1px_black] [text-shadow:4px_4px_0_var(--color-yellow-accent)]"
                     >
-                        {"The SeekKrr Way"}
+                        {`The ${siteConfig.name} Way`}
                     </h2>
                 </motion.div>
 
@@ -39,7 +40,7 @@ export function TheSeekKrrWay() {
                     <div className="hidden md:block w-full max-w-[1140px]">
                         <Image
                             src={CloudinaryIcons.blackboardDesktop}
-                            alt="The SeekKrr Way Desktop"
+                            alt={`The ${siteConfig.name} Way Desktop`}
                             width={1140}
                             height={374}
                             className="w-full h-auto drop-shadow-xl"
@@ -51,7 +52,7 @@ export function TheSeekKrrWay() {
                     <div className="block md:hidden w-full max-w-[500px]">
                         <Image
                             src={CloudinaryIcons.blackboardMobile}
-                            alt="The SeekKrr Way Mobile"
+                            alt={`The ${siteConfig.name} Way Mobile`}
                             width={500}
                             height={1187}
                             className="w-full h-auto drop-shadow-xl"

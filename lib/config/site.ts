@@ -9,6 +9,11 @@ export const siteConfig = {
     termsLastUpdated: "February 23, 2026",
     privacyLastUpdated: "February 9, 2026",
     creatorPayoutLink: "/creator-terms",
+    tagline: "Discover Your Next Adventure",
+    assets: {
+        logoIconId: "v1772038022/SeekKrr_Logo_mw9777.svg", // For cloudinaryLoader
+        logoTextPath: "/assets/images/SeekKrr_Text.png",   // For public/assets
+    },
     socials: {
         whatsapp: "https://chat.whatsapp.com/FZxZgnAoDdc2GpiXTW2ZWS",
         instagram: "https://www.instagram.com/seek_krr",

@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { LenisProvider } from "@/components/animations/LenisProvider";
 import { Navbar, Footer } from "@/components/sections";
+import { siteConfig } from "@/lib/config/site";
 import "@/styles/globals.css";
 
 const inter = Inter({
@@ -32,31 +33,31 @@ const caveat = Caveat({
 
 export const metadata: Metadata = {
   title: {
-    default: "SeekKrr — Discover Your Next Adventure",
-    template: "%s | SeekKrr",
+    default: `${siteConfig.name} — ${siteConfig.tagline}`,
+    template: `%s | ${siteConfig.name}`,
   },
   description:
-    "SeekKrr connects explorers with extraordinary quests and unforgettable experiences. Discover, create, and share adventures that push your boundaries.",
+    `${siteConfig.name} connects explorers with extraordinary quests and unforgettable experiences. Discover, create, and share adventures that push your boundaries.`,
   keywords: [
     "adventure",
     "quests",
     "exploration",
     "experiences",
     "creators",
-    "seekkrr",
+    siteConfig.name.toLowerCase(),
   ],
-  authors: [{ name: "SeekKrr" }],
+  authors: [{ name: siteConfig.name }],
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "SeekKrr",
-    title: "SeekKrr — Discover Your Next Adventure",
+    siteName: siteConfig.name,
+    title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description:
       "Connect with extraordinary quests and unforgettable experiences.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SeekKrr — Discover Your Next Adventure",
+    title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description:
       "Connect with extraordinary quests and unforgettable experiences.",
   },

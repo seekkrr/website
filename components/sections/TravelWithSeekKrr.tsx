@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useTime, useTransform, useMotionTemplate } from "framer-motion";
+import { siteConfig } from "@/lib/config/site";
 
 /* ------------------------------------------------------------------ */
 /*  Bird card data                                                    */
@@ -16,7 +17,7 @@ interface BirdCard {
 const BIRD_CARDS: BirdCard[] = [
     {
         angle: 0,
-        lines: <>Download<br />the<br />SeekKrr<br />App</>,
+        lines: <>Download<br />the<br />{siteConfig.name}<br />App</>,
         bg: "var(--color-beige)",
         textColor: "var(--color-green-dark)",
     },
@@ -69,7 +70,7 @@ export function TravelWithSeekKrr() {
                         <h2
                             className="font-handwriting text-[32px] sm:text-[40px] md:text-[48px] lg:text-[56px] font-bold leading-[1.15] text-center text-black whitespace-pre-line [text-shadow:3px_3px_0_var(--color-orange-accent)]"
                         >
-                            {"Travel\nWith\nSeekKrr"}
+                            {`Travel\nWith\n${siteConfig.name}`}
                         </h2>
                     </div>
 

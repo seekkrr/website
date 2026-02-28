@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import cloudinaryLoader from "@/lib/cloudinaryLoader";
+import { siteConfig } from "@/lib/config/site";
 
 const NAV_LINKS = [
     { name: "Home", href: "/" },
@@ -26,8 +27,8 @@ export function Navbar() {
                     {/* Text PNG loads with default Next.js optimization from /public */}
                     <div className="relative h-10 w-32 sm:h-12 sm:w-40 transition-transform hover:scale-105">
                         <Image
-                            src="/assets/images/SeekKrr_Text.png"
-                            alt="SeekKrr"
+                            src={siteConfig.assets.logoTextPath}
+                            alt={siteConfig.name}
                             fill
                             sizes="(max-width: 640px) 128px, 160px"
                             className="object-contain object-left"
@@ -38,8 +39,8 @@ export function Navbar() {
                     <div className="relative h-10 w-10 sm:h-12 sm:w-12 transition-transform hover:scale-105">
                         <Image
                             loader={cloudinaryLoader}
-                            src="v1772038022/SeekKrr_Logo_mw9777.svg"
-                            alt="SeekKrr Logo"
+                            src={siteConfig.assets.logoIconId}
+                            alt={`${siteConfig.name} Logo`}
                             fill
                             sizes="(max-width: 640px) 40px, 48px"
                             className="object-contain object-left"
@@ -107,7 +108,7 @@ export function Navbar() {
                             transition={{ delay: 0.5, duration: 0.5 }}
                             className="absolute bottom-12 text-theme-yellow font-handwriting text-[24px]"
                         >
-                            Discover Your Next Adventure
+                            {siteConfig.tagline}
                         </motion.div>
                     </motion.div>
                 )}
