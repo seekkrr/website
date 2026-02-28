@@ -21,7 +21,7 @@ export function Footer() {
 
                 {/* Center: Legal Links */}
                 <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 font-jakarta text-[14px] md:text-[15px]">
-                    <Link href="/terms" className="text-gray-300 hover:text-[#FECD38] transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-[#FECD38] hover:after:w-full after:transition-all">
+                    <Link href="/terms" className="text-gray-300 hover:text-theme-yellow transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-theme-yellow hover:after:w-full after:transition-all">
                         Terms and Conditions
                     </Link>
                     <Link href="/privacy" className="text-gray-300 hover:text-[#FECD38] transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-[#FECD38] hover:after:w-full after:transition-all">
