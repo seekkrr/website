@@ -41,9 +41,11 @@ export function HeroTripod() {
                             </div>
 
                             {/* Stars icon positioned uniquely over the end of the text, outside the underline calculation */}
-                            <img
+                            <Image
                                 src="/assets/images/Stars.svg"
                                 alt="Stars Decoration"
+                                width={48}
+                                height={48}
                                 className="absolute -right-8 md:-right-10 -top-5 md:-top-7 w-10 md:w-12 h-auto z-20 pointer-events-none shrink-0"
                             />
                         </div>
@@ -57,9 +59,11 @@ export function HeroTripod() {
                     transition={{ duration: 0.8, delay: 0.5 }}
                     className="relative mt-8 lg:mt-0 w-full lg:w-auto flex justify-center lg:block lg:absolute lg:bottom-[-35px] lg:right-[-40px] xl:bottom-[-40px] xl:right-[-50px] z-20 pointer-events-none"
                 >
-                    <img
+                    <Image
                         src="/assets/images/tripod.svg"
                         alt="Travel photographer with tripod"
+                        width={460}
+                        height={460}
                         className="w-full h-auto max-w-[320px] sm:max-w-[400px] lg:max-w-[380px] xl:max-w-[460px] drop-shadow-[0_15px_15px_rgba(0,0,0,0.1)] object-contain"
                     />
                 </motion.div>

@@ -84,45 +84,6 @@ export function RegisterModal({ isOpen, onClose }: RegisterModalProps) {
     const [apiError, setApiError] = useState<string | null>(null);
     const autoCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    // ── Auto-close on success ────────────────────────────────────────────
-
-    useEffect(() => {
-        if (isSuccess) {
-            autoCloseTimer.current = setTimeout(() => {
-                handleClose();
-            }, AUTO_CLOSE_DELAY_MS);
-        }
-        return () => {
-            if (autoCloseTimer.current) clearTimeout(autoCloseTimer.current);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSuccess]);
-
-    // ── Escape key ───────────────────────────────────────────────────────
-
-    useEffect(() => {
-        if (!isOpen) return;
-        const onKey = (e: KeyboardEvent) => {
-            if (e.key === "Escape") handleClose();
-        };
-        window.addEventListener("keydown", onKey);
-        return () => window.removeEventListener("keydown", onKey);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isOpen]);
-
-    // ── Lock body scroll while open ──────────────────────────────────────
-
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "";
-        }
-        return () => {
-            document.body.style.overflow = "";
-        };
-    }, [isOpen]);
-
     // ── Handlers ─────────────────────────────────────────────────────────
 
     const handleClose = useCallback(() => {
@@ -136,6 +97,43 @@ export function RegisterModal({ isOpen, onClose }: RegisterModalProps) {
             setApiError(null);
         }, 300);
     }, [onClose]);
+
+    // ── Auto-close on success ────────────────────────────────────────────
+
+    useEffect(() => {
+        if (isSuccess) {
+            autoCloseTimer.current = setTimeout(() => {
+                handleClose();
+            }, AUTO_CLOSE_DELAY_MS);
+        }
+        return () => {
+            if (autoCloseTimer.current) clearTimeout(autoCloseTimer.current);
+        };
+    }, [isSuccess, handleClose]);
+
+    // ── Escape key ───────────────────────────────────────────────────────
+
+    useEffect(() => {
+        if (!isOpen) return;
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") handleClose();
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [isOpen, handleClose]);
+
+    // ── Lock body scroll while open ──────────────────────────────────────
+
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [isOpen]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

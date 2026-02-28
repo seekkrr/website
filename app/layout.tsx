@@ -87,7 +87,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className="min-h-screen bg-background font-sans antialiased text-white"
+        className="min-h-screen bg-background font-sans antialiased"
         suppressHydrationWarning
       >
         <LenisProvider>
