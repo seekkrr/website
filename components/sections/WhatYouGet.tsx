@@ -19,7 +19,7 @@ const Box = ({
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true, margin: "-40px" }}
         transition={{ duration: 0.45, ease: "easeOut" }}
-        className={`border-[1.5px] border-black/80 rounded-[18px] overflow-hidden bg-[#FFFFF3]
+        className={`border-[1.5px] border-black/80 rounded-[18px] overflow-hidden bg-theme-beige
             transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg ${className}`}
     >
         {children}
@@ -31,7 +31,7 @@ const Box = ({
 /* ------------------------------------------------------------------ */
 export function WhatYouGet() {
     return (
-        <section className="w-full bg-[#FFFFF3] py-3 lg:py-5 overflow-hidden text-black relative">
+        <section className="w-full bg-theme-beige py-3 lg:py-5 overflow-hidden text-black relative">
             <div className="w-full max-w-[1240px] mx-auto px-4 lg:px-8">
 
                 {/* ── Row 1: WhatYouGet | Maps | Painter ── */}
@@ -39,11 +39,11 @@ export function WhatYouGet() {
 
                     {/* Box 1 — "What You Get?" */}
                     <Box className="col-span-4 sm:col-span-3 lg:col-span-3 p-5 flex items-center justify-center
-                        [box-shadow:5px_5px_0_#FF5B25] min-h-[180px] lg:min-h-[220px]">
-                        <h2 className="font-handwriting text-[44px] lg:text-[56px] leading-[1] text-center
-                            [text-shadow:3px_3px_0_#8398FF] tracking-tight">
+                        [box-shadow:5px_5px_0_var(--color-orange-accent)] min-h-[180px] lg:min-h-[220px]">
+                        <h3 className="font-handwriting text-[32px] sm:text-[36px] lg:text-[40px] font-bold leading-none
+                            [text-shadow:3px_3px_0_var(--color-blue-accent)] tracking-tight">
                             What<br />You<br />Get ?
-                        </h2>
+                        </h3>
                     </Box>
 
                     {/* Box 2 — Maps: image left, text right */}
@@ -104,9 +104,9 @@ export function WhatYouGet() {
                     </Box>
 
                     {/* Box 5 — SeekKrr */}
-                    <Box className="col-span-4 sm:col-span-8 lg:col-span-4 !bg-[#8398FF] p-5 lg:p-6
-                        flex flex-col items-center justify-center text-center
-                        [box-shadow:5px_5px_0_#FF5B25] min-h-[180px] lg:min-h-[220px]">
+                    <Box className="col-span-4 sm:col-span-8 lg:col-span-4 !bg-theme-blue p-5 lg:p-6
+                        flex flex-col justify-end
+                        [box-shadow:5px_5px_0_var(--color-orange-accent)] min-h-[180px] lg:min-h-[220px]">
                         <div className="relative w-full max-w-[180px] h-[56px] mb-1 pointer-events-none">
                             <Image
                                 src={CloudinaryIcons.seekkrrText}
@@ -116,7 +116,6 @@ export function WhatYouGet() {
                                 sizes="180px"
                             />
                         </div>
-                        <p className="text-black/70 text-xs mb-3 font-sans font-semibold">/~To -Seek~/</p>
                         <p className="text-white font-sans text-[15px] lg:text-[17px] leading-snug">
                             You <strong>Focus on Exploring</strong>, We focus on{" "}
                             <strong>When, How and Where</strong>
@@ -146,13 +145,13 @@ export function WhatYouGet() {
                     </Box>
 
                     {/* Box 7 — Spiritual / Orange */}
-                    <Box className="col-span-4 sm:col-span-4 lg:col-span-4 !bg-[#FF5B25] p-5 lg:p-6
-                        flex flex-col justify-center text-center
-                        [box-shadow:5px_5px_0_#8398FF] min-h-[180px] lg:min-h-[200px]">
-                        <p className="font-handwriting text-[28px] lg:text-[34px] leading-[1.1] mb-4
-                            [text-shadow:2px_2px_0_#FECD36]">
+                    <Box className="col-span-4 sm:col-span-4 lg:col-span-4 !bg-theme-orange p-5 lg:p-6
+                        flex flex-col justify-end
+                        [box-shadow:5px_5px_0_var(--color-blue-accent)] min-h-[180px] lg:min-h-[200px]">
+                        <h3 className="font-handwriting text-[32px] sm:text-[36px] lg:text-[40px] font-bold leading-none text-white 
+                            [text-shadow:2px_2px_0_var(--color-yellow-accent)]">
                             Spiritual Culinary Offbeat History and more . . .
-                        </p>
+                        </h3>
                         <p className="font-sans text-white text-[14px] lg:text-[16px] leading-snug font-medium">
                             Find quests based on your Travel preferences
                         </p>

@@ -41,7 +41,7 @@ const FloatingIcon = ({
 
 export function FreedomSection() {
     return (
-        <section className="w-full bg-[#FFFFF3] overflow-hidden py-2 lg:py-3 flex justify-center items-center min-h-[350px] lg:min-h-[450px]">
+        <section className="w-full bg-theme-beige overflow-hidden py-2 lg:py-3 flex justify-center items-center min-h-[350px] lg:min-h-[450px]">
             <div className="w-full max-w-[1240px] mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] xl:grid-cols-[1fr_600px_1fr] items-center gap-8 lg:gap-12">
 
                 {/* Mobile Top Icons (Visible < lg) */}

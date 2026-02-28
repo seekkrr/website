@@ -211,7 +211,7 @@ export function RegisterModal({ isOpen, onClose, onSuccess }: RegisterModalProps
 
                     {/* Modal Card */}
                     <motion.div
-                        className="relative w-full max-w-[420px] bg-[#FECD36] border-[3px] border-black rounded-2xl px-7 py-8 sm:px-9 sm:py-10 shadow-2xl font-jakarta"
+                        className="relative w-full max-w-[420px] bg-theme-yellow border-[3px] border-black rounded-2xl px-7 py-8 sm:px-9 sm:py-10 shadow-2xl font-jakarta"
                         initial={{ opacity: 0, scale: 0.9, y: 30 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 30 }}
@@ -275,7 +275,7 @@ export function RegisterModal({ isOpen, onClose, onSuccess }: RegisterModalProps
                                             placeholder="First Name + Last Name"
                                             value={formData.name}
                                             onChange={handleChange}
-                                            className={`w-full px-4 py-3 bg-[#FFFFF3] border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.name
+                                            className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.name
                                                 ? "border-red-600 focus:border-red-600"
                                                 : "border-black/80 focus:border-black"
                                                 }`}
@@ -302,7 +302,7 @@ export function RegisterModal({ isOpen, onClose, onSuccess }: RegisterModalProps
                                             placeholder="abc@domain.com"
                                             value={formData.email}
                                             onChange={handleChange}
-                                            className={`w-full px-4 py-3 bg-[#FFFFF3] border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.email
+                                            className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.email
                                                 ? "border-red-600 focus:border-red-600"
                                                 : "border-black/80 focus:border-black"
                                                 }`}
@@ -329,7 +329,7 @@ export function RegisterModal({ isOpen, onClose, onSuccess }: RegisterModalProps
                                             placeholder="+91 9875543210"
                                             value={formData.phone}
                                             onChange={handleChange}
-                                            className={`w-full px-4 py-3 bg-[#FFFFF3] border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.phone
+                                            className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.phone
                                                 ? "border-red-600 focus:border-red-600"
                                                 : "border-black/80 focus:border-black"
                                                 }`}

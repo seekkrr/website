@@ -77,7 +77,7 @@ export default function ContactUsPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#FFFFF3] pt-32 pb-16 px-6 sm:px-12 lg:px-24">
+        <div className="min-h-screen bg-theme-beige pt-32 pb-16 px-6 sm:px-12 lg:px-24">
             {/* Top Header */}
             <div className="max-w-6xl mx-auto mb-16 text-center">
                 <h1 className="text-5xl md:text-[5rem] font-jakarta font-bold text-black tracking-tight">
@@ -97,7 +97,7 @@ export default function ContactUsPage() {
                 </div>
 
                 {/* Right Column - Form */}
-                <div className="bg-[#FFFFF3] border-2 border-black rounded-[2rem] p-8 sm:p-12 shadow-[0_4px_20px_rgba(0,0,0,0.05)] font-sans">
+                <div className="bg-theme-beige border-2 border-black rounded-[2rem] p-8 sm:p-12 shadow-[0_4px_20px_rgba(0,0,0,0.05)] font-sans">
                     {!isSuccess && !isCheckingState && (
                         <h2 className="text-2xl sm:text-3xl text-gray-700 font-light mb-8">
                             We're here to help

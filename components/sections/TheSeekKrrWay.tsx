@@ -20,12 +20,7 @@ export function TheSeekKrrWay() {
                     style={{ willChange: "transform, opacity" }}
                 >
                     <h2
-                        className="font-jakarta text-[36px] sm:text-[42px] lg:text-[48px] leading-[1.1] font-semibold tracking-wide whitespace-pre-line"
-                        style={{
-                            color: "#003634",
-                            WebkitTextStroke: "1px #000000",
-                            textShadow: "4px 4px 0px #FECD36",
-                        }}
+                        className="font-jakarta text-[36px] sm:text-[42px] lg:text-[48px] leading-[1.1] font-semibold tracking-wide whitespace-pre-line text-theme-green [-webkit-text-stroke:1px_black] [text-shadow:4px_4px_0_var(--color-yellow-accent)]"
                     >
                         {"The SeekKrr Way"}
                     </h2>

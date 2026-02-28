@@ -17,14 +17,14 @@ const BIRD_CARDS: BirdCard[] = [
     {
         angle: 0,
         lines: <>Download<br />the<br />SeekKrr<br />App</>,
-        bg: "#FFFFF3",
-        textColor: "#000000",
+        bg: "var(--color-beige)",
+        textColor: "var(--color-green-dark)",
     },
     {
         angle: 90,
         lines: <>Explore<br />Quests<br />With<br />Different<br />Themes</>,
-        bg: "#FFFFF3",
-        textColor: "#000000",
+        bg: "var(--color-beige)",
+        textColor: "var(--color-green-dark)",
     },
     {
         angle: 180,
@@ -35,15 +35,15 @@ const BIRD_CARDS: BirdCard[] = [
                 (Early Bird<br />Offer)
             </>
         ),
-        bg: "#FECD36",
-        textColor: "#003634",
+        bg: "var(--color-yellow-accent)",
+        textColor: "var(--color-green-dark)",
         highlight: true,
     },
     {
         angle: 270,
         lines: <>Travel<br />without<br />the<br />Worry Of<br />Itinerary</>,
-        bg: "#FFFFF3",
-        textColor: "#000000",
+        bg: "var(--color-beige)",
+        textColor: "var(--color-green-dark)",
     },
 ];
 
@@ -52,7 +52,7 @@ const BIRD_CARDS: BirdCard[] = [
 /* ------------------------------------------------------------------ */
 export function TravelWithSeekKrr() {
     return (
-        <section className="w-full bg-[#FFFFF3] overflow-hidden py-2 lg:py-3 flex flex-col items-center justify-center">
+        <section className="w-full bg-theme-beige overflow-hidden py-2 lg:py-3 flex flex-col items-center justify-center">
             <InjectBirdStyles />
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -67,7 +67,7 @@ export function TravelWithSeekKrr() {
                     {/* Central text (static) */}
                     <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
                         <h2
-                            className="font-handwriting text-[32px] sm:text-[40px] md:text-[48px] lg:text-[56px] font-bold leading-[1.15] text-center text-black whitespace-pre-line [text-shadow:3px_3px_0_#FF5B25]"
+                            className="font-handwriting text-[32px] sm:text-[40px] md:text-[48px] lg:text-[56px] font-bold leading-[1.15] text-center text-black whitespace-pre-line [text-shadow:3px_3px_0_var(--color-orange-accent)]"
                         >
                             {"Travel\nWith\nSeekKrr"}
                         </h2>
@@ -190,10 +190,10 @@ export function InjectBirdStyles() {
 /*  Layer 1: Wings & tail SVG (gets flap animation — rendered BEHIND)  */
 /* ------------------------------------------------------------------ */
 function WingsSvg({ muted = false }: { muted?: boolean }) {
-    const bg = "#FFFFF3";
-    const blue = muted ? bg : "#8398FF";
-    const orange = muted ? bg : "#FF5B25";
-    const dark = "#003634";
+    const bg = "var(--color-beige)";
+    const blue = muted ? bg : "var(--color-blue-accent)";
+    const orange = muted ? bg : "var(--color-orange-accent)";
+    const dark = "var(--color-green-dark)";
     return (
         <svg viewBox="0 0 173 341" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full pointer-events-none select-none">
             {/* Outline strokes for wing structures */}
@@ -225,9 +225,9 @@ function WingsSvg({ muted = false }: { muted?: boolean }) {
 /*  Layer 2: Body + head + beak SVG (STATIC — rendered ON TOP)        */
 /* ------------------------------------------------------------------ */
 function BodySvg({ bodyColor, muted = false }: { bodyColor: string; muted?: boolean }) {
-    const bg = "#FFFFF3";
-    const blue = muted ? bg : "#8398FF";
-    const dark = "#003634";
+    const bg = "var(--color-beige)";
+    const blue = muted ? bg : "var(--color-blue-accent)";
+    const dark = "var(--color-green-dark)";
     return (
         <svg viewBox="0 0 173 341" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full pointer-events-none select-none">
             {/* Body rect — covers wing attachment seams */}
@@ -236,7 +236,7 @@ function BodySvg({ bodyColor, muted = false }: { bodyColor: string; muted?: bool
             <path d="M26.0259 155.793C10.5824 152.271 9.47913 185.995 26.0259 184.486V155.793Z" fill={dark} stroke={dark} strokeWidth="0.5" />
             <path d="M25.5259 162.535H17.5259C15.5259 166.535 15.5259 173.035 17.5259 178.035H25.5259V162.535Z" fill={blue} stroke={blue} strokeWidth="0.5" />
             {/* Beak */}
-            <path d="M14.5259 177.035L2.02588 170.535L14.5259 163.035C13.3259 167.035 14.0259 174.035 14.5259 177.035Z" fill={muted ? bg : "#FF5B25"} stroke={dark} strokeWidth="0.5" />
+            <path d="M14.5259 177.035L2.02588 170.535L14.5259 163.035C13.3259 167.035 14.0259 174.035 14.5259 177.035Z" fill={muted ? bg : "var(--color-orange-accent)"} stroke={dark} strokeWidth="0.5" />
         </svg>
     );
 }

@@ -38,6 +38,7 @@ const config: Config = {
         "theme-blue": "var(--color-blue-accent)",
         "theme-yellow": "var(--color-yellow-accent)",
         "theme-green": "var(--color-green-dark)",
+        "theme-orange": "var(--color-orange-accent)",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],

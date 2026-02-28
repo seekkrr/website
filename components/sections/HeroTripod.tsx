@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 
 export function HeroTripod() {
     return (
-        <section className="relative w-full bg-[#FFFFF3] pt-32 pb-8 px-6 md:px-12 lg:px-24 flex justify-center">
+        <section className="relative w-full bg-theme-beige pt-32 pb-8 px-6 md:px-12 lg:px-24 flex justify-center">
             {/* Container simulating the rounded stroke card */}
-            <div className="relative w-full max-w-[1240px] mx-auto rounded-[32px] border-[3px] border-black bg-[#FFFFF3] px-8 pt-12 pb-14 sm:px-12 sm:pt-14 sm:pb-16 lg:px-16 lg:pt-16 lg:pb-16 flex flex-col justify-center shadow-none">
+            <div className="relative w-full max-w-[1240px] mx-auto rounded-[32px] border-[3px] border-black bg-theme-beige px-8 pt-12 pb-14 sm:px-12 sm:pt-14 sm:pb-16 lg:px-16 lg:pt-16 lg:pb-16 flex flex-col justify-center shadow-none">
 
                 {/* Left Side: Typography */}
                 <div className="flex w-full flex-col z-10 lg:w-[60%] shrink-0 text-left">
@@ -30,7 +30,7 @@ export function HeroTripod() {
                     >
                         {/* The primary text wrapper */}
                         <div className="relative inline-block mt-2 md:mt-4">
-                            <h1 className="font-jakarta text-[32px] sm:text-[44px] md:text-[50px] lg:text-[44px] xl:text-[62px] font-bold leading-[1.1] sm:leading-none text-[#003634] [text-shadow:4px_4px_0_#FECD38] sm:[text-shadow:4px_4px_0_#FECD38] relative z-10 pb-[10px] md:pb-[14px] xl:whitespace-nowrap">
+                            <h1 className="font-jakarta text-[32px] sm:text-[44px] md:text-[50px] lg:text-[44px] xl:text-[62px] font-bold leading-[1.1] sm:leading-none text-theme-green [text-shadow:4px_4px_0_var(--color-yellow-accent)] sm:[text-shadow:4px_4px_0_var(--color-yellow-accent)] relative z-10 pb-[10px] md:pb-[14px] xl:whitespace-nowrap">
                                 Travel With SeekKrr
                             </h1>
 

@@ -54,7 +54,7 @@ export function Navbar() {
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="text-[15px] font-jakarta font-medium text-white/90 hover:text-[#FECD38] transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-[#FECD38] hover:after:w-full after:transition-all"
+                            className="text-[15px] font-jakarta font-medium text-white/90 hover:text-theme-yellow transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-theme-yellow hover:after:w-full after:transition-all"
                         >
                             {link.name}
                         </Link>
@@ -63,7 +63,7 @@ export function Navbar() {
 
                 {/* Hamburger Toggle (Mobile/Tablet) */}
                 <button
-                    className="lg:hidden flex items-center justify-center p-2 text-white hover:text-[#FECD38] transition-colors z-50"
+                    className="lg:hidden flex items-center justify-center p-2 text-white hover:text-theme-yellow transition-colors z-50"
                     onClick={() => setIsOpen(!isOpen)}
                     aria-label="Toggle Menu"
                 >
@@ -92,7 +92,7 @@ export function Navbar() {
                                     <Link
                                         href={link.href}
                                         onClick={() => setIsOpen(false)}
-                                        className="text-[24px] sm:text-[32px] font-jakarta font-semibold text-white hover:text-[#FECD38] transition-colors relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-[3px] after:bg-[#FECD38] hover:after:w-full after:transition-all overflow-hidden"
+                                        className="text-[24px] sm:text-[32px] font-jakarta font-semibold text-white hover:text-theme-yellow transition-colors relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-[3px] after:bg-theme-yellow hover:after:w-full after:transition-all overflow-hidden"
                                     >
                                         {link.name}
                                     </Link>
@@ -105,7 +105,7 @@ export function Navbar() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.5, duration: 0.5 }}
-                            className="absolute bottom-12 text-[#FECD38] font-handwriting text-[24px]"
+                            className="absolute bottom-12 text-theme-yellow font-handwriting text-[24px]"
                         >
                             Discover Your Next Adventure
                         </motion.div>
