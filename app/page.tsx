@@ -2,7 +2,7 @@ import { HeroTripod, EarlyAccess, BuiltForExplorers, WhatYouGet, FreedomSection,
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-screen bg-[#FFFFF3]">
+    <div className="relative min-h-screen bg-theme-beige">
       {/* Hero Section */}
       <HeroTripod />
 
