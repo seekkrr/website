@@ -19,6 +19,12 @@
     --border: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
     --radius: 0.75rem;
+
+    /* Theme Colors (Hex based overrides) */
+    --color-beige: #FFFFF3;
+    --color-blue-accent: #8EA7FF;
+    --color-yellow-accent: #FECD38;
+    --color-green-dark: #003634;
   }
 
   .dark {

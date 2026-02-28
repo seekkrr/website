@@ -34,6 +34,10 @@ const config: Config = {
         },
         border: "hsl(var(--border))",
         ring: "hsl(var(--ring))",
+        "theme-beige": "var(--color-beige)",
+        "theme-blue": "var(--color-blue-accent)",
+        "theme-yellow": "var(--color-yellow-accent)",
+        "theme-green": "var(--color-green-dark)",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],

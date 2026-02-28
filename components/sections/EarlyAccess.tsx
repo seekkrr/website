@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { CloudinaryIcons } from "@/lib/config/assets";
 import { RegisterModal } from "@/components/ui/RegisterModal";
+import { clientState } from "@/lib/clientState";
 
 const FloatingIcon = ({
     src,
@@ -43,10 +44,26 @@ const FloatingIcon = ({
 
 export function EarlyAccess() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isRegistered, setIsRegistered] = useState(false);
+
+    useEffect(() => {
+        // Check if user already registered for early access
+        if (clientState.get("earlyAccessRegistered") === "true") {
+            setIsRegistered(true);
+        }
+    }, []);
+
+    const handleSuccess = () => {
+        setIsRegistered(true);
+    };
 
     return (
         <>
-            <RegisterModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            <RegisterModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSuccess={handleSuccess}
+            />
             <section className="w-full bg-[#FFFFF3] overflow-hidden pt-6 pb-24 lg:pt-8 lg:pb-32 flex justify-center items-center min-h-[350px] lg:min-h-[450px]">
                 <div className="w-full max-w-[1240px] mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] xl:grid-cols-[1fr_600px_1fr] items-center gap-8 lg:gap-12">
 
@@ -85,16 +102,24 @@ export function EarlyAccess() {
                         transition={{ duration: 0.6, ease: "easeOut" }}
                         className="relative z-10 bg-black text-white rounded-[40px] px-8 py-5 md:px-12 md:py-6 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 mx-auto w-full max-w-[600px] shadow-2xl"
                     >
-                        <h2 className="font-jakarta text-[24px] lg:text-[28px] xl:text-[32px] font-semibold tracking-tight whitespace-nowrap">
-                            Get Early Access
-                        </h2>
+                        {isRegistered ? (
+                            <h2 className="font-jakarta text-[24px] lg:text-[28px] xl:text-[32px] font-semibold tracking-tight whitespace-nowrap">
+                                Thank You for your interest!
+                            </h2>
+                        ) : (
+                            <>
+                                <h2 className="font-jakarta text-[24px] lg:text-[28px] xl:text-[32px] font-semibold tracking-tight whitespace-nowrap">
+                                    Get Early Access
+                                </h2>
 
-                        <button
-                            onClick={() => setIsModalOpen(true)}
-                            className="bg-white text-black font-jakarta font-bold text-[18px] lg:text-[20px] px-8 py-3 rounded-[12px] border-[3px] border-black transition-transform hover:-translate-y-1 active:translate-y-0 [box-shadow:4px_4px_0_#8EA7FF] hover:[box-shadow:6px_6px_0_#8EA7FF] active:[box-shadow:2px_2px_0_#8EA7FF] shrink-0"
-                        >
-                            Register
-                        </button>
+                                <button
+                                    onClick={() => setIsModalOpen(true)}
+                                    className="bg-white text-black font-jakarta font-bold text-[18px] lg:text-[20px] px-8 py-3 rounded-[12px] border-[3px] border-black transition-transform hover:-translate-y-1 active:translate-y-0 [box-shadow:4px_4px_0_#8EA7FF] hover:[box-shadow:6px_6px_0_#8EA7FF] active:[box-shadow:2px_2px_0_#8EA7FF] shrink-0"
+                                >
+                                    Register
+                                </button>
+                            </>
+                        )}
                     </motion.div>
 
                     {/* Right Icons Matrix */}

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { z } from "zod";
 import { registerInterest } from "@/lib/api";
+import { clientState } from "@/lib/clientState";
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -62,6 +63,7 @@ type FormErrors = Partial<Record<keyof z.input<typeof registerSchema>, string>>;
 interface RegisterModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onSuccess?: () => void;
 }
 
 interface FormData {
@@ -72,7 +74,7 @@ interface FormData {
 
 // ── Component ──────────────────────────────────────────────────────────────
 
-export function RegisterModal({ isOpen, onClose }: RegisterModalProps) {
+export function RegisterModal({ isOpen, onClose, onSuccess }: RegisterModalProps) {
     const [formData, setFormData] = useState<FormData>({
         name: "",
         email: "",
@@ -174,7 +176,9 @@ export function RegisterModal({ isOpen, onClose }: RegisterModalProps) {
                 email: sanitised.email,
                 ...(sanitised.phone && { phone: sanitised.phone }),
             });
+            clientState.set("earlyAccessRegistered", "true", 365); // Expire in 1 year
             setIsSuccess(true);
+            onSuccess?.();
         } catch (err) {
             setApiError(
                 err instanceof Error ? err.message : "Something went wrong. Please try again.",
