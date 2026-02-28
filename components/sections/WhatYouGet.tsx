@@ -140,7 +140,7 @@ export function WhatYouGet() {
                                 sizes="(max-width: 768px) 40vw, 140px"
                             />
                         </div>
-                        <p className="font-sans text-[15px] lg:text-[16px] leading-snug">
+                        <p className="font-sans text-[16px] lg:text-[18px] leading-snug">
                             <strong>Capture the trip,</strong> with fun{" "}
                             <strong>milestones</strong> that you complete on the way
                         </p>
@@ -171,7 +171,7 @@ export function WhatYouGet() {
                                 sizes="(max-width: 768px) 40vw, 140px"
                             />
                         </div>
-                        <p className="font-sans text-[15px] lg:text-[16px] leading-snug">
+                        <p className="font-sans text-[16px] lg:text-[18px] leading-snug">
                             <strong>Vetted Routes</strong> so you feel safe when traveling
                         </p>
                     </Box>
