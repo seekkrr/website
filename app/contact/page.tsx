@@ -199,7 +199,7 @@ export default function ContactUsPage() {
                                 <textarea
                                     id="message"
                                     rows={4}
-                                    placeholder="abcdefgh"
+                                    placeholder="Let us know how we can help!"
                                     className="w-full border border-gray-400 rounded-[1rem] bg-transparent p-4 text-black placeholder:text-gray-300 focus:outline-none focus:border-black transition-colors resize-none"
                                     {...register("message")}
                                 />
