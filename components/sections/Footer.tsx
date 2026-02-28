@@ -14,7 +14,7 @@ export function Footer() {
                         <span className="font-jakarta text-[24px] font-bold text-white tracking-tight">SeekKrr</span>
                     </div>
                     <p className="font-jakarta text-gray-400 text-[14px] text-center md:text-left pt-1">
-                        2026 <span className="mx-1">|</span> &copy; SoloQuest Pvt. Ltd. <span className="mx-1">|</span> All rights reserved.
+                        {new Date().getFullYear()} <span className="mx-1">|</span> &copy; SoloQuest Pvt. Ltd. <span className="mx-1">|</span> All rights reserved.
                     </p>
                 </div>
 
