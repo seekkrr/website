@@ -36,8 +36,8 @@ export function HeroTripod() {
 
                             {/* Custom underline elements close to text, matching text width exactly */}
                             <div className="absolute bottom-0 left-0 w-full flex flex-col z-0">
-                                <div className="w-full h-[2px] bg-[#003634]"></div>
-                                <div className="w-full h-[4px] bg-[#F2B705] mt-[1px]"></div>
+                                <div className="w-full h-[2px] bg-theme-green"></div>
+                                <div className="w-full h-[4px] bg-theme-yellow mt-[1px]"></div>
                             </div>
 
                             {/* Stars icon positioned uniquely over the end of the text, outside the underline calculation */}
