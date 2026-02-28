@@ -1,8 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    // Disable React Strict Mode in dev to avoid double-render issues with
-    // Framer Motion + React Three Fiber. Production builds still run strict checks.
-    reactStrictMode: process.env.NODE_ENV === "production",
+    // Enable React Strict Mode to identify potential problems in development
+    reactStrictMode: true,
 
     // Turbopack config (Next.js 16+) — used when running `next dev`
     turbopack: {
