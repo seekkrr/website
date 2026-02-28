@@ -3,7 +3,7 @@ import { Inter, Outfit, Plus_Jakarta_Sans, Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { LenisProvider } from "@/components/animations/LenisProvider";
-import { Navbar } from "@/components/sections";
+import { Navbar, Footer } from "@/components/sections";
 import "@/styles/globals.css";
 
 const inter = Inter({
@@ -93,6 +93,7 @@ export default function RootLayout({
         <LenisProvider>
           <Navbar />
           <main className="relative">{children}</main>
+          <Footer />
         </LenisProvider>
         <Analytics />
         <SpeedInsights />

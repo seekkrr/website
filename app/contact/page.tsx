@@ -1,0 +1,233 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Loader2 } from "lucide-react";
+import { submitQuery } from "@/lib/api";
+import { clientState } from "@/lib/clientState";
+
+const contactSchema = z.object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    phone: z
+        .string()
+        .optional()
+        .refine((val) => !val || /^\+?\d{9,15}$/.test(val), {
+            message: "Please enter a valid phone number",
+        }),
+    email: z.string().email("Please enter a valid email address"),
+    message: z.string().min(10, "Message must be at least 10 characters"),
+});
+
+type ContactFormValues = z.infer<typeof contactSchema>;
+
+export default function ContactUsPage() {
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [submitError, setSubmitError] = useState("");
+    const [isCheckingState, setIsCheckingState] = useState(true);
+
+    useEffect(() => {
+        // Check if user already submitted in this session/cookie
+        const hasSubmitted = clientState.get("contactSubmitted");
+        if (hasSubmitted === "true") {
+            setIsSuccess(true);
+        }
+        setIsCheckingState(false);
+    }, []);
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors, isSubmitting },
+    } = useForm<ContactFormValues>({
+        resolver: zodResolver(contactSchema),
+        defaultValues: {
+            name: "",
+            phone: "",
+            email: "",
+            message: "",
+        },
+    });
+
+    const onSubmit = async (data: ContactFormValues) => {
+        try {
+            setSubmitError("");
+            const result = await submitQuery({
+                name: data.name,
+                email: data.email,
+                phone: data.phone || undefined,
+                message: data.message,
+            });
+
+            // If the request didn't throw, it was successful (200-299)
+            if (result && result.message) {
+                clientState.set("contactSubmitted", "true", 1); // Expiry in 1 day
+                setIsSuccess(true);
+                reset();
+            } else {
+                setSubmitError("Failed to submit query.");
+            }
+        } catch (error) {
+            setSubmitError(
+                error instanceof Error ? error.message : "Something went wrong."
+            );
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-[#FFFFF3] pt-32 pb-16 px-6 sm:px-12 lg:px-24">
+            {/* Top Header */}
+            <div className="max-w-6xl mx-auto mb-16 text-center">
+                <h1 className="text-5xl md:text-[5rem] font-jakarta font-bold text-black tracking-tight">
+                    Contact Us
+                </h1>
+            </div>
+
+            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-start">
+                {/* Left Column - Handwriting Text */}
+                <div className="flex flex-col justify-start h-full pt-8 md:pt-16">
+                    <p className="font-handwriting text-[2.5rem] md:text-[3.5rem] leading-[1.1] text-black flex flex-col">
+                        <span>Questions,</span>
+                        <span>Suggestions,</span>
+                        <span>Exclusive Discounts</span>
+                        <span>and more!</span>
+                    </p>
+                </div>
+
+                {/* Right Column - Form */}
+                <div className="bg-[#FFFFF3] border-2 border-black rounded-[2rem] p-8 sm:p-12 shadow-[0_4px_20px_rgba(0,0,0,0.05)] font-sans">
+                    {!isSuccess && !isCheckingState && (
+                        <h2 className="text-2xl sm:text-3xl text-gray-700 font-light mb-8">
+                            We're here to help
+                        </h2>
+                    )}
+
+                    {isCheckingState ? (
+                        <div className="flex justify-center items-center h-[300px]">
+                            <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+                        </div>
+                    ) : isSuccess ? (
+                        <div className="bg-transparent p-8 sm:p-12 text-center flex flex-col items-center justify-center min-h-[300px] animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <h3 className="text-[1.5rem] sm:text-[1.8rem] md:text-[2rem] font-medium text-black text-center text-balance leading-snug">
+                                Thank you for<br />reaching out,<br />we will answer your<br />query<br />shortly
+                            </h3>
+                        </div>
+                    ) : (
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                            {submitError && (
+                                <div className="p-4 rounded-xl bg-red-50 text-red-600 text-sm">
+                                    {submitError}
+                                </div>
+                            )}
+
+                            {/* Full Name */}
+                            <div className="space-y-1">
+                                <label
+                                    htmlFor="name"
+                                    className="block text-sm font-medium text-black"
+                                >
+                                    Full Name
+                                </label>
+                                <input
+                                    id="name"
+                                    type="text"
+                                    placeholder="Sudhanshu Rai"
+                                    className="w-full border-b border-gray-400 bg-transparent py-2 text-black placeholder:text-gray-300 focus:outline-none focus:border-black transition-colors"
+                                    {...register("name")}
+                                />
+                                {errors.name && (
+                                    <p className="text-red-500 text-xs mt-1">
+                                        {errors.name.message}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Mobile (optional) */}
+                            <div className="space-y-1">
+                                <label
+                                    htmlFor="phone"
+                                    className="block text-sm font-medium text-black mt-4"
+                                >
+                                    Mobile (optional)
+                                </label>
+                                <input
+                                    id="phone"
+                                    type="tel"
+                                    placeholder="Enter your mobile number"
+                                    className="w-full border-b border-gray-400 bg-transparent py-2 text-black placeholder:text-gray-300 focus:outline-none focus:border-black transition-colors"
+                                    {...register("phone")}
+                                />
+                                {errors.phone && (
+                                    <p className="text-red-500 text-xs mt-1">
+                                        {errors.phone.message}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Email */}
+                            <div className="space-y-1">
+                                <label
+                                    htmlFor="email"
+                                    className="block text-sm font-medium text-black mt-4"
+                                >
+                                    Email
+                                </label>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    placeholder="abc@gmail.com"
+                                    className="w-full border-b border-gray-400 bg-transparent py-2 text-black placeholder:text-gray-300 focus:outline-none focus:border-black transition-colors"
+                                    {...register("email")}
+                                />
+                                {errors.email && (
+                                    <p className="text-red-500 text-xs mt-1">
+                                        {errors.email.message}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Message */}
+                            <div className="space-y-1">
+                                <label
+                                    htmlFor="message"
+                                    className="block text-sm font-medium text-black mt-4 mb-2"
+                                >
+                                    Message
+                                </label>
+                                <textarea
+                                    id="message"
+                                    rows={4}
+                                    placeholder="abcdefgh"
+                                    className="w-full border border-gray-400 rounded-[1rem] bg-transparent p-4 text-black placeholder:text-gray-300 focus:outline-none focus:border-black transition-colors resize-none"
+                                    {...register("message")}
+                                />
+                                {errors.message && (
+                                    <p className="text-red-500 text-xs mt-1">
+                                        {errors.message.message}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Submit Button */}
+                            <div className="pt-6 flex justify-center">
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="bg-black text-white px-12 py-3 rounded-full font-medium min-w-[200px] flex items-center justify-center hover:bg-gray-800 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                                >
+                                    {isSubmitting ? (
+                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                    ) : (
+                                        "Submit"
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}

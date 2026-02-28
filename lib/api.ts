@@ -14,6 +14,18 @@ export interface RegisterInterestPayload {
     phone?: string;
 }
 
+export interface SubmitQueryPayload {
+    name: string;
+    email: string;
+    phone?: string;
+    message: string;
+}
+
+export interface SubmitQueryResponse {
+    message: string;
+    queries_id?: string;
+}
+
 export interface ApiSuccessResponse {
     success: true;
     message: string;
@@ -65,6 +77,19 @@ export function registerInterest(
     payload: RegisterInterestPayload,
 ): Promise<ApiResponse> {
     return request<ApiResponse>("/api/interest", {
+        method: "POST",
+        body: JSON.stringify(payload),
+    });
+}
+
+/**
+ * Submit user queries from the contact us page.
+ * POST /api/queries
+ */
+export function submitQuery(
+    payload: SubmitQueryPayload,
+): Promise<SubmitQueryResponse> {
+    return request<SubmitQueryResponse>("/api/queries", {
         method: "POST",
         body: JSON.stringify(payload),
     });
