@@ -11,8 +11,8 @@ export const siteConfig = {
     creatorPayoutLink: "/creator-terms",
     socials: {
         whatsapp: "https://wa.me/1234567890",
-        instagram: "https://instagram.com",
-        linkedin: "https://linkedin.com",
-        twitter: "https://x.com",
+        instagram: "https://www.instagram.com/seek_krr",
+        linkedin: "https://www.linkedin.com/company/seekkrr",
+        twitter: "https://x.com/seek_krr",
     },
 };

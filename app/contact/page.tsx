@@ -80,7 +80,7 @@ export default function ContactUsPage() {
         <div className="min-h-screen bg-theme-beige pt-32 pb-16 px-6 sm:px-12 lg:px-24">
             {/* Top Header */}
             <div className="max-w-6xl mx-auto mb-16 text-center">
-                <h1 className="text-5xl md:text-[5rem] font-jakarta font-bold text-black tracking-tight">
+                <h1 className="text-5xl md:text-6xl font-extrabold text-black tracking-tight">
                     Contact Us
                 </h1>
             </div>

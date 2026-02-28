@@ -6,7 +6,7 @@ import { CloudinaryIcons } from "@/lib/config/assets";
 
 export function TheSeekKrrWay() {
     return (
-        <section className="w-full bg-[#FFFFF3] overflow-hidden flex flex-col items-center justify-center -mt-12 sm:-mt-20 lg:-mt-32 mb-0 lg:mb-4 relative z-20 pointer-events-none text-center">
+        <section className="w-full bg-theme-beige overflow-hidden flex flex-col items-center justify-center -mt-12 sm:-mt-20 lg:-mt-32 mb-0 lg:mb-4 relative z-20 pointer-events-none text-center">
             {/* pointer-events-none added to section so it doesn't block scroll but we'll enable it on inner contents if needed */}
             <div className="w-full max-w-[1240px] mx-auto px-2 lg:px-4 flex flex-col items-center gap-0 pointer-events-auto">
 
