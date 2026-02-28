@@ -10,7 +10,7 @@ export const siteConfig = {
     privacyLastUpdated: "February 9, 2026",
     creatorPayoutLink: "/creator-terms",
     socials: {
-        whatsapp: "https://wa.me/1234567890",
+        whatsapp: "https://chat.whatsapp.com/FZxZgnAoDdc2GpiXTW2ZWS",
         instagram: "https://www.instagram.com/seek_krr",
         linkedin: "https://www.linkedin.com/company/seekkrr",
         twitter: "https://x.com/seek_krr",
