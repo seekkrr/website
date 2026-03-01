@@ -100,21 +100,21 @@ export function EarlyAccess() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.6, ease: "easeOut" }}
-                        className="relative z-10 bg-black text-white rounded-[40px] px-8 py-5 md:px-12 md:py-6 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 mx-auto w-full max-w-[600px] shadow-2xl"
+                        className="relative z-10 bg-black text-white rounded-[32px] md:rounded-[40px] px-6 py-5 sm:px-8 md:px-12 md:py-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-12 mx-auto w-[90%] sm:w-full max-w-[600px] shadow-2xl"
                     >
                         {isRegistered ? (
-                            <h2 className="font-jakarta text-[24px] lg:text-[28px] xl:text-[32px] font-semibold tracking-tight whitespace-nowrap">
+                            <h2 className="font-jakarta text-[18px] sm:text-[24px] lg:text-[28px] xl:text-[32px] font-semibold tracking-tight whitespace-normal text-center sm:whitespace-nowrap">
                                 Thank You for your interest!
                             </h2>
                         ) : (
                             <>
-                                <h2 className="font-jakarta text-[24px] lg:text-[28px] xl:text-[32px] font-semibold tracking-tight whitespace-nowrap">
+                                <h2 className="font-jakarta text-[20px] sm:text-[24px] lg:text-[28px] xl:text-[32px] font-semibold tracking-tight whitespace-normal text-center sm:whitespace-nowrap">
                                     Get Early Access
                                 </h2>
 
                                 <button
                                     onClick={() => setIsModalOpen(true)}
-                                    className="bg-white text-black font-jakarta font-bold text-[18px] lg:text-[20px] px-8 py-3 rounded-[12px] border-[3px] border-black transition-transform hover:-translate-y-1 active:translate-y-0 [box-shadow:4px_4px_0_var(--color-blue-accent)] hover:[box-shadow:6px_6px_0_var(--color-blue-accent)] active:[box-shadow:2px_2px_0_var(--color-blue-accent)] shrink-0"
+                                    className="bg-white text-black font-jakarta font-bold text-[16px] sm:text-[18px] lg:text-[20px] px-6 py-2 sm:px-8 sm:py-3 rounded-[8px] sm:rounded-[12px] border-[2px] sm:border-[3px] border-black transition-transform hover:-translate-y-1 active:translate-y-0 [box-shadow:3px_3px_0_var(--color-blue-accent)] sm:[box-shadow:4px_4px_0_var(--color-blue-accent)] hover:[box-shadow:6px_6px_0_var(--color-blue-accent)] active:[box-shadow:2px_2px_0_var(--color-blue-accent)] shrink-0"
                                 >
                                     Register
                                 </button>

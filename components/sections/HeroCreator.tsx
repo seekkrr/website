@@ -7,9 +7,9 @@ import cloudinaryLoader from "@/lib/cloudinaryLoader";
 
 export function HeroCreator() {
     return (
-        <section className="relative w-full bg-theme-beige pt-32 pb-8 px-6 md:px-12 lg:px-24 flex justify-center overflow-hidden">
+        <section className="relative w-full bg-theme-beige pt-32 pb-0 px-6 md:px-12 lg:px-24 flex justify-center overflow-hidden">
             {/* Main container with premium card aesthetic */}
-            <div className="relative w-full max-w-[1240px] mx-auto rounded-[32px] bg-theme-beige min-h-[500px] lg:min-h-[460px] lg:h-[460px] flex flex-col lg:flex-row items-center overflow-hidden">
+            <div className="relative w-full max-w-[1240px] mx-auto bg-theme-beige min-h-[500px] lg:min-h-[460px] lg:h-[460px] flex flex-col lg:flex-row items-center overflow-hidden">
 
                 {/* Background SVG border pattern (absolute positioned to fill the card) */}
                 <div className="absolute inset-0 z-0 pointer-events-none w-full h-full flex items-center justify-center">

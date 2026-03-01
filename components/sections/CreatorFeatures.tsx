@@ -28,12 +28,12 @@ export function CreatorFeatures() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="bg-transparent rounded-[32px] border-[2px] border-black flex flex-col items-center pt-10 px-6 pb-0 overflow-hidden h-[500px] lg:h-[650px] xl:h-[700px] [box-shadow:6px_6px_0_#FECD36]"
+                    className="bg-transparent rounded-[24px] xl:rounded-[32px] border-[2px] border-black flex flex-col items-center pt-8 px-4 sm:px-6 pb-0 overflow-hidden h-[400px] lg:h-[464px] xl:h-[504px] [box-shadow:6px_6px_0_#FECD36]"
                 >
-                    <h4 className="font-sans text-[22px] md:text-[24px] lg:text-[28px] font-medium text-center text-black leading-[1.3] mb-8 max-w-[80%] mt-4">
+                    <h4 className="font-sans text-[18px] md:text-[20px] lg:text-[24px] font-medium text-center text-black leading-[1.3] mb-4 xl:mb-6 max-w-[85%] mt-2 xl:mt-4">
                         They Navigate to all the Spots you mentioned using Maps
                     </h4>
-                    <div className="relative w-full flex-1 flex items-end justify-center rounded-b-[24px] overflow-hidden -mb-[2px]">
+                    <div className="relative w-full flex-[1] flex items-end justify-center rounded-b-[24px] overflow-hidden -mb-[2px]">
                         <div className="relative w-[90%] lg:w-[85%] h-[95%]">
                             <Image
                                 loader={cloudinaryLoader}
@@ -56,27 +56,27 @@ export function CreatorFeatures() {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: "-50px" }}
                         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-                        className="bg-transparent rounded-[32px] border-[2px] border-black flex flex-col md:flex-row items-center justify-between pt-10 pb-6 lg:py-10 px-8 xl:px-12 h-auto md:h-[350px] lg:h-[313px] xl:h-[338px] [box-shadow:6px_6px_0_#FECD36] gap-6 md:gap-8"
+                        className="bg-transparent rounded-[24px] xl:rounded-[32px] border-[2px] border-black flex flex-col sm:flex-row items-center justify-between pt-6 pb-4 lg:py-8 px-6 xl:px-8 h-auto sm:h-[240px] lg:h-[220px] xl:h-[240px] [box-shadow:6px_6px_0_#FECD36] gap-4 md:gap-6"
                     >
-                        <div className="relative w-full md:w-1/2 h-[220px] lg:h-[180px] xl:h-full flex items-center justify-center">
+                        <div className="relative w-full sm:w-1/2 h-[160px] sm:h-[180px] md:h-[200px] lg:h-[160px] xl:h-full flex items-center justify-center">
                             <Image
                                 loader={cloudinaryLoader}
                                 src={CloudinaryIcons.creatorBaat}
                                 alt="Ek Samay ki Baat Hai"
                                 fill
                                 className="object-contain"
-                                sizes="(max-w-width: 768px) 100vw, 33vw"
+                                sizes="(max-width: 768px) 100vw, 33vw"
                             />
                         </div>
-                        <div className="w-full md:w-1/2 flex items-center justify-center lg:justify-start pb-4 lg:pb-0 font-medium">
-                            <h4 className="font-sans text-[20px] md:text-[22px] lg:text-[26px] xl:text-[28px] text-center md:text-left text-black leading-[1.4] max-w-[90%] lg:max-w-[85%]">
+                        <div className="w-full sm:w-1/2 flex items-center justify-center lg:justify-start pb-2 lg:pb-0 font-medium">
+                            <h4 className="font-sans text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px] text-center sm:text-left text-black leading-[1.3] md:leading-[1.4] max-w-[95%] lg:max-w-[90%]">
                                 Learn about the stories and cultural notes about the destination
                             </h4>
                         </div>
                     </motion.div>
 
                     {/* Bottom Right Row - Two Square Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-auto md:h-[350px] lg:h-[313px] xl:h-[338px]">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 h-auto sm:h-[260px] lg:h-[220px] xl:h-[240px]">
 
                         {/* Bottom Left Square - Milestones */}
                         <motion.div
@@ -84,20 +84,20 @@ export function CreatorFeatures() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-50px" }}
                             transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-                            className="bg-transparent rounded-[32px] border-[2px] border-black flex flex-col items-center pt-10 px-6 pb-0 overflow-hidden h-[300px] md:h-full [box-shadow:6px_6px_0_#FECD36]"
+                            className="bg-transparent rounded-[24px] xl:rounded-[32px] border-[2px] border-black flex flex-col items-center pt-6 px-4 pb-0 overflow-hidden h-[240px] sm:h-full [box-shadow:6px_6px_0_#FECD36]"
                         >
-                            <h4 className="font-sans text-[20px] md:text-[22px] lg:text-[24px] font-medium text-center text-black leading-[1.3] mb-6 max-w-[85%] mt-2">
+                            <h4 className="font-sans text-[16px] md:text-[18px] lg:text-[20px] font-medium text-center text-black leading-[1.3] mb-4 max-w-[90%] mt-1 xl:mt-2">
                                 Solve and Complete Fun Milestones That You Add
                             </h4>
-                            <div className="relative w-full flex-1 flex items-end justify-center rounded-b-[24px] overflow-hidden -mb-[2px]">
-                                <div className="relative w-[90%] h-[95%]">
+                            <div className="relative w-full flex-[1] flex items-end justify-center rounded-b-[24px] overflow-hidden -mb-[2px]">
+                                <div className="relative w-[90%] lg:w-[85%] h-full">
                                     <Image
                                         loader={cloudinaryLoader}
                                         src={CloudinaryIcons.creatorMilestone}
                                         alt="Solve Milestones"
                                         fill
                                         className="object-contain object-bottom"
-                                        sizes="(max-w-width: 768px) 100vw, 25vw"
+                                        sizes="(max-width: 768px) 100vw, 25vw"
                                     />
                                 </div>
                             </div>
@@ -109,11 +109,11 @@ export function CreatorFeatures() {
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true, margin: "-50px" }}
                             transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-                            className="bg-[#8398FF] rounded-[24px] border-[2px] border-black flex flex-col items-center justify-center p-8 h-[300px] md:h-full [box-shadow:6px_6px_0_#FECD36]"
+                            className="bg-[#8398FF] rounded-[24px] xl:rounded-[32px] border-[2px] border-black flex flex-col items-center justify-center p-4 sm:p-6 h-[240px] sm:h-full [box-shadow:6px_6px_0_#FECD36]"
                         >
-                            <h4 className="font-handwriting text-center text-[#FFFFF3] leading-[1.2] flex flex-col gap-2">
-                                <span className="font-normal text-[26px] md:text-[30px] lg:text-[34px] xl:text-[38px] block mb-1">Don't Wait to</span>
-                                <span className="font-bold text-[32px] md:text-[36px] lg:text-[40px] xl:text-[46px] block">Give your Audience The Experience They Seek</span>
+                            <h4 className="font-handwriting text-center text-[#FFFFF3] leading-[1.2] flex flex-col gap-1">
+                                <span className="font-normal text-[20px] sm:text-[22px] md:text-[24px] lg:text-[26px] xl:text-[28px] block mb-0">Don't Wait to</span>
+                                <span className="font-bold text-[24px] sm:text-[26px] md:text-[28px] lg:text-[32px] xl:text-[36px] block px-1">Give your Audience The Experience They Seek</span>
                             </h4>
                         </motion.div>
                     </div>
