@@ -49,6 +49,14 @@ export const CloudinaryIcons = {
     creatorCheckpoints: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772361358/checkpoints_fqyjwb.png"),
     creatorBaat: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772361358/baat_frari6.png"),
     creatorMilestone: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772361358/friend_milestone_xqwshw.png"),
+
+    // About Page - Team Profiles
+    profileSudhanshu: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772307241/sudhanshu_mths0x.png"),
+    profileSarthak: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772307242/sarthak_ocbbnb.png"),
+    profileRishabh: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772307241/rishabh_ub8zrf.png"),
+
+    // About Page - Letters & Special Content
+    dearReaderLetter: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772307241/dear_reader_co3mu3.png"),
 };
 
 /**

@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { AnimatedSection } from "@/components/animations/AnimatedSection";
 import { siteConfig } from "@/lib/config/site";
+import { CloudinaryIcons } from "@/lib/config/assets";
+import { themeColors } from "@/lib/config/theme";
+import { profiles } from "@/lib/data/profiles";
 
 export const metadata: Metadata = {
     title: "About",
@@ -23,8 +26,6 @@ const SketchUnderline = ({ className }: { className?: string }) => (
     </svg>
 );
 
-import { profiles } from "@/lib/data/profiles";
-
 export default function AboutPage() {
     return (
         <div className="min-h-screen bg-theme-beige font-jakarta pt-32 pb-24 px-6 overflow-hidden">
@@ -36,14 +37,20 @@ export default function AboutPage() {
                 {/* Mission / Goal Box */}
                 <div className="border-[2px] border-black rounded-xl w-full max-w-[860px] mx-auto py-12 px-6 md:px-12 text-center bg-white shadow-sm mb-12">
                     <h2 className="text-xl md:text-2xl font-bold mb-6 text-black tracking-wide">Who are we?</h2>
-                    <p className="font-handwriting text-3xl md:text-[2.5rem] mb-12 [text-shadow:2px_2px_0_#FECD36]">
+                    <p
+                        className="font-handwriting text-3xl md:text-[2.5rem] mb-12 tracking-tight"
+                        style={{ textShadow: `2px 2px 0 ${themeColors.about.yellow}` }}
+                    >
                         Corporates and Solo Travellers
                     </p>
 
                     <h2 className="text-xl md:text-2xl font-bold mb-6 text-black tracking-wide">Our Goal</h2>
 
                     <div className="flex flex-col items-center gap-6">
-                        <p className="font-handwriting text-3xl md:text-[2.5rem] tracking-wide [text-shadow:2px_2px_0px_#8398FF]">
+                        <p
+                            className="font-handwriting text-3xl md:text-[2.5rem] tracking-wide"
+                            style={{ textShadow: `2px 2px 0px ${themeColors.about.blue}` }}
+                        >
                             To replace the{" "}
                             <span className="relative inline-block">
                                 Fear of Unknown
@@ -51,7 +58,10 @@ export default function AboutPage() {
                             </span>
                         </p>
 
-                        <p className="font-handwriting text-3xl md:text-[2.5rem] tracking-wide mt-2 [text-shadow:2px_2px_0px_#8398FF]">
+                        <p
+                            className="font-handwriting text-3xl md:text-[2.5rem] tracking-wide mt-2"
+                            style={{ textShadow: `2px 2px 0px ${themeColors.about.blue}` }}
+                        >
                             with the{" "}
                             <span className="relative inline-block">
                                 Thrill of Discovery
@@ -98,7 +108,7 @@ export default function AboutPage() {
                 <AnimatedSection className="-mt-10 mb-10 max-w-4xl mx-auto flex justify-center" delay={0.4}>
                     <div className="relative w-full max-w-[700px] aspect-[4/3] rounded-lg overflow-hidden flex justify-center items-center group">
                         <Image
-                            src="https://res.cloudinary.com/seekkrr/image/upload/v1772307241/dear_reader_co3mu3.png"
+                            src={CloudinaryIcons.dearReaderLetter}
                             alt="Letter to the Reader"
                             fill
                             sizes="(max-width: 768px) 100vw, 700px"
