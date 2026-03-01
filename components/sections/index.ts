@@ -9,3 +9,6 @@ export { FreedomSection } from "./FreedomSection";
 export { TheSeekKrrWay } from "./TheSeekKrrWay";
 export { TravelWithSeekKrr } from "./TravelWithSeekKrr";
 export { Footer } from "./Footer";
+export { HeroCreator } from "./HeroCreator";
+export { CreatorSteps } from "./CreatorSteps";
+export { CreatorFeatures } from "./CreatorFeatures";

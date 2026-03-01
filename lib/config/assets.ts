@@ -37,6 +37,18 @@ export const CloudinaryIcons = {
     route: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772219159/route_gfbbrj.png"),
     conversation: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772219160/conversation_dldupe.png"),
     seekkrrText: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772219159/seekkrr_text_qczfju.png"),
+
+    // Creator Portal Hero
+    creatorHero: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772362908/creator_hero_zclfoo.png"),
+
+    // Creator Portal Steps & Features
+    creatorBox1: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772361359/creator_box1_x4vilt.png"),
+    creatorBox2: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772361359/creator_box2_fz8zsd.png"),
+    creatorBox3: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772361359/creator_box3_xpzynh.png"),
+    creatorBox4: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772361358/creator_box4_a4nnz6.png"),
+    creatorCheckpoints: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772361358/checkpoints_fqyjwb.png"),
+    creatorBaat: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772361358/baat_frari6.png"),
+    creatorMilestone: enrichCloudinaryUrl("https://res.cloudinary.com/seekkrr/image/upload/v1772361358/friend_milestone_xqwshw.png"),
 };
 
 /**
