@@ -53,7 +53,7 @@ const BIRD_CARDS: BirdCard[] = [
 /* ------------------------------------------------------------------ */
 export function TravelWithSeekKrr() {
     return (
-        <section className="w-full bg-theme-beige overflow-hidden pt-6 pb-4 lg:pt-8 lg:pb-6 flex flex-col items-center justify-center">
+        <section className="w-full bg-theme-beige overflow-hidden flex flex-col items-center justify-center">
             <InjectBirdStyles />
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
