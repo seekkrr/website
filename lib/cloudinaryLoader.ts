@@ -29,7 +29,10 @@ export default function cloudinaryLoader({
     }
 
     // Otherwise, construct the URL using the project's cloud name
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "seekkrr";
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    if (!cloudName) {
+        throw new Error("Cloudinary cloud name is not configured. Please set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME.");
+    }
 
     // Clean up leading slashes from local paths
     const cleanSrc = src.replace(/^\/+/, "");
