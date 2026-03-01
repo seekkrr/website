@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { CloudinaryIcons } from "@/lib/config/assets";
 import cloudinaryLoader from "@/lib/cloudinaryLoader";
-import { RegisterModal } from "@/components/ui/RegisterModal";
+import { CreatorRegisterModal } from "@/components/ui/CreatorRegisterModal";
+import { clientState } from "@/lib/clientState";
 
 const steps = [
     {
@@ -28,13 +29,21 @@ const steps = [
 
 export function CreatorSteps() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isRegistered, setIsRegistered] = useState(false);
+
+    useEffect(() => {
+        if (clientState.get("creatorRegistered") === "true") {
+            setIsRegistered(true);
+        }
+    }, []);
 
     return (
         <section className="relative w-full bg-theme-beige px-4 md:px-8 lg:px-12 pb-12 lg:pb-20 pt-4 md:pt-6 flex flex-col items-center">
 
-            <RegisterModal
+            <CreatorRegisterModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
+                onSuccess={() => setIsRegistered(true)}
             />
 
             {/* CTA Pill */}
@@ -45,15 +54,23 @@ export function CreatorSteps() {
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 className="relative z-10 bg-black text-white rounded-[32px] sm:rounded-[40px] px-5 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 flex items-center justify-center gap-4 sm:gap-6 md:gap-10 mb-10 sm:mb-16 max-w-fit mx-auto shadow-2xl mt-0"
             >
-                <h2 className="font-jakarta text-[18px] sm:text-[24px] md:text-[28px] lg:text-[32px] font-semibold tracking-tight whitespace-nowrap pt-[2px]">
-                    Register Now &rarr;
-                </h2>
-                <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="bg-white text-black font-jakarta font-bold text-[14px] sm:text-[18px] lg:text-[20px] px-4 py-2 sm:px-8 sm:py-3 rounded-[8px] sm:rounded-[12px] border-[2px] sm:border-[3px] border-black transition-transform hover:-translate-y-1 active:translate-y-0 [box-shadow:3px_3px_0_var(--color-blue-accent)] sm:[box-shadow:4px_4px_0_var(--color-blue-accent)] hover:[box-shadow:4px_4px_0_var(--color-blue-accent)] sm:hover:[box-shadow:6px_6px_0_var(--color-blue-accent)] active:[box-shadow:2px_2px_0_var(--color-blue-accent)] shrink-0"
-                >
-                    Sign Up
-                </button>
+                {isRegistered ? (
+                    <h2 className="font-jakarta text-[18px] sm:text-[24px] lg:text-[28px] xl:text-[32px] font-semibold tracking-tight whitespace-normal text-center sm:whitespace-nowrap pt-[2px]">
+                        Thank You ! ✨
+                    </h2>
+                ) : (
+                    <>
+                        <h2 className="font-jakarta text-[18px] sm:text-[24px] md:text-[28px] lg:text-[32px] font-semibold tracking-tight whitespace-nowrap pt-[2px]">
+                            Register Now &rarr;
+                        </h2>
+                        <button
+                            onClick={() => setIsModalOpen(true)}
+                            className="bg-white text-black font-jakarta font-bold text-[14px] sm:text-[18px] lg:text-[20px] px-4 py-2 sm:px-8 sm:py-3 rounded-[8px] sm:rounded-[12px] border-[2px] sm:border-[3px] border-black transition-transform hover:-translate-y-1 active:translate-y-0 [box-shadow:3px_3px_0_var(--color-blue-accent)] sm:[box-shadow:4px_4px_0_var(--color-blue-accent)] hover:[box-shadow:4px_4px_0_var(--color-blue-accent)] sm:hover:[box-shadow:6px_6px_0_var(--color-blue-accent)] active:[box-shadow:2px_2px_0_var(--color-blue-accent)] shrink-0"
+                        >
+                            Sign Up
+                        </button>
+                    </>
+                )}
             </motion.div>
 
             {/* Header */}
@@ -76,7 +93,7 @@ export function CreatorSteps() {
             </div>
 
             {/* 4 Cards Grid */}
-             <div className="w-full max-w-[1240px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8 mx-auto px-0 sm:px-6 md:px-0">
+            <div className="w-full max-w-[1240px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8 mx-auto px-0 sm:px-6 md:px-0">
                 {steps.map((step, index) => (
                     <motion.div
                         key={index}
@@ -96,7 +113,7 @@ export function CreatorSteps() {
                                 alt={step.title}
                                 width={400}
                                 height={400}
-                                 className="w-full h-auto object-contain object-bottom sm:mt-auto sm:-mb-1"
+                                className="w-full h-auto object-contain object-bottom sm:mt-auto sm:-mb-1"
                                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                             />
                         </div>

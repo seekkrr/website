@@ -14,6 +14,14 @@ export interface RegisterInterestPayload {
     phone?: string;
 }
 
+export interface RegisterCreatorPayload {
+    name: string;
+    email: string;
+    phone?: string;
+    socialLinks: string[];
+}
+
+
 export interface SubmitQueryPayload {
     name: string;
     email: string;
@@ -92,5 +100,24 @@ export function submitQuery(
     return request<SubmitQueryResponse>("/api/queries", {
         method: "POST",
         body: JSON.stringify(payload),
+    });
+}
+
+/**
+ * Register creator interest (Mocked for now).
+ * MOCK POST /api/creator-register
+ */
+export async function registerCreator(
+    payload: RegisterCreatorPayload,
+): Promise<ApiResponse> {
+    // MOCK IMPLEMENTATION
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            console.log("Mock Creator Registration payload:", payload);
+            resolve({
+                success: true,
+                message: "Registration successful"
+            });
+        }, 1500); // simulate network request
     });
 }
