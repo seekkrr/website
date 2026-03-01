@@ -3,6 +3,7 @@ import { Inter, Outfit, Plus_Jakarta_Sans, Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { LenisProvider } from "@/components/animations/LenisProvider";
+import { ScrollToTop } from "@/components/animations/ScrollToTop";
 import { Navbar, Footer } from "@/components/sections";
 import { siteConfig } from "@/lib/config/site";
 import "@/styles/globals.css";
@@ -36,8 +37,7 @@ export const metadata: Metadata = {
     default: `${siteConfig.name} — ${siteConfig.tagline}`,
     template: `%s | ${siteConfig.name}`,
   },
-  description:
-    `${siteConfig.name} connects explorers with extraordinary quests and unforgettable experiences. Discover, create, and share adventures that push your boundaries.`,
+  description: `${siteConfig.name} connects explorers with extraordinary quests and unforgettable experiences. Discover, create, and share adventures that push your boundaries.`,
   keywords: [
     "adventure",
     "quests",
@@ -92,6 +92,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <LenisProvider>
+          <ScrollToTop />
           <Navbar />
           <main className="relative">{children}</main>
           <Footer />
