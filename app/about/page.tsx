@@ -51,7 +51,7 @@ export default function AboutPage() {
                             </span>
                         </p>
 
-                        <p className="font-handwriting text-3xl md:text-[2.5rem] tracking-wide mt-2" style={{ textShadow: "2px 2px 0px #8398FF" }}>
+                        <p className="font-handwriting text-3xl md:text-[2.5rem] tracking-wide mt-2 [text-shadow:2px_2px_0px_#8398FF]">
                             with the{" "}
                             <span className="relative inline-block">
                                 Thrill of Discovery
