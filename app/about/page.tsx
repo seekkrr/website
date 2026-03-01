@@ -43,7 +43,7 @@ export default function AboutPage() {
                     <h2 className="text-xl md:text-2xl font-bold mb-6 text-black tracking-wide">Our Goal</h2>
 
                     <div className="flex flex-col items-center gap-6">
-                        <p className="font-handwriting text-3xl md:text-[2.5rem] tracking-wide" style={{ textShadow: "2px 2px 0px #8398FF" }}>
+                        <p className="font-handwriting text-3xl md:text-[2.5rem] tracking-wide [text-shadow:2px_2px_0px_#8398FF]">
                             To replace the{" "}
                             <span className="relative inline-block">
                                 Fear of Unknown
