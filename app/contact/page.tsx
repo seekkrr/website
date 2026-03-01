@@ -133,7 +133,7 @@ export default function ContactUsPage() {
                                 <input
                                     id="name"
                                     type="text"
-                                    placeholder="Sudhanshu Rai"
+                                    placeholder="John Doe"
                                     className="w-full border-b border-gray-400 bg-transparent py-2 text-black placeholder:text-gray-300 focus:outline-none focus:border-black transition-colors"
                                     {...register("name")}
                                 />
