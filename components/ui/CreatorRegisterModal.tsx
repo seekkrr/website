@@ -77,6 +77,8 @@ interface FormData {
     socialLinks: string[];
 }
 
+type LinkStatus = "idle" | "verifying" | "success" | "error";
+
 // ── Component ──────────────────────────────────────────────────────────────
 
 export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegisterModalProps) {
@@ -87,8 +89,10 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
         socialLinks: [],
     });
     const [socialInput, setSocialInput] = useState("");
+    const [linkStatuses, setLinkStatuses] = useState<Record<number, LinkStatus>>({});
     const [errors, setErrors] = useState<FormErrors>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [verificationStep, setVerificationStep] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [apiError, setApiError] = useState<string | null>(null);
     const autoCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -102,8 +106,10 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
         setTimeout(() => {
             setFormData({ name: "", email: "", phone: "", socialLinks: [] });
             setSocialInput("");
+            setLinkStatuses({});
             setErrors({});
             setIsSuccess(false);
+            setVerificationStep(false);
             setApiError(null);
         }, 300);
     }, [onClose]);
@@ -178,10 +184,39 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
     };
 
     const removeSocialLink = (index: number) => {
+        if (isSubmitting) return; // Prevent removal during verification
         setFormData((prev) => ({
             ...prev,
             socialLinks: prev.socialLinks.filter((_, i) => i !== index),
         }));
+        setLinkStatuses((prev) => {
+            const next = { ...prev };
+            delete next[index];
+            return next;
+        });
+    };
+
+    const validateAllLinks = async (links: string[]) => {
+        setVerificationStep(true);
+        let allValid = true;
+
+        for (let i = 0; i < links.length; i++) {
+            setLinkStatuses((prev) => ({ ...prev, [i]: "verifying" }));
+
+            // Mock verification delay
+            await new Promise((resolve) => setTimeout(resolve, 800));
+
+            const isBroken = links[i].toLowerCase().includes("broken") || links[i].toLowerCase().includes("404");
+
+            if (!isBroken) {
+                setLinkStatuses((prev) => ({ ...prev, [i]: "success" }));
+            } else {
+                setLinkStatuses((prev) => ({ ...prev, [i]: "error" }));
+                allValid = false;
+            }
+        }
+
+        return allValid;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -215,6 +250,17 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
         setIsSubmitting(true);
         setApiError(null);
 
+        // Step 1: Verify all links
+        const linksOk = await validateAllLinks(sanitised.socialLinks);
+
+        if (!linksOk) {
+            setApiError("One or more links are broken or invalid. Please check and try again.");
+            setIsSubmitting(false);
+            setVerificationStep(false);
+            return;
+        }
+
+        // Step 2: Final Submission
         try {
             await registerCreator({
                 name: sanitised.name,
@@ -231,6 +277,7 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
             );
         } finally {
             setIsSubmitting(false);
+            setVerificationStep(false);
         }
     };
 
@@ -319,10 +366,11 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                                             placeholder="First Name + Last Name"
                                             value={formData.name}
                                             onChange={handleChange}
+                                            disabled={isSubmitting}
                                             className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.name
                                                 ? "border-red-600 focus:border-red-600"
                                                 : "border-black/80 focus:border-black"
-                                                }`}
+                                                } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                                         />
                                         {errors.name && (
                                             <p className="mt-1 text-[13px] text-red-700 font-medium tracking-tight">
@@ -346,10 +394,11 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                                             placeholder="abc@domain.com"
                                             value={formData.email}
                                             onChange={handleChange}
+                                            disabled={isSubmitting}
                                             className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.email
                                                 ? "border-red-600 focus:border-red-600"
                                                 : "border-black/80 focus:border-black"
-                                                }`}
+                                                } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                                         />
                                         {errors.email && (
                                             <p className="mt-1 text-[13px] text-red-700 font-medium tracking-tight">
@@ -373,10 +422,11 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                                             placeholder="+91 9875543210"
                                             value={formData.phone}
                                             onChange={handleChange}
+                                            disabled={isSubmitting}
                                             className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.phone
                                                 ? "border-red-600 focus:border-red-600"
                                                 : "border-black/80 focus:border-black"
-                                                }`}
+                                                } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                                         />
                                         {errors.phone && (
                                             <p className="mt-1 text-[13px] text-red-700 font-medium tracking-tight">
@@ -397,15 +447,38 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                                             className={`w-full px-4 py-2 bg-theme-beige border-2 rounded-lg flex flex-wrap gap-2 items-center transition-colors min-h-[50px] text-black ${errors.socialLinks
                                                 ? "border-red-600 focus-within:border-red-600"
                                                 : "border-black/80 focus-within:border-black"
-                                                }`}
+                                                } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                                         >
                                             {formData.socialLinks.map((link, i) => (
-                                                <span key={i} className="flex items-center gap-1.5 bg-white border border-black/30 rounded-full px-3 py-1 text-[14px] font-medium text-black">
+                                                <span
+                                                    key={i}
+                                                    className={`flex items-center gap-1.5 bg-white border rounded-full px-3 py-1 text-[14px] font-medium text-black transition-colors ${linkStatuses[i] === "success" ? "border-green-500 bg-green-50" :
+                                                        linkStatuses[i] === "error" ? "border-red-500 bg-red-50" :
+                                                            "border-black/30"
+                                                        }`}
+                                                >
+                                                    {linkStatuses[i] === "verifying" && (
+                                                        <svg className="animate-spin h-3 w-3 text-black/40" viewBox="0 0 24 24" fill="none">
+                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                                        </svg>
+                                                    )}
+                                                    {linkStatuses[i] === "success" && (
+                                                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" className="text-green-600">
+                                                            <path d="M13.3333 4L5.99996 11.3333L2.66663 8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                                                        </svg>
+                                                    )}
+                                                    {linkStatuses[i] === "error" && (
+                                                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" className="text-red-600">
+                                                            <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                                                        </svg>
+                                                    )}
                                                     {link}
                                                     <button
                                                         type="button"
                                                         onClick={() => removeSocialLink(i)}
-                                                        className="text-black/60 hover:text-black transition-colors flex items-center justify-center shrink-0 w-4 h-4 rounded-full"
+                                                        disabled={isSubmitting}
+                                                        className="text-black/60 hover:text-black transition-colors flex items-center justify-center shrink-0 w-4 h-4 rounded-full disabled:hidden"
                                                         aria-label="Remove link"
                                                     >
                                                         <svg width="10" height="10" viewBox="0 0 16 16" fill="none">
@@ -430,7 +503,8 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                                                 }}
                                                 onKeyDown={handleSocialInputKeyDown}
                                                 onBlur={addSocialLink} // add when they click away
-                                                className="flex-1 min-w-[150px] bg-transparent outline-none text-black placeholder:text-black/40 text-[15px]"
+                                                disabled={isSubmitting}
+                                                className="flex-1 min-w-[150px] bg-transparent outline-none text-black placeholder:text-black/40 text-[15px] disabled:hidden"
                                             />
                                         </div>
                                         {errors.socialLinks && (
@@ -475,7 +549,7 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                                                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                                                         />
                                                     </svg>
-                                                    Submitting…
+                                                    {verificationStep ? "Verifying Links…" : "Submitting…"}
                                                 </>
                                             ) : (
                                                 "Become A Creator"
