@@ -3,10 +3,16 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import { CloudinaryIcons } from "@/lib/config/assets";
 import cloudinaryLoader from "@/lib/cloudinaryLoader";
-import { CreatorRegisterModal } from "@/components/ui/CreatorRegisterModal";
 import { clientState } from "@/lib/clientState";
+
+// Dynamic import for CreatorRegisterModal - code split automatically
+const CreatorRegisterModal = dynamic(() => import("@/components/ui/CreatorRegisterModal").then(mod => ({ default: mod.CreatorRegisterModal })), {
+    loading: () => null,
+    ssr: false,
+});
 
 const steps = [
     {
@@ -63,12 +69,28 @@ export function CreatorSteps() {
                         <h2 className="font-jakarta text-[18px] sm:text-[24px] md:text-[28px] lg:text-[32px] font-semibold tracking-tight whitespace-nowrap pt-[2px]">
                             Register Now &rarr;
                         </h2>
-                        <button
+                        <motion.button
                             onClick={() => setIsModalOpen(true)}
-                            className="bg-white text-black font-jakarta font-bold text-[14px] sm:text-[18px] lg:text-[20px] px-4 py-2 sm:px-8 sm:py-3 rounded-[8px] sm:rounded-[12px] border-[2px] sm:border-[3px] border-black transition-transform hover:-translate-y-1 active:translate-y-0 [box-shadow:3px_3px_0_var(--color-blue-accent)] sm:[box-shadow:4px_4px_0_var(--color-blue-accent)] hover:[box-shadow:4px_4px_0_var(--color-blue-accent)] sm:hover:[box-shadow:6px_6px_0_var(--color-blue-accent)] active:[box-shadow:2px_2px_0_var(--color-blue-accent)] shrink-0"
+                            className="bg-white text-black font-jakarta font-bold text-[14px] sm:text-[18px] lg:text-[20px] px-4 py-2 sm:px-8 sm:py-3 rounded-[8px] sm:rounded-[12px] border-[2px] sm:border-[3px] border-black shrink-0"
+                            whileHover={{
+                                y: -4,
+                                boxShadow: "6px 6px 0 var(--color-blue-accent)",
+                            }}
+                            whileTap={{
+                                y: 0,
+                                boxShadow: "2px 2px 0 var(--color-blue-accent)",
+                            }}
+                            style={{
+                                boxShadow: "3px 3px 0 var(--color-blue-accent)",
+                            }}
+                            transition={{
+                                type: "spring",
+                                stiffness: 300,
+                                damping: 20,
+                            }}
                         >
                             Sign Up
-                        </button>
+                        </motion.button>
                     </>
                 )}
             </motion.div>
@@ -99,9 +121,19 @@ export function CreatorSteps() {
                         key={index}
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
+                        whileHover={{
+                            y: -8,
+                            boxShadow: "0 16px 32px rgba(0,0,0,0.08)",
+                            transition: {
+                                type: "spring",
+                                stiffness: 350,
+                                damping: 25,
+                            },
+                        }}
+                        whileTap={{ scale: 0.98 }}
                         viewport={{ once: true, margin: "-50px" }}
                         transition={{ duration: 0.6, delay: index * 0.15, ease: "easeOut" }}
-                        className="bg-transparent rounded-[24px] border-[1.5px] border-black flex flex-col justify-between items-center pt-5 sm:pt-6 lg:pt-8 pb-0 overflow-hidden h-[260px] sm:h-full relative transition-shadow hover:shadow-md"
+                        className="bg-white rounded-[24px] border-[1.5px] border-black flex flex-col justify-between items-center pt-5 sm:pt-6 lg:pt-8 pb-0 overflow-hidden h-[260px] sm:h-full relative cursor-pointer shadow-sm hover:shadow-lg transition-shadow"
                     >
                         <h4 className="font-sans text-[15px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-medium text-center text-black leading-[1.25] mb-2 sm:mb-4 lg:mb-6 max-w-[95%] px-2 sm:px-4 lg:px-6">
                             {step.title}

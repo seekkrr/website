@@ -3,9 +3,16 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { CloudinaryIcons } from "@/lib/config/assets";
-import { RegisterModal } from "@/components/ui/RegisterModal";
 import { clientState } from "@/lib/clientState";
+import { imageLoadingAnimation } from "@/lib/utils/imageOptimization";
+
+// Dynamic import for RegisterModal - code split automatically
+const RegisterModal = dynamic(() => import("@/components/ui/RegisterModal").then(mod => ({ default: mod.RegisterModal })), {
+    loading: () => null,
+    ssr: false,
+});
 
 const FloatingIcon = ({
     src,
@@ -24,18 +31,31 @@ const FloatingIcon = ({
             animate={{
                 y: [0, -15, 0],
             }}
+            whileHover={{
+                scale: 1.08,
+                filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.1))",
+            }}
+            whileTap={{ scale: 0.96 }}
             transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
+                y: {
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                },
+                scale: {
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 10,
+                },
             }}
         >
-            <div className="relative w-full h-full">
+            <div className="relative w-full h-full pointer-events-none">
                 <Image
                     src={src}
                     alt={alt}
                     fill
                     className="object-contain"
+                    loading="lazy"
                 />
             </div>
         </motion.div>
@@ -112,12 +132,28 @@ export function EarlyAccess() {
                                     Get Early Access
                                 </h2>
 
-                                <button
+                                <motion.button
                                     onClick={() => setIsModalOpen(true)}
-                                    className="bg-white text-black font-jakarta font-bold text-[16px] sm:text-[18px] lg:text-[20px] px-6 py-2 sm:px-8 sm:py-3 rounded-[8px] sm:rounded-[12px] border-[2px] sm:border-[3px] border-black transition-transform hover:-translate-y-1 active:translate-y-0 [box-shadow:3px_3px_0_var(--color-blue-accent)] sm:[box-shadow:4px_4px_0_var(--color-blue-accent)] hover:[box-shadow:6px_6px_0_var(--color-blue-accent)] active:[box-shadow:2px_2px_0_var(--color-blue-accent)] shrink-0"
+                                    className="bg-white text-black font-jakarta font-bold text-[16px] sm:text-[18px] lg:text-[20px] px-6 py-2 sm:px-8 sm:py-3 rounded-[8px] sm:rounded-[12px] border-[2px] sm:border-[3px] border-black shrink-0"
+                                    whileHover={{
+                                        y: -4,
+                                        boxShadow: "6px 6px 0 var(--color-blue-accent)",
+                                    }}
+                                    whileTap={{
+                                        y: 0,
+                                        boxShadow: "2px 2px 0 var(--color-blue-accent)",
+                                    }}
+                                    style={{
+                                        boxShadow: "3px 3px 0 var(--color-blue-accent)",
+                                    }}
+                                    transition={{
+                                        type: "spring",
+                                        stiffness: 300,
+                                        damping: 20,
+                                    }}
                                 >
                                     Register
-                                </button>
+                                </motion.button>
                             </>
                         )}
                     </motion.div>

@@ -1,45 +1,68 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { z } from "zod";
 import { registerCreator } from "@/lib/api";
 import { clientState } from "@/lib/clientState";
 import { siteConfig } from "@/lib/config/site";
-import { animationDefaults, modalDefaults } from "@/lib/config/theme";
+
+// ── Constants ──────────────────────────────────────────────────────────────
+
+const AUTO_CLOSE_DELAY_MS = 6_000;
+
+// ── Sanitisation ───────────────────────────────────────────────────────────
+// Strips HTML / script tags to prevent XSS when the value is ever rendered
+// or forwarded. This runs *before* zod's own validations via `.transform`.
+
+const stripTags = (v: string) => v.replace(/[<>]/g, "");
 
 // ── Zod Schema ─────────────────────────────────────────────────────────────
 
 const registerSchema = z.object({
     name: z
         .string()
-        .min(1, "Name is required")
-        .min(2, "Name must be at least 2 characters")
-        .max(100, "Name must be under 100 characters")
-        .regex(
-            /^[\p{L}\p{M}'\-\s.]+$/u,
-            "Name can only contain letters, spaces, hyphens, and apostrophes",
+        .transform((v) => stripTags(v).trim())
+        .pipe(
+            z
+                .string()
+                .min(1, "Name is required")
+                .min(2, "Name must be at least 2 characters")
+                .max(100, "Name must be under 100 characters")
+                .regex(
+                    /^[\p{L}\p{M}'\-\s.]+$/u,
+                    "Name can only contain letters, spaces, hyphens, and apostrophes",
+                ),
         ),
     email: z
         .string()
-        .min(1, "Email is required")
-        .email("Enter a valid email address")
-        .max(254, "Email is too long"),
+        .transform((v) => stripTags(v).trim().toLowerCase())
+        .pipe(
+            z
+                .string()
+                .min(1, "Email is required")
+                .email("Enter a valid email address")
+                .max(254, "Email is too long"),
+        ),
     phone: z
         .string()
-        .optional()
-        .refine((val) => !val || /^\+?\d{9,15}$/.test(val), {
-            message: "Enter a valid phone number",
-        }),
+        .transform((v) => stripTags(v).trim())
+        .pipe(
+            z
+                .string()
+                .regex(
+                    /^$|^\+?\d[\d\s\-()]{7,18}\d$/,
+                    "Enter a valid phone number (e.g. +91 9875543210)",
+                ),
+        ),
     socialLinks: z
-        .array(z.string().url("Please enter valid URLs"))
-        .min(1, "Please provide at least one social media link")
-        .max(5, "Maximum 5 social media links allowed"),
+        .array(
+            z.string().transform((v) => stripTags(v).trim()),
+        )
+        .min(1, "Please provide at least one social media link"),
 });
 
-type RegisterFormValues = z.infer<typeof registerSchema>;
+type FormErrors = Partial<Record<keyof z.input<typeof registerSchema> | "socialInput", string>>;
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -49,36 +72,32 @@ interface CreatorRegisterModalProps {
     onSuccess?: () => void;
 }
 
+interface FormData {
+    name: string;
+    email: string;
+    phone: string;
+    socialLinks: string[];
+}
+
 type LinkStatus = "idle" | "verifying" | "success" | "error";
 
 // ── Component ──────────────────────────────────────────────────────────────
 
 export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegisterModalProps) {
-    const {
-        register,
-        handleSubmit,
-        watch,
-        reset,
-        formState: { errors, isSubmitting },
-        setValue,
-    } = useForm<RegisterFormValues>({
-        resolver: zodResolver(registerSchema),
-        defaultValues: {
-            name: "",
-            email: "",
-            phone: "",
-            socialLinks: [],
-        },
+    const [formData, setFormData] = useState<FormData>({
+        name: "",
+        email: "",
+        phone: "",
+        socialLinks: [],
     });
-
     const [socialInput, setSocialInput] = useState("");
     const [linkStatuses, setLinkStatuses] = useState<Record<number, LinkStatus>>({});
+    const [errors, setErrors] = useState<FormErrors>({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [verificationStep, setVerificationStep] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
-    const [isVerifying, setIsVerifying] = useState(false);
     const [apiError, setApiError] = useState<string | null>(null);
-    const [isCheckingState, setIsCheckingState] = useState(true);
     const autoCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const socialLinks = watch("socialLinks");
 
     // ── Handlers ─────────────────────────────────────────────────────────
 
@@ -87,28 +106,91 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
         onClose();
         // Reset after exit animation completes
         setTimeout(() => {
-            reset();
+            setFormData({ name: "", email: "", phone: "", socialLinks: [] });
             setSocialInput("");
             setLinkStatuses({});
+            setErrors({});
             setIsSuccess(false);
-            setIsVerifying(false);
+            setVerificationStep(false);
             setApiError(null);
-        }, animationDefaults.normal);
-    }, [onClose, reset]);
+        }, 300);
+    }, [onClose]);
 
-    const addSocialLink = useCallback(() => {
-        const link = socialInput.trim();
-        if (link) {
-            setValue("socialLinks", [...socialLinks, link]);
-            setSocialInput("");
+    // ── Auto-close on success ────────────────────────────────────────────
+
+    useEffect(() => {
+        if (isSuccess) {
+            autoCloseTimer.current = setTimeout(() => {
+                handleClose();
+            }, AUTO_CLOSE_DELAY_MS);
         }
-    }, [socialInput, socialLinks, setValue]);
+        return () => {
+            if (autoCloseTimer.current) clearTimeout(autoCloseTimer.current);
+        };
+    }, [isSuccess, handleClose]);
+
+    // ── Escape key ───────────────────────────────────────────────────────
+
+    useEffect(() => {
+        if (!isOpen) return;
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") handleClose();
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [isOpen, handleClose]);
+
+    // ── Lock body scroll while open ──────────────────────────────────────
+
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [isOpen]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+        // Clear field error on change
+        if (errors[name as keyof FormErrors]) {
+            setErrors((prev) => ({ ...prev, [name]: undefined }));
+        }
+        if (apiError) setApiError(null);
+    };
+
+    const handleSocialInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter" || e.key === ",") {
+            e.preventDefault();
+            addSocialLink();
+        }
+    };
+
+    const addSocialLink = () => {
+        const link = socialInput.trim();
+        // Check array bounds / empty so we don't spam empty
+        if (link) {
+            setFormData((prev) => ({
+                ...prev,
+                socialLinks: [...prev.socialLinks, link],
+            }));
+            setSocialInput("");
+            if (errors.socialLinks) {
+                setErrors((prev) => ({ ...prev, socialLinks: undefined }));
+            }
+        }
+    };
 
     const removeSocialLink = (index: number) => {
-        setValue(
-            "socialLinks",
-            socialLinks.filter((_, i) => i !== index),
-        );
+        if (isSubmitting) return; // Prevent removal during verification
+        setFormData((prev) => ({
+            ...prev,
+            socialLinks: prev.socialLinks.filter((_, i) => i !== index),
+        }));
         setLinkStatuses((prev) => {
             const next = { ...prev };
             delete next[index];
@@ -116,23 +198,18 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
         });
     };
 
-    const handleSocialKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter" || e.key === ",") {
-            e.preventDefault();
-            addSocialLink();
-        }
-    };
-
     const validateAllLinks = async (links: string[]) => {
-        setIsVerifying(true);
+        setVerificationStep(true);
         let allValid = true;
 
         for (let i = 0; i < links.length; i++) {
             setLinkStatuses((prev) => ({ ...prev, [i]: "verifying" }));
+
             // Mock verification delay
             await new Promise((resolve) => setTimeout(resolve, 800));
 
             const isBroken = links[i].toLowerCase().includes("broken") || links[i].toLowerCase().includes("404");
+
             if (!isBroken) {
                 setLinkStatuses((prev) => ({ ...prev, [i]: "success" }));
             } else {
@@ -144,37 +221,65 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
         return allValid;
     };
 
-    const onSubmit = async (data: RegisterFormValues) => {
-        setApiError(null);
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
 
-        // Verify links before submission
-        const linksOk = await validateAllLinks(data.socialLinks);
-        if (!linksOk) {
-            setApiError("One or more links are broken or invalid. Please check and try again.");
-            setIsVerifying(false);
+        // If they have text in the social input but haven't hit enter, add it automatically
+        let currentData = { ...formData };
+        if (socialInput.trim()) {
+            currentData.socialLinks = [...currentData.socialLinks, socialInput.trim()];
+            setSocialInput("");
+            setFormData(currentData);
+        }
+
+        const result = registerSchema.safeParse(currentData);
+
+        if (!result.success) {
+            // Map zod issues ⇒ per-field error messages
+            const fieldErrors: FormErrors = {};
+            for (const issue of result.error.issues) {
+                const field = issue.path[0] as keyof FormErrors;
+                if (!fieldErrors[field]) {
+                    fieldErrors[field] = issue.message;
+                }
+            }
+            setErrors(fieldErrors);
             return;
         }
 
+        const sanitised = result.data;
+
+        setIsSubmitting(true);
+        setApiError(null);
+
+        // Step 1: Verify all links
+        const linksOk = await validateAllLinks(sanitised.socialLinks);
+
+        if (!linksOk) {
+            const errorMsg = "One or more links are broken or invalid. Please check and try again.";
+            setApiError(errorMsg);
+            setIsSubmitting(false);
+            setVerificationStep(false);
+            return;
+        }
+
+        // Step 2: Final Submission
         try {
-            await registerCreator({
-                name: data.name,
-                email: data.email,
-                ...(data.phone && { phone: data.phone }),
-                socialLinks: data.socialLinks,
+            const response = await registerCreator({
+                name: sanitised.name,
+                email: sanitised.email,
+                ...(sanitised.phone && { phone: sanitised.phone }),
+                socialLinks: sanitised.socialLinks,
             });
-            clientState.set("creatorRegistered", "true", 365);
+            clientState.set("creatorRegistered", "true", 365); // Expire in 1 year
             setIsSuccess(true);
             onSuccess?.();
-
-            autoCloseTimer.current = setTimeout(() => {
-                handleClose();
-            }, modalDefaults.autoCloseFast);
         } catch (err) {
-            setApiError(
-                err instanceof Error ? err.message : "Something went wrong. Please try again.",
-            );
+            const errorMsg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+            setApiError(errorMsg);
         } finally {
-            setIsVerifying(false);
+            setIsSubmitting(false);
+            setVerificationStep(false);
         }
     };
 
@@ -188,7 +293,7 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: animationDefaults.normal / 1000 }}
+                    transition={{ duration: 0.25 }}
                 >
                     {/* Backdrop */}
                     <motion.div
@@ -205,11 +310,7 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                         initial={{ opacity: 0, scale: 0.9, y: 30 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 30 }}
-                        transition={{
-                            type: "spring",
-                            damping: animationDefaults.spring.damping,
-                            stiffness: animationDefaults.spring.stiffness,
-                        }}
+                        transition={{ type: "spring", damping: 25, stiffness: 300 }}
                         onClick={(e) => e.stopPropagation()}
                         role="dialog"
                         aria-modal="true"
@@ -220,7 +321,6 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                             onClick={handleClose}
                             className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full border-2 border-black/60 text-black/70 hover:text-black hover:border-black transition-colors"
                             aria-label="Close modal"
-                            disabled={isSubmitting}
                         >
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                 <path
@@ -237,12 +337,12 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                                 /* ── Registration Form ──────────────────────────────── */
                                 <motion.form
                                     key="form"
-                                    onSubmit={handleSubmit(onSubmit)}
+                                    onSubmit={handleSubmit}
                                     noValidate
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -10 }}
-                                    transition={{ duration: animationDefaults.fast / 1000 }}
+                                    transition={{ duration: 0.2 }}
                                 >
                                     {/* Heading */}
                                     <h2 className="text-center text-[22px] sm:text-[26px] font-bold leading-tight text-black mb-7">
@@ -255,86 +355,102 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
 
                                     {/* Name Field */}
                                     <div className="mb-4">
-                                        <label htmlFor="name" className="block text-[15px] font-semibold text-black mb-1.5">
+                                        <label
+                                            htmlFor="register-name"
+                                            className="block text-[15px] font-semibold text-black mb-1.5"
+                                        >
                                             Name<span className="text-red-700">*</span>
                                         </label>
                                         <input
-                                            id="name"
+                                            id="register-name"
+                                            name="name"
                                             type="text"
                                             placeholder="First Name + Last Name"
-                                            className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${
-                                                errors.name
-                                                    ? "border-red-600 focus:border-red-600"
-                                                    : "border-black/80 focus:border-black"
-                                            } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
-                                            {...register("name")}
+                                            value={formData.name}
+                                            onChange={handleChange}
                                             disabled={isSubmitting}
+                                            className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${
+                                                errors.name ? "border-red-600 focus:border-red-600" : "border-black/80 focus:border-black"
+                                            } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                                         />
                                         {errors.name && (
                                             <p className="mt-1 text-[13px] text-red-700 font-medium tracking-tight">
-                                                {errors.name.message}
+                                                {errors.name}
                                             </p>
                                         )}
                                     </div>
 
                                     {/* Email Field */}
                                     <div className="mb-4">
-                                        <label htmlFor="email" className="block text-[15px] font-semibold text-black mb-1.5">
+                                        <label
+                                            htmlFor="register-email"
+                                            className="block text-[15px] font-semibold text-black mb-1.5"
+                                        >
                                             Email<span className="text-red-700">*</span>
                                         </label>
                                         <input
-                                            id="email"
+                                            id="register-email"
+                                            name="email"
                                             type="email"
                                             placeholder="abc@domain.com"
-                                            className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${
-                                                errors.email
-                                                    ? "border-red-600 focus:border-red-600"
-                                                    : "border-black/80 focus:border-black"
-                                            } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
-                                            {...register("email")}
+                                            value={formData.email}
+                                            onChange={handleChange}
                                             disabled={isSubmitting}
+                                            className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${
+                                                errors.email ? "border-red-600 focus:border-red-600" : "border-black/80 focus:border-black"
+                                            } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                                         />
                                         {errors.email && (
                                             <p className="mt-1 text-[13px] text-red-700 font-medium tracking-tight">
-                                                {errors.email.message}
+                                                {errors.email}
                                             </p>
                                         )}
                                     </div>
 
                                     {/* Phone Field */}
                                     <div className="mb-4">
-                                        <label htmlFor="phone" className="block text-[15px] font-semibold text-black mb-1.5">
-                                            Phone (optional)
+                                        <label
+                                            htmlFor="register-phone"
+                                            className="block text-[15px] font-semibold text-black mb-1.5"
+                                        >
+                                            Phone No. <span className="font-normal text-black/60">(Optional)</span>
                                         </label>
                                         <input
-                                            id="phone"
+                                            id="register-phone"
+                                            name="phone"
                                             type="tel"
-                                            placeholder="+91 9876543210"
-                                            className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${
-                                                errors.phone
-                                                    ? "border-red-600 focus:border-red-600"
-                                                    : "border-black/80 focus:border-black"
-                                            } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
-                                            {...register("phone")}
+                                            placeholder="+91 9875543210"
+                                            value={formData.phone}
+                                            onChange={handleChange}
                                             disabled={isSubmitting}
+                                            className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${
+                                                errors.phone ? "border-red-600 focus:border-red-600" : "border-black/80 focus:border-black"
+                                            } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                                         />
                                         {errors.phone && (
                                             <p className="mt-1 text-[13px] text-red-700 font-medium tracking-tight">
-                                                {errors.phone.message}
+                                                {errors.phone}
                                             </p>
                                         )}
                                     </div>
 
                                     {/* Social Links Field */}
-                                    <div className="mb-5">
-                                        <label htmlFor="social" className="block text-[15px] font-semibold text-black mb-2.5">
-                                            Social Media<span className="text-red-700">*</span>
+                                    <div className="mb-6">
+                                        <label
+                                            htmlFor="register-social"
+                                            className="block text-[15px] font-semibold text-black mb-1.5"
+                                        >
+                                            Link to Instagram/ Youtube page<span className="text-red-700">*</span>
                                         </label>
-                                        <div className="flex flex-wrap gap-2 p-3 bg-theme-beige border-2 border-black/80 rounded-lg focus-within:border-black transition-colors">
-                                            {socialLinks.map((link, i) => (
+                                        <div
+                                            className={`w-full px-4 py-2 bg-theme-beige border-2 rounded-lg flex flex-wrap gap-2 items-center transition-colors min-h-[50px] text-black ${
+                                                errors.socialLinks ? "border-red-600 focus-within:border-red-600" : "border-black/80 focus-within:border-black"
+                                            } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
+                                        >
+                                            {formData.socialLinks.map((link, i) => (
                                                 <span
                                                     key={i}
-                                                    className={`flex items-center gap-1.5 bg-white border rounded-full px-3 py-1 text-[13px] font-medium text-black transition-colors ${
+                                                    className={`flex items-center gap-1.5 bg-white border rounded-full px-3 py-1 text-[14px] font-medium text-black transition-colors ${
                                                         linkStatuses[i] === "success"
                                                             ? "border-green-500 bg-green-50"
                                                             : linkStatuses[i] === "error"
@@ -343,7 +459,7 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                                                     }`}
                                                 >
                                                     {linkStatuses[i] === "verifying" && (
-                                                        <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
+                                                        <svg className="animate-spin h-3 w-3 text-black/40" viewBox="0 0 24 24" fill="none">
                                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                                                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                                                         </svg>
@@ -358,12 +474,12 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                                                             <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                                                         </svg>
                                                     )}
-                                                    <span className="truncate max-w-[120px]">{link}</span>
+                                                    {link}
                                                     <button
                                                         type="button"
                                                         onClick={() => removeSocialLink(i)}
                                                         disabled={isSubmitting}
-                                                        className="text-black/60 hover:text-black transition-colors disabled:hidden"
+                                                        className="text-black/60 hover:text-black transition-colors flex items-center justify-center shrink-0 w-4 h-4 rounded-full disabled:hidden"
                                                         aria-label="Remove link"
                                                     >
                                                         <svg width="10" height="10" viewBox="0 0 16 16" fill="none">
@@ -373,20 +489,23 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                                                 </span>
                                             ))}
                                             <input
-                                                id="social"
-                                                type="url"
-                                                placeholder={socialLinks.length === 0 ? "Add social media URLs" : "Add another..."}
+                                                id="register-social"
+                                                type="text"
+                                                placeholder={formData.socialLinks.length === 0 ? "Add your social media pages" : ""}
                                                 value={socialInput}
-                                                onChange={(e) => setSocialInput(e.target.value)}
-                                                onKeyDown={handleSocialKeyDown}
+                                                onChange={(e) => {
+                                                    setSocialInput(e.target.value);
+                                                    if (errors.socialLinks) setErrors((prev) => ({ ...prev, socialLinks: undefined }));
+                                                }}
+                                                onKeyDown={handleSocialInputKeyDown}
                                                 onBlur={addSocialLink}
-                                                className="flex-1 min-w-[150px] bg-transparent outline-none text-black placeholder:text-black/40 text-[15px] disabled:hidden"
                                                 disabled={isSubmitting}
+                                                className="flex-1 min-w-[150px] bg-transparent outline-none text-black placeholder:text-black/40 text-[15px] disabled:hidden"
                                             />
                                         </div>
                                         {errors.socialLinks && (
                                             <p className="mt-1 text-[13px] text-red-700 font-medium tracking-tight">
-                                                {errors.socialLinks.message}
+                                                {errors.socialLinks}
                                             </p>
                                         )}
                                     </div>
@@ -402,7 +521,7 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                                     <div className="flex justify-center">
                                         <button
                                             type="submit"
-                                            disabled={isSubmitting || isVerifying}
+                                            disabled={isSubmitting}
                                             className="bg-black text-white font-jakarta font-bold text-[17px] px-10 py-3.5 rounded-full border-2 border-black transition-all hover:bg-black/90 active:scale-[0.97] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                         >
                                             {isSubmitting ? (
@@ -411,7 +530,7 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                                                     </svg>
-                                                    {isVerifying ? "Verifying..." : "Submitting..."}
+                                                    {verificationStep ? "Verifying Links..." : "Submitting..."}
                                                 </>
                                             ) : (
                                                 "Become A Creator"
@@ -427,12 +546,12 @@ export function CreatorRegisterModal({ isOpen, onClose, onSuccess }: CreatorRegi
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95 }}
-                                    transition={{ duration: animationDefaults.normal / 1000 }}
+                                    transition={{ duration: 0.3 }}
                                 >
                                     <h2 className="text-[22px] sm:text-[26px] font-bold leading-tight text-black mb-8 px-4">
                                         Thank you for your interest.
                                         <br /> We will revert to you on email
-                                        <br /> within 2 business days
+                                        <br /> soon
                                     </h2>
 
                                     <button
