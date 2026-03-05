@@ -4,7 +4,7 @@ export const siteConfig = {
     address: "HIG-29A, Kaushambi Kunj, Kalindipuram, Rajrooppur, Allahabad",
     jurisdiction: "Uttar Pradesh, India",
     disputeLocation: "Allahabad, Uttar Pradesh, India",
-    email: "seekkrr@gmail.com",
+    email: "support@seekkrr.com",
     url: "https://www.seekkrr.com",
     termsLastUpdated: "February 23, 2026",
     privacyLastUpdated: "February 9, 2026",

@@ -6,6 +6,7 @@ import { z } from "zod";
 import { registerCreator } from "@/lib/api";
 import { clientState } from "@/lib/clientState";
 import { siteConfig } from "@/lib/config/site";
+import { useClientStatePolling } from "@/lib/hooks/useClientStatePolling";
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -101,9 +102,14 @@ export function CreatorRegisterModal({
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [verificationStep, setVerificationStep] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const { hasState: persistedSuccess, forceCheck } = useClientStatePolling("creatorRegistered");
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const isSuccess = persistedSuccess || submitSuccess;
   const [apiError, setApiError] = useState<string | null>(null);
   const autoCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // ── Persistence & Multi-submission ──────────────────────────────────
+  // Handled by the useClientStatePolling hook above.
 
   // ── Handlers ─────────────────────────────────────────────────────────
 
@@ -116,7 +122,7 @@ export function CreatorRegisterModal({
       setSocialInput("");
       setLinkStatuses({});
       setErrors({});
-      setIsSuccess(false);
+      setSubmitSuccess(false);
       setVerificationStep(false);
       setApiError(null);
     }, 300);
@@ -285,8 +291,9 @@ export function CreatorRegisterModal({
         ...(sanitised.phone && { phone: sanitised.phone }),
         socialLinks: sanitised.socialLinks,
       });
-      clientState.set("creatorRegistered", "true", 365); // Expire in 1 year
-      setIsSuccess(true);
+      clientState.set("creatorRegistered", "true", 10 / 1440);
+      forceCheck(); // Immediately sync state without waiting for next poll
+      setSubmitSuccess(true);
       onSuccess?.();
     } catch (err) {
       const errorMsg =
@@ -386,11 +393,10 @@ export function CreatorRegisterModal({
                       value={formData.name}
                       onChange={handleChange}
                       disabled={isSubmitting}
-                      className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${
-                        errors.name
-                          ? "border-red-600 focus:border-red-600"
-                          : "border-black/80 focus:border-black"
-                      } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
+                      className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.name
+                        ? "border-red-600 focus:border-red-600"
+                        : "border-black/80 focus:border-black"
+                        } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                     />
                     {errors.name && (
                       <p className="mt-1 text-[13px] text-red-700 font-medium tracking-tight">
@@ -415,11 +421,10 @@ export function CreatorRegisterModal({
                       value={formData.email}
                       onChange={handleChange}
                       disabled={isSubmitting}
-                      className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${
-                        errors.email
-                          ? "border-red-600 focus:border-red-600"
-                          : "border-black/80 focus:border-black"
-                      } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
+                      className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.email
+                        ? "border-red-600 focus:border-red-600"
+                        : "border-black/80 focus:border-black"
+                        } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                     />
                     {errors.email && (
                       <p className="mt-1 text-[13px] text-red-700 font-medium tracking-tight">
@@ -447,11 +452,10 @@ export function CreatorRegisterModal({
                       value={formData.phone}
                       onChange={handleChange}
                       disabled={isSubmitting}
-                      className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${
-                        errors.phone
-                          ? "border-red-600 focus:border-red-600"
-                          : "border-black/80 focus:border-black"
-                      } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
+                      className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.phone
+                        ? "border-red-600 focus:border-red-600"
+                        : "border-black/80 focus:border-black"
+                        } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                     />
                     {errors.phone && (
                       <p className="mt-1 text-[13px] text-red-700 font-medium tracking-tight">
@@ -470,22 +474,20 @@ export function CreatorRegisterModal({
                       <span className="text-red-700">*</span>
                     </label>
                     <div
-                      className={`w-full px-4 py-2 bg-theme-beige border-2 rounded-lg flex flex-wrap gap-2 items-center transition-colors min-h-[50px] text-black ${
-                        errors.socialLinks
-                          ? "border-red-600 focus-within:border-red-600"
-                          : "border-black/80 focus-within:border-black"
-                      } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
+                      className={`w-full px-4 py-2 bg-theme-beige border-2 rounded-lg flex flex-wrap gap-2 items-center transition-colors min-h-[50px] text-black ${errors.socialLinks
+                        ? "border-red-600 focus-within:border-red-600"
+                        : "border-black/80 focus-within:border-black"
+                        } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                     >
                       {formData.socialLinks.map((link, i) => (
                         <span
                           key={i}
-                          className={`flex items-center gap-1.5 bg-white border rounded-full px-3 py-1 text-[14px] font-medium text-black transition-colors ${
-                            linkStatuses[i] === "success"
-                              ? "border-green-500 bg-green-50"
-                              : linkStatuses[i] === "error"
-                                ? "border-red-500 bg-red-50"
-                                : "border-black/30"
-                          }`}
+                          className={`flex items-center gap-1.5 bg-white border rounded-full px-3 py-1 text-[14px] font-medium text-black transition-colors ${linkStatuses[i] === "success"
+                            ? "border-green-500 bg-green-50"
+                            : linkStatuses[i] === "error"
+                              ? "border-red-500 bg-red-50"
+                              : "border-black/30"
+                            }`}
                         >
                           {linkStatuses[i] === "verifying" && (
                             <svg

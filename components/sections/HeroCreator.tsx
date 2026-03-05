@@ -9,21 +9,30 @@ export function HeroCreator() {
     return (
         <section className="relative w-full bg-theme-beige pt-32 pb-0 px-6 md:px-12 lg:px-24 flex justify-center overflow-hidden">
             {/* Main container with premium card aesthetic */}
-            <div className="relative w-full max-w-[1240px] mx-auto bg-theme-beige min-h-[500px] lg:min-h-[460px] lg:h-[460px] flex flex-col lg:flex-row items-center overflow-hidden">
+            <div className="relative w-full max-w-[1240px] mx-auto bg-theme-beige min-h-[400px] lg:min-h-[460px] lg:h-[460px] flex flex-col lg:flex-row items-center overflow-hidden">
 
-                {/* Background SVG border pattern (absolute positioned to fill the card) */}
+                {/* Background SVG border patterns (Responsive) */}
                 <div className="absolute inset-0 z-0 pointer-events-none w-full h-full flex items-center justify-center">
+                    {/* Desktop/Tablet Border */}
                     <Image
                         src="/assets/misc/border_with_box.svg"
                         alt="Border Decoration"
                         fill
-                        className="object-fill w-full h-full"
+                        className="hidden md:block object-fill w-full h-full"
+                        priority
+                    />
+                    {/* Mobile Border (<= 768px) */}
+                    <Image
+                        src="/assets/misc/box_border_mobile.svg"
+                        alt="Border Decoration"
+                        fill
+                        className="block md:hidden object-fill w-full h-full"
                         priority
                     />
                 </div>
 
                 {/* Left Side: Typography */}
-                <div className="relative z-10 flex w-full flex-col lg:w-1/2 shrink-0 text-left pt-20 pb-4 px-10 sm:px-16 lg:px-0 lg:pl-[160px] xl:pl-[180px] lg:py-0 h-auto lg:h-full justify-center items-start lg:-mt-4">
+                <div className="relative z-10 flex w-full flex-col lg:w-1/2 shrink-0 text-left pt-5 md:pt-20 pb-4 px-10 sm:px-16 lg:px-0 lg:pl-[160px] xl:pl-[180px] lg:py-0 h-auto lg:h-full justify-center items-start lg:-mt-4">
                     <motion.div
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
