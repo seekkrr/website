@@ -87,6 +87,25 @@ export function RegisterModal({ isOpen, onClose, onSuccess }: RegisterModalProps
     const [apiError, setApiError] = useState<string | null>(null);
     const autoCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+    // ── Persistence & Multi-submission ──────────────────────────────────
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const checkSubmissionState = () => {
+            const hasRegistered = clientState.get("earlyAccessRegistered");
+            if (hasRegistered === "true") {
+                setIsSuccess(true);
+            } else {
+                setIsSuccess(false);
+            }
+        };
+
+        checkSubmissionState();
+        const interval = setInterval(checkSubmissionState, 10000); // Check every 10s
+        return () => clearInterval(interval);
+    }, [isOpen]);
+
     // ── Handlers ─────────────────────────────────────────────────────────
 
     const handleClose = useCallback(() => {
@@ -177,7 +196,7 @@ export function RegisterModal({ isOpen, onClose, onSuccess }: RegisterModalProps
                 email: sanitised.email,
                 ...(sanitised.phone && { phone: sanitised.phone }),
             });
-            clientState.set("earlyAccessRegistered", "true", 365); // Expire in 1 year
+            clientState.set("earlyAccessRegistered", "true", 5 / 1440); // Expire in 5 minutes
             setIsSuccess(true);
             onSuccess?.();
         } catch (err) {

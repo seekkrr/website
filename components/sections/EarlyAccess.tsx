@@ -73,10 +73,17 @@ export function EarlyAccess() {
   const [isRegistered, setIsRegistered] = useState(false);
 
   useEffect(() => {
-    // Check if user already registered for early access
-    if (clientState.get("earlyAccessRegistered") === "true") {
-      setIsRegistered(true);
-    }
+    const checkSubmissionState = () => {
+      if (clientState.get("earlyAccessRegistered") === "true") {
+        setIsRegistered(true);
+      } else {
+        setIsRegistered(false);
+      }
+    };
+
+    checkSubmissionState();
+    const interval = setInterval(checkSubmissionState, 10000); // Check every 10s
+    return () => clearInterval(interval);
   }, []);
 
   const handleSuccess = () => {

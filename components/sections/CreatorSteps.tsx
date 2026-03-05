@@ -44,9 +44,17 @@ export function CreatorSteps() {
   const [isRegistered, setIsRegistered] = useState(false);
 
   useEffect(() => {
-    if (clientState.get("creatorRegistered") === "true") {
-      setIsRegistered(true);
-    }
+    const checkState = () => {
+      if (clientState.get("creatorRegistered") === "true") {
+        setIsRegistered(true);
+      } else {
+        setIsRegistered(false);
+      }
+    };
+
+    checkState();
+    const interval = setInterval(checkState, 10000); // Check every 10s
+    return () => clearInterval(interval);
   }, []);
 
   return (

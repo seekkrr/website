@@ -29,11 +29,21 @@ export default function ContactUsPage() {
 
     useEffect(() => {
         // Check if user already submitted in this session/cookie
-        const hasSubmitted = clientState.get("contactSubmitted");
-        if (hasSubmitted === "true") {
-            setIsSuccess(true);
-        }
-        setIsCheckingState(false);
+        const checkState = () => {
+            const hasSubmitted = clientState.get("contactSubmitted");
+            if (hasSubmitted === "true") {
+                setIsSuccess(true);
+            } else {
+                setIsSuccess(false);
+            }
+            setIsCheckingState(false);
+        };
+
+        checkState();
+
+        // Check periodically to auto-reactivate the form after 1 minute
+        const interval = setInterval(checkState, 10000); // Check every 10s
+        return () => clearInterval(interval);
     }, []);
 
     const {
@@ -63,7 +73,7 @@ export default function ContactUsPage() {
 
             // If the request didn't throw, it was successful (200-299)
             if (result && result.message) {
-                clientState.set("contactSubmitted", "true", 1); // Expiry in 1 day
+                clientState.set("contactSubmitted", "true", 1 / 1440); // Expiry in 1 minute
                 setIsSuccess(true);
                 reset();
             } else {

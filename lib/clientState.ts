@@ -11,12 +11,15 @@ export const clientState = {
      * Set a state value.
      * @param key The key to store
      * @param value The value to store
-     * @param expires Optional expiration in days (applies to cookies only)
+     * @param expiresDays Optional expiration in days. (e.g. 1/1440 for 1 minute)
      */
-    set: (key: string, value: string, expires: number = 1): void => {
+    set: (key: string, value: string, expiresDays: number = 1): void => {
+        const expiresMs = expiresDays * 24 * 60 * 60 * 1000;
+        const expiryTime = Date.now() + expiresMs;
+
         try {
             // Attempt to set a cookie first
-            Cookies.set(key, value, { expires });
+            Cookies.set(key, value, { expires: expiresDays, path: "/" });
         } catch (error) {
             console.warn("Cookies are not available, falling back to sessionStorage", error);
         }
@@ -25,6 +28,8 @@ export const clientState = {
             // Always write to sessionStorage as a fallback/sync for the current tab
             if (typeof window !== "undefined") {
                 sessionStorage.setItem(key, value);
+                // Store matching expiry timestamp for sessionStorage
+                sessionStorage.setItem(`${key}_expires`, expiryTime.toString());
             }
         } catch (error) {
             console.warn("sessionStorage is not available", error);
@@ -34,10 +39,10 @@ export const clientState = {
     /**
      * Get a state value.
      * @param key The key to retrieve
-     * @returns The value, or null if not found
+     * @returns The value, or null if not found/expired
      */
     get: (key: string): string | null => {
-        let value = null;
+        let value: string | null = null;
 
         try {
             // Check cookies first
@@ -46,15 +51,35 @@ export const clientState = {
             console.warn("Could not read cookies", error);
         }
 
-        // Fall back to sessionStorage if cookie wasn't found
-        if (!value) {
-            try {
-                if (typeof window !== "undefined") {
-                    value = sessionStorage.getItem(key);
+        // Check sessionStorage to validate sync and session freshness
+        try {
+            if (typeof window !== "undefined") {
+                const sessionValue = sessionStorage.getItem(key);
+                const expiryStr = sessionStorage.getItem(`${key}_expires`);
+
+                // If it's in a cookie but NOT in this session's storage, it's stale
+                if (value && !sessionValue) {
+                    clientState.remove(key);
+                    return null;
                 }
-            } catch (error) {
-                console.warn("Could not read sessionStorage", error);
+
+                if (sessionValue) {
+                    // Validations
+                    const isExpired = expiryStr && Date.now() > parseInt(expiryStr);
+                    const isOldStyle = !expiryStr; // No expiry key means it's from the old implementation
+
+                    if (isExpired || isOldStyle) {
+                        // Clear if expired or old format
+                        clientState.remove(key);
+                        return null;
+                    } else if (!value) {
+                        // Not expired in session but cookie missing (maybe cleared by browser)
+                        value = sessionValue;
+                    }
+                }
             }
+        } catch (error) {
+            console.warn("Could not read/validate sessionStorage", error);
         }
 
         return value;
@@ -66,7 +91,7 @@ export const clientState = {
      */
     remove: (key: string): void => {
         try {
-            Cookies.remove(key);
+            Cookies.remove(key, { path: "/" });
         } catch (error) {
             console.warn("Failed to remove cookie", error);
         }
@@ -74,6 +99,7 @@ export const clientState = {
         try {
             if (typeof window !== "undefined") {
                 sessionStorage.removeItem(key);
+                sessionStorage.removeItem(`${key}_expires`);
             }
         } catch (error) {
             console.warn("Failed to remove sessionStorage item", error);
