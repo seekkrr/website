@@ -105,7 +105,7 @@ export function submitQuery(
 
 /**
  * Register creator interest (Mocked for now).
- * MOCK POST /api/creator-register
+ * MOCK POST /api/creators/register
  */
 export async function registerCreator(
     payload: RegisterCreatorPayload,
