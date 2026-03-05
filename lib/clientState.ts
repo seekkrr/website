@@ -6,6 +6,14 @@ import Cookies from "js-cookie";
  * This is useful for preventing spam, tracking client interactions, and optimizations.
  */
 
+/** Internal helper — fires a same-tab event so any useClientStatePolling hook
+ *  listening for this key can react instantly without waiting for its next poll. */
+function dispatchClientStateEvent(key: string) {
+    if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("clientstate-changed", { detail: { key } }));
+    }
+}
+
 export const clientState = {
     /**
      * Set a state value.
@@ -34,6 +42,8 @@ export const clientState = {
         } catch (error) {
             console.warn("sessionStorage is not available", error);
         }
+
+        dispatchClientStateEvent(key);
     },
 
     /**
@@ -57,9 +67,10 @@ export const clientState = {
                 const sessionValue = sessionStorage.getItem(key);
                 const expiryStr = sessionStorage.getItem(`${key}_expires`);
 
-                // If it's in a cookie but NOT in this session's storage, it's stale
+                // Cookie exists but nothing in this tab's sessionStorage — treat as
+                // a different session/tab.  Don't touch the shared cookie so the
+                // original tab remains unaffected; just return null for THIS tab.
                 if (value && !sessionValue) {
-                    clientState.remove(key);
                     return null;
                 }
 

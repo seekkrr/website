@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Loader2 } from "lucide-react";
 import { submitQuery } from "@/lib/api";
 import { clientState } from "@/lib/clientState";
+import { useClientStatePolling } from "@/lib/hooks/useClientStatePolling";
 
 const contactSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -23,28 +24,8 @@ const contactSchema = z.object({
 type ContactFormValues = z.infer<typeof contactSchema>;
 
 export default function ContactUsPage() {
-    const [isSuccess, setIsSuccess] = useState(false);
+    const { hasState: isSuccess, isChecking: isCheckingState, forceCheck } = useClientStatePolling("contactSubmitted");
     const [submitError, setSubmitError] = useState("");
-    const [isCheckingState, setIsCheckingState] = useState(true);
-
-    useEffect(() => {
-        // Check if user already submitted in this session/cookie
-        const checkState = () => {
-            const hasSubmitted = clientState.get("contactSubmitted");
-            if (hasSubmitted === "true") {
-                setIsSuccess(true);
-            } else {
-                setIsSuccess(false);
-            }
-            setIsCheckingState(false);
-        };
-
-        checkState();
-
-        // Check periodically to auto-reactivate the form after 1 minute
-        const interval = setInterval(checkState, 10000); // Check every 10s
-        return () => clearInterval(interval);
-    }, []);
 
     const {
         register,
@@ -71,10 +52,9 @@ export default function ContactUsPage() {
                 message: data.message,
             });
 
-            // If the request didn't throw, it was successful (200-299)
             if (result && result.message) {
-                clientState.set("contactSubmitted", "true", 1 / 1440); // Expiry in 1 minute
-                setIsSuccess(true);
+                clientState.set("contactSubmitted", "true", 1 / 1440);
+                forceCheck(); // Immediately sync UI without waiting for next poll
                 reset();
             } else {
                 setSubmitError("Failed to submit query.");

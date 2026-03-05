@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { CloudinaryIcons } from "@/lib/config/assets";
-import { clientState } from "@/lib/clientState";
+import { useClientStatePolling } from "@/lib/hooks/useClientStatePolling";
 import { imageLoadingAnimation } from "@/lib/utils/imageOptimization";
 
 // Dynamic import for RegisterModal - code split automatically
@@ -70,32 +70,13 @@ const FloatingIcon = ({
 
 export function EarlyAccess() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(false);
-
-  useEffect(() => {
-    const checkSubmissionState = () => {
-      if (clientState.get("earlyAccessRegistered") === "true") {
-        setIsRegistered(true);
-      } else {
-        setIsRegistered(false);
-      }
-    };
-
-    checkSubmissionState();
-    const interval = setInterval(checkSubmissionState, 10000); // Check every 10s
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleSuccess = () => {
-    setIsRegistered(true);
-  };
+  const { hasState: isRegistered } = useClientStatePolling("earlyAccessRegistered");
 
   return (
     <>
       <RegisterModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSuccess={handleSuccess}
       />
       <section className="w-full bg-theme-beige overflow-hidden pt-6 pb-24 lg:pt-8 lg:pb-32 flex justify-center items-center min-h-[350px] lg:min-h-[450px]">
         <div className="w-full max-w-[1240px] mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] xl:grid-cols-[1fr_600px_1fr] items-center gap-8 lg:gap-12">

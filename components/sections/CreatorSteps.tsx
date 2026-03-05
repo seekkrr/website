@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { CloudinaryIcons } from "@/lib/config/assets";
 import cloudinaryLoader from "@/lib/cloudinaryLoader";
-import { clientState } from "@/lib/clientState";
+import { useClientStatePolling } from "@/lib/hooks/useClientStatePolling";
 
 // Dynamic import for CreatorRegisterModal - code split automatically
 const CreatorRegisterModal = dynamic(
@@ -41,28 +41,14 @@ const steps = [
 
 export function CreatorSteps() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(false);
-
-  useEffect(() => {
-    const checkState = () => {
-      if (clientState.get("creatorRegistered") === "true") {
-        setIsRegistered(true);
-      } else {
-        setIsRegistered(false);
-      }
-    };
-
-    checkState();
-    const interval = setInterval(checkState, 10000); // Check every 10s
-    return () => clearInterval(interval);
-  }, []);
+  const { hasState: isRegistered, forceCheck } = useClientStatePolling("creatorRegistered");
 
   return (
     <section className="relative w-full bg-theme-beige px-4 md:px-8 lg:px-12 pb-12 lg:pb-20 pt-4 md:pt-6 flex flex-col items-center">
       <CreatorRegisterModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSuccess={() => setIsRegistered(true)}
+        onSuccess={forceCheck}
       />
 
       {/* CTA Pill */}

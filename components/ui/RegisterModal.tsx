@@ -6,6 +6,7 @@ import { z } from "zod";
 import { registerInterest } from "@/lib/api";
 import { clientState } from "@/lib/clientState";
 import { siteConfig } from "@/lib/config/site";
+import { useClientStatePolling } from "@/lib/hooks/useClientStatePolling";
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -83,28 +84,14 @@ export function RegisterModal({ isOpen, onClose, onSuccess }: RegisterModalProps
     });
     const [errors, setErrors] = useState<FormErrors>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSuccess, setIsSuccess] = useState(false);
+    const { hasState: persistedSuccess, forceCheck } = useClientStatePolling("earlyAccessRegistered");
+    const [submitSuccess, setSubmitSuccess] = useState(false);
+    const isSuccess = persistedSuccess || submitSuccess;
     const [apiError, setApiError] = useState<string | null>(null);
     const autoCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     // ── Persistence & Multi-submission ──────────────────────────────────
-
-    useEffect(() => {
-        if (!isOpen) return;
-
-        const checkSubmissionState = () => {
-            const hasRegistered = clientState.get("earlyAccessRegistered");
-            if (hasRegistered === "true") {
-                setIsSuccess(true);
-            } else {
-                setIsSuccess(false);
-            }
-        };
-
-        checkSubmissionState();
-        const interval = setInterval(checkSubmissionState, 10000); // Check every 10s
-        return () => clearInterval(interval);
-    }, [isOpen]);
+    // Handled by the useClientStatePolling hook above.
 
     // ── Handlers ─────────────────────────────────────────────────────────
 
@@ -115,7 +102,7 @@ export function RegisterModal({ isOpen, onClose, onSuccess }: RegisterModalProps
         setTimeout(() => {
             setFormData({ name: "", email: "", phone: "" });
             setErrors({});
-            setIsSuccess(false);
+            setSubmitSuccess(false);
             setApiError(null);
         }, 300);
     }, [onClose]);
@@ -196,8 +183,9 @@ export function RegisterModal({ isOpen, onClose, onSuccess }: RegisterModalProps
                 email: sanitised.email,
                 ...(sanitised.phone && { phone: sanitised.phone }),
             });
-            clientState.set("earlyAccessRegistered", "true", 5 / 1440); // Expire in 5 minutes
-            setIsSuccess(true);
+            clientState.set("earlyAccessRegistered", "true", 5 / 1440);
+            forceCheck(); // Immediately sync state without waiting for next poll
+            setSubmitSuccess(true);
             onSuccess?.();
         } catch (err) {
             setApiError(
