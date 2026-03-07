@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { z } from "zod";
-import { registerCreator } from "@/lib/api";
+import { registerCreator, ApiError } from "@/lib/api";
 import { clientState } from "@/lib/clientState";
 import { siteConfig } from "@/lib/config/site";
 import { useClientStatePolling } from "@/lib/hooks/useClientStatePolling";
@@ -212,31 +212,6 @@ export function CreatorRegisterModal({
     });
   };
 
-  const validateAllLinks = async (links: string[]) => {
-    setVerificationStep(true);
-    let allValid = true;
-
-    for (let i = 0; i < links.length; i++) {
-      setLinkStatuses((prev) => ({ ...prev, [i]: "verifying" }));
-
-      // Mock verification delay
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      const isBroken =
-        links[i].toLowerCase().includes("broken") ||
-        links[i].toLowerCase().includes("404");
-
-      if (!isBroken) {
-        setLinkStatuses((prev) => ({ ...prev, [i]: "success" }));
-      } else {
-        setLinkStatuses((prev) => ({ ...prev, [i]: "error" }));
-        allValid = false;
-      }
-    }
-
-    return allValid;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -269,38 +244,65 @@ export function CreatorRegisterModal({
     const sanitised = result.data;
 
     setIsSubmitting(true);
+    setVerificationStep(true); // Shows "Verifying Links..." spinner
     setApiError(null);
 
-    // Step 1: Verify all links
-    const linksOk = await validateAllLinks(sanitised.socialLinks);
+    // Set all links to 'verifying' instantly
+    const initialStatuses: Record<number, LinkStatus> = {};
+    sanitised.socialLinks.forEach((_, i) => {
+      initialStatuses[i] = "verifying";
+    });
+    setLinkStatuses(initialStatuses);
 
-    if (!linksOk) {
-      const errorMsg =
-        "One or more links are broken or invalid. Please check and try again.";
-      setApiError(errorMsg);
-      setIsSubmitting(false);
-      setVerificationStep(false);
-      return;
-    }
-
-    // Step 2: Final Submission
+    // Final Submission directly
     try {
-      const response = await registerCreator({
+      await registerCreator({
         name: sanitised.name,
         email: sanitised.email,
         ...(sanitised.phone && { phone: sanitised.phone }),
-        socialLinks: sanitised.socialLinks,
+        social_links: sanitised.socialLinks,
       });
+
+      // All good
+      const successStatuses: Record<number, LinkStatus> = {};
+      sanitised.socialLinks.forEach((_, i) => {
+        successStatuses[i] = "success";
+      });
+      setLinkStatuses(successStatuses);
+
       clientState.set("creatorRegistered", "true", 10 / 1440);
       forceCheck(); // Immediately sync state without waiting for next poll
       setSubmitSuccess(true);
       onSuccess?.();
-    } catch (err) {
-      const errorMsg =
-        err instanceof Error
-          ? err.message
-          : "Something went wrong. Please try again.";
-      setApiError(errorMsg);
+    } catch (err: any) {
+      if (err?.status === 422 && err?.data?.failed_links) {
+        const newStatuses: Record<number, LinkStatus> = {};
+        const failedUrls = err.data.failed_links.map((f: any) => f.url);
+        const reasons = err.data.failed_links.map((f: any) => f.reason);
+
+        sanitised.socialLinks.forEach((link, i) => {
+          if (failedUrls.includes(link)) {
+            newStatuses[i] = "error";
+          } else {
+            newStatuses[i] = "success";
+          }
+        });
+        setLinkStatuses(newStatuses);
+
+        // Show specific reasons in the main error block
+        const detailedError =
+          err.message || "One or more links are broken or invalid.";
+        // const reasonsText = reasons.length > 0 ? ` Details: ${reasons.join(", ")}` : "";
+        setApiError(detailedError);
+      } else {
+        // Other errors (409, 400, 500)
+        setLinkStatuses({}); // Clear individual link statuses if it's a general/form error
+        const errorMsg =
+          err instanceof Error
+            ? err.message
+            : err?.data?.message || err?.message || "Something went wrong. Please try again.";
+        setApiError(errorMsg);
+      }
     } finally {
       setIsSubmitting(false);
       setVerificationStep(false);
@@ -605,7 +607,7 @@ export function CreatorRegisterModal({
                   )}
 
                   {/* Submit Button */}
-                  <div className="flex justify-center">
+                  <div className="flex flex-col items-center">
                     <button
                       type="submit"
                       disabled={isSubmitting}
@@ -640,6 +642,11 @@ export function CreatorRegisterModal({
                         "Become A Creator"
                       )}
                     </button>
+                    {verificationStep && (
+                      <p className="mt-3 text-[13px] text-black/60 font-medium text-center px-4">
+                        Please wait 1-2 minutes while we verify your social media links.
+                      </p>
+                    )}
                   </div>
                 </motion.form>
               ) : (

@@ -18,7 +18,7 @@ export interface RegisterCreatorPayload {
     name: string;
     email: string;
     phone?: string;
-    socialLinks: string[];
+    social_links: string[];
 }
 
 
@@ -48,6 +48,18 @@ export type ApiResponse = ApiSuccessResponse | ApiErrorResponse;
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
+export class ApiError extends Error {
+    public status: number;
+    public data: any;
+
+    constructor(message: string, status: number, data: any) {
+        super(message);
+        this.status = status;
+        this.data = data;
+        this.name = "ApiError";
+    }
+}
+
 async function request<T>(
     endpoint: string,
     options: RequestInit = {},
@@ -69,7 +81,7 @@ async function request<T>(
         const message =
             (data as ApiErrorResponse)?.message ??
             `Request failed with status ${res.status}`;
-        throw new Error(message);
+        throw new ApiError(message, res.status, data);
     }
 
     return data as T;
@@ -103,21 +115,16 @@ export function submitQuery(
     });
 }
 
+
 /**
- * Register creator interest (Mocked for now).
- * MOCK POST /api/creators/register
+ * Register creator interest (Application).
+ * POST /api/creator/apply
  */
 export async function registerCreator(
     payload: RegisterCreatorPayload,
 ): Promise<ApiResponse> {
-    // MOCK IMPLEMENTATION
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            console.log("Mock Creator Registration payload:", payload);
-            resolve({
-                success: true,
-                message: "Registration successful"
-            });
-        }, 1500); // simulate network request
+    return request<ApiResponse>("/api/creator/apply", {
+        method: "POST",
+        body: JSON.stringify(payload),
     });
 }
