@@ -10,9 +10,9 @@ import { siteConfig } from "@/lib/config/site";
 
 const NAV_LINKS = [
     { name: "Home", href: "/" },
-    { name: "Become a creator", href: "/creators" },
     { name: "About Us", href: "/about" },
     { name: "Travel Stories", href: "/stories" },
+    { name: "Become a creator", href: "/creators" },
     { name: "Contact Us", href: "/contact" },
 ];
 
