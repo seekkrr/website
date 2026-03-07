@@ -248,10 +248,9 @@ export function CreatorRegisterModal({
     setApiError(null);
 
     // Set all links to 'verifying' instantly
-    const initialStatuses: Record<number, LinkStatus> = {};
-    sanitised.socialLinks.forEach((_, i) => {
-      initialStatuses[i] = "verifying";
-    });
+    const initialStatuses = Object.fromEntries(
+      sanitised.socialLinks.map((_, i) => [i, "verifying"])
+    ) as Record<number, LinkStatus>;
     setLinkStatuses(initialStatuses);
 
     // Final Submission directly
@@ -264,10 +263,9 @@ export function CreatorRegisterModal({
       });
 
       // All good
-      const successStatuses: Record<number, LinkStatus> = {};
-      sanitised.socialLinks.forEach((_, i) => {
-        successStatuses[i] = "success";
-      });
+      const successStatuses = Object.fromEntries(
+        sanitised.socialLinks.map((_, i) => [i, "success"])
+      ) as Record<number, LinkStatus>;
       setLinkStatuses(successStatuses);
 
       clientState.set("creatorRegistered", "true", 10 / 1440);
@@ -277,8 +275,7 @@ export function CreatorRegisterModal({
     } catch (err: any) {
       if (err?.status === 422 && err?.data?.failed_links) {
         const newStatuses: Record<number, LinkStatus> = {};
-        const failedUrls = err.data.failed_links.map((f: any) => f.url);
-        const reasons = err.data.failed_links.map((f: any) => f.reason);
+        const failedUrls = err.data.failed_links.map((f: { url: string }) => f.url);
 
         sanitised.socialLinks.forEach((link, i) => {
           if (failedUrls.includes(link)) {
@@ -292,7 +289,6 @@ export function CreatorRegisterModal({
         // Show specific reasons in the main error block
         const detailedError =
           err.message || "One or more links are broken or invalid.";
-        // const reasonsText = reasons.length > 0 ? ` Details: ${reasons.join(", ")}` : "";
         setApiError(detailedError);
       } else {
         // Other errors (409, 400, 500)
