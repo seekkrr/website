@@ -6,9 +6,14 @@ import { CloudinaryIcons } from "@/lib/config/assets";
 import { themeColors } from "@/lib/config/theme";
 import { profiles } from "@/lib/data/profiles";
 
+import { StructuredData } from "@/components/seo/StructuredData";
+
 export const metadata: Metadata = {
-  title: "About",
-  description: `Learn about ${siteConfig.name} — the platform connecting explorers with extraordinary quests and unforgettable experiences.`,
+  title: `About ${siteConfig.name} | The Vision Behind the Quest`,
+  description: `Discover how ${siteConfig.name} is revolutionizing travel through gamified quests and exploration. Join our mission to replace the fear of the unknown with the thrill of discovery.`,
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 const SketchUnderline = ({ className }: { className?: string }) => (
@@ -33,6 +38,12 @@ const SketchUnderline = ({ className }: { className?: string }) => (
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-theme-beige font-jakarta pt-32 pb-6 px-6 overflow-hidden">
+      <StructuredData
+        data={[
+          { name: "Home", item: "/" },
+          { name: "About", item: "/about" },
+        ]}
+      />
       <AnimatedSection className="max-w-6xl mx-auto">
         <h1 className="text-center text-5xl md:text-6xl font-extrabold text-black mb-16 tracking-tight">
           About Us

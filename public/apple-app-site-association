@@ -1,0 +1,22 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["YOUR_TEAM_ID.com.seekkrr.app"],
+        "components": [
+          {
+            "/": "/stories/*",
+            "comment": "Matches any story link"
+          },
+          {
+            "/": "/creators/*",
+            "comment": "Matches any creator profile"
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["YOUR_TEAM_ID.com.seekkrr.app"]
+  }
+}
