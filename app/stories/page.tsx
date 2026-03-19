@@ -3,14 +3,25 @@ import { Metadata } from "next";
 import { AnimatedSection } from "@/components/animations/AnimatedSection";
 import { siteConfig } from "@/lib/config/site";
 
+import { StructuredData } from "@/components/seo/StructuredData";
+
 export const metadata: Metadata = {
-  title: "Travel Stories - Coming Soon",
-  description: `Travel Stories is coming soon to ${siteConfig.name}. Get ready for amazing adventures!`,
+  title: `Travel Stories & Adventure Chronicles | ${siteConfig.name}`,
+  description: `Authentic travel stories and adventure chronicles from around the world. Coming soon to ${siteConfig.name} — the ultimate quest travel app.`,
+  alternates: {
+    canonical: "/stories",
+  },
 };
 
 export default function ComingSoonPage() {
   return (
     <div className="min-h-screen bg-theme-beige flex items-center justify-center p-6 overflow-hidden mt-16">
+      <StructuredData
+        data={[
+          { name: "Home", item: "/" },
+          { name: "Stories", item: "/stories" },
+        ]}
+      />
       <AnimatedSection className="w-full max-w-[860px] mx-auto flex flex-col items-center justify-center text-center">
         {/* Coming Soon Heading */}
         <h1 className="font-handwriting text-[80px] sm:text-[120px] md:text-[160px] font-bold leading-none text-theme-green [text-shadow:6px_6px_0_var(--color-yellow-accent)] mb-4">
