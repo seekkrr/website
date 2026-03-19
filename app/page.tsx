@@ -32,11 +32,6 @@ export default function HomePage() {
           operatingSystem: "iOS, Android",
           applicationCategory: "TravelApplication, GameApplication",
           description: siteConfig.tagline,
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: "4.8",
-            ratingCount: "1250", // Placeholders for social proof
-          },
           offers: {
             "@type": "Offer",
             price: "0",

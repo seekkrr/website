@@ -10,7 +10,7 @@ export function StructuredData({
   data,
 }: {
   type?: string;
-  data?: any;
+  data?: BreadcrumbItem[] | object;
 }) {
   let schemaData = data;
 
@@ -19,7 +19,7 @@ export function StructuredData({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       numberOfItems: data.length,
-      itemListElement: data.map((item: BreadcrumbItem, index: number) => ({
+      itemListElement: (data as BreadcrumbItem[]).map((item, index) => ({
         "@type": "ListItem",
         position: index + 1,
         name: item.name,

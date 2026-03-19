@@ -144,32 +144,30 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Organization",
-              name: siteConfig.name,
-              url: siteConfig.url,
-              logo: `${siteConfig.url}/favicon.ico`,
-              sameAs: Object.values(siteConfig.socials),
-              contactPoint: {
-                "@type": "ContactPoint",
-                email: siteConfig.email,
-                contactType: "customer service",
-              },
-            }),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: siteConfig.name,
-              url: siteConfig.url,
-              potentialAction: {
-                "@type": "SearchAction",
-                target: `${siteConfig.url}/search?q={search_term_string}`,
-                "query-input": "required name=search_term_string",
-              },
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  name: siteConfig.name,
+                  url: siteConfig.url,
+                  logo: `${siteConfig.url}${siteConfig.assets.logoTextPath}`,
+                  sameAs: Object.values(siteConfig.socials),
+                  contactPoint: {
+                    "@type": "ContactPoint",
+                    email: siteConfig.email,
+                    contactType: "customer service",
+                  },
+                },
+                {
+                  "@type": "WebSite",
+                  name: siteConfig.name,
+                  url: siteConfig.url,
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target: `${siteConfig.url}/search?q={search_term_string}`,
+                    "query-input": "required name=search_term_string",
+                  },
+                },
+              ],
             }),
           }}
         />
