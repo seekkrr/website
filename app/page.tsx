@@ -29,14 +29,20 @@ export default function HomePage() {
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
           name: siteConfig.name,
-          operatingSystem: "iOS, Android",
-          applicationCategory: "TravelApplication, GameApplication",
-          description: siteConfig.tagline,
+          operatingSystem: "Android",
+          applicationCategory: "TravelApplication",
+          description:
+            "SeekKrr is the ultimate quest travel app. Transform your journeys into extraordinary adventures with gamified quests, exploration challenges, and a community of creators.",
           offers: {
             "@type": "Offer",
             price: "0",
             priceCurrency: "INR",
           },
+          downloadUrl: siteConfig.playStoreUrl,
+          installUrl: siteConfig.playStoreUrl,
+          featureList:
+            "Quest-based travel, Gamified exploration, Creator economy, AR challenges, Community quests",
+          screenshot: `${siteConfig.url}/assets/images/og-image.png`,
         }}
       />
       {/* Hero Section */}
