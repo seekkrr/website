@@ -1,7 +1,7 @@
 {
-  "name": "SeekKrr",
+  "name": "SeekKrr — Discover Your Next Adventure",
   "short_name": "SeekKrr",
-  "description": "SeekKrr connects explorers with extraordinary quests and unforgettable experiences.",
+  "description": "SeekKrr is the ultimate quest travel app. Transform your journeys into extraordinary adventures with gamified quests, exploration challenges, and creator-driven experiences.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -21,6 +21,14 @@
       "src": "/assets/images/website_logo.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.seekkrr.app",
+      "id": "com.seekkrr.app"
     }
   ]
 }

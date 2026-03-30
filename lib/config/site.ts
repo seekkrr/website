@@ -5,11 +5,14 @@ export const siteConfig = {
     jurisdiction: "Uttar Pradesh, India",
     disputeLocation: "Allahabad, Uttar Pradesh, India",
     email: "support@seekkrr.com",
-    url: "https://www.seekkrr.com",
+    url: "https://seekkrr.com",
+    playStoreUrl: "https://play.google.com/store/apps/details?id=com.seekkrr.app",
     termsLastUpdated: "February 23, 2026",
     privacyLastUpdated: "February 9, 2026",
     creatorPayoutLink: "/creator-terms",
     tagline: "Discover Your Next Adventure",
+    description:
+      "SeekKrr is the ultimate quest travel app. Transform your journeys into extraordinary adventures with gamified quests, exploration challenges, and a community of creators.",
     assets: {
         logoIconId: "v1772038022/SeekKrr_Logo_mw9777.svg", // For cloudinaryLoader
         logoTextPath: "/assets/images/SeekKrr_Text.png",   // For public/assets

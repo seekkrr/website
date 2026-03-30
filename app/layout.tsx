@@ -161,11 +161,18 @@ export default function RootLayout({
                   "@type": "WebSite",
                   name: siteConfig.name,
                   url: siteConfig.url,
-                  potentialAction: {
-                    "@type": "SearchAction",
-                    target: `${siteConfig.url}/search?q={search_term_string}`,
-                    "query-input": "required name=search_term_string",
+                },
+                {
+                  "@type": "MobileApplication",
+                  name: siteConfig.name,
+                  operatingSystem: "ANDROID",
+                  applicationCategory: "TravelApplication",
+                  offers: {
+                    "@type": "Offer",
+                    price: "0",
+                    priceCurrency: "INR",
                   },
+                  installUrl: siteConfig.playStoreUrl,
                 },
               ],
             }),
