@@ -5,7 +5,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url;
 
   // Use current date for static routes to signal freshness
-  const lastModified = new Date("2026-03-30T00:00:00.000Z");
+  const lastModified = new Date().toISOString();
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
