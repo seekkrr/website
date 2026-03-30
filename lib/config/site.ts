@@ -11,6 +11,8 @@ export const siteConfig = {
     privacyLastUpdated: "February 9, 2026",
     creatorPayoutLink: "/creator-terms",
     tagline: "Discover Your Next Adventure",
+    description:
+      "SeekKrr is the ultimate quest travel app. Transform your journeys into extraordinary adventures with gamified quests, exploration challenges, and a community of creators.",
     assets: {
         logoIconId: "v1772038022/SeekKrr_Logo_mw9777.svg", // For cloudinaryLoader
         logoTextPath: "/assets/images/SeekKrr_Text.png",   // For public/assets

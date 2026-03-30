@@ -29,10 +29,9 @@ export default function HomePage() {
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
           name: siteConfig.name,
-          operatingSystem: "Android",
-          applicationCategory: "TravelApplication",
-          description:
-            "SeekKrr is the ultimate quest travel app. Transform your journeys into extraordinary adventures with gamified quests, exploration challenges, and a community of creators.",
+          operatingSystem: "Android, iOS",
+          applicationCategory: ["TravelApplication", "GameApplication"],
+          description: siteConfig.description,
           offers: {
             "@type": "Offer",
             price: "0",
