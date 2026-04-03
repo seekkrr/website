@@ -1,24 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import dynamic from "next/dynamic";
+import Link from "next/link";
 import { CloudinaryIcons } from "@/lib/config/assets";
-import { useClientStatePolling } from "@/lib/hooks/useClientStatePolling";
-import { imageLoadingAnimation } from "@/lib/utils/imageOptimization";
-
-// Dynamic import for RegisterModal - code split automatically
-const RegisterModal = dynamic(
-  () =>
-    import("@/components/ui/RegisterModal").then((mod) => ({
-      default: mod.RegisterModal,
-    })),
-  {
-    loading: () => null,
-    ssr: false,
-  }
-);
+import { siteConfig } from "@/lib/config/site";
 
 const FloatingIcon = ({
   src,
@@ -69,15 +55,8 @@ const FloatingIcon = ({
 };
 
 export function EarlyAccess() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { hasState: isRegistered } = useClientStatePolling("earlyAccessRegistered");
-
   return (
     <>
-      <RegisterModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
       <section className="w-full bg-theme-beige overflow-hidden pt-6 pb-24 lg:pt-8 lg:pb-32 flex justify-center items-center min-h-[350px] lg:min-h-[450px]">
         <div className="w-full max-w-[1240px] mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] xl:grid-cols-[1fr_600px_1fr] items-center gap-8 lg:gap-12">
           {/* Mobile Top Icons (Visible < lg) */}
@@ -113,48 +92,28 @@ export function EarlyAccess() {
             </div>
           </div>
 
-          {/* Central Call to Action Pill */}
+          {/* Central Call to Action - Google Play Badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="relative z-10 bg-black text-white rounded-[32px] md:rounded-[40px] px-6 py-5 sm:px-8 md:px-12 md:py-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-12 mx-auto w-[90%] sm:w-full max-w-[600px] shadow-2xl"
+            className="relative z-10 flex items-center justify-center"
           >
-            {isRegistered ? (
-              <h2 className="font-jakarta text-[18px] sm:text-[24px] lg:text-[28px] xl:text-[32px] font-semibold tracking-tight whitespace-normal text-center sm:whitespace-nowrap">
-                Thank You for your interest!
-              </h2>
-            ) : (
-              <>
-                <h2 className="font-jakarta text-[20px] sm:text-[24px] lg:text-[28px] xl:text-[32px] font-semibold tracking-tight whitespace-normal text-center sm:whitespace-nowrap">
-                  Get Early Access
-                </h2>
-
-                <motion.button
-                  onClick={() => setIsModalOpen(true)}
-                  className="bg-white text-black font-jakarta font-bold text-[16px] sm:text-[18px] lg:text-[20px] px-6 py-2 sm:px-8 sm:py-3 rounded-[8px] sm:rounded-[12px] border-[2px] sm:border-[3px] border-black shrink-0"
-                  whileHover={{
-                    y: -4,
-                    boxShadow: "6px 6px 0 var(--color-blue-accent)",
-                  }}
-                  whileTap={{
-                    y: 0,
-                    boxShadow: "2px 2px 0 var(--color-blue-accent)",
-                  }}
-                  style={{
-                    boxShadow: "3px 3px 0 var(--color-blue-accent)",
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 20,
-                  }}
-                >
-                  Register
-                </motion.button>
-              </>
-            )}
+            <Link
+              href={siteConfig.playStoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-90 transition-opacity block"
+            >
+              <Image
+                src="/assets/images/GetItOnGooglePlay_Badge.svg"
+                alt="Get it on Google Play - Google Play is a trademark of Google LLC"
+                width={320}
+                height={94}
+                className="w-full sm:w-80 md:w-96 h-auto"
+              />
+            </Link>
           </motion.div>
 
           {/* Right Icons Matrix */}
