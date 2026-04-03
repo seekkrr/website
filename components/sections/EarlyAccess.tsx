@@ -106,11 +106,11 @@ export function EarlyAccess() {
               rel="noopener noreferrer"
               className="hover:opacity-90 transition-opacity block"
             >
-              <img
+              <Image
                 src="/assets/images/GetItOnGooglePlay_Badge.svg"
                 alt="Get it on Google Play - Google Play is a trademark of Google LLC"
-                width="320"
-                height="94"
+                width={320}
+                height={94}
                 className="w-full sm:w-80 md:w-96 h-auto"
               />
             </Link>
