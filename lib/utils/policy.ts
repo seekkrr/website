@@ -1,4 +1,4 @@
-export async function getMarkdownPolicy(filename: string): Promise<string> {
+export async function getMarkdownPolicy(filename: "privacy-policy" | "refund-policy" | "terms-and-conditions" | "creator-terms"): Promise<string> {
     const url = `https://cdn.jsdelivr.net/gh/seekkrr/policies@main/en/${filename}.md`;
     
     const res = await fetch(url, {
