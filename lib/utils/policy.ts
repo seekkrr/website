@@ -1,7 +1,5 @@
 export async function getMarkdownPolicy(filename: string): Promise<string> {
-    // We use raw.githubusercontent.com instead of jsDelivr to avoid the 24-hour edge cache on branches.
-    // GitHub's raw CDN caches objects for roughly 5 minutes, which pairs perfectly with our 60s ISG revalidation.
-    const url = `https://raw.githubusercontent.com/seekkrr/policies/main/en/${filename}.md`;
+    const url = `https://cdn.jsdelivr.net/gh/seekkrr/policies@main/en/${filename}.md`;
     
     const res = await fetch(url, {
         next: { revalidate: 60 }
