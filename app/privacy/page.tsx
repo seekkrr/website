@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { AnimatedSection } from "@/components/animations/AnimatedSection";
 import { siteConfig } from "@/lib/config/site";
 import { MarkdownPolicy } from "@/components/legal/MarkdownPolicy";
+import { getMarkdownPolicy } from "@/lib/utils/policy";
 
 export const metadata: Metadata = {
     title: "Privacy Policy",
@@ -9,8 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PrivacyPolicyPage() {
-    const res = await fetch("https://cdn.jsdelivr.net/gh/seekkrr/policies@main/en/privacy-policy.md", { next: { revalidate: 60 } });
-    const content = res.ok ? await res.text() : "Failed to load policy. Please try again later.";
+    const content = await getMarkdownPolicy("privacy-policy");
 
     return (
         <div className="min-h-screen bg-background py-16 px-4 sm:px-6 lg:px-8 mt-16">
