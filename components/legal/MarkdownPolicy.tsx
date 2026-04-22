@@ -29,13 +29,30 @@ export function MarkdownPolicy({ content }: MarkdownPolicyProps) {
           ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-6 space-y-2 text-muted-foreground" {...props} />,
           li: ({ node, ...props }) => <li className="pl-2" {...props} />,
           a: ({ node, href, ...props }) => {
-            let mappedHref = href;
-            if (href?.endsWith(".md")) {
-              if (href.includes("privacy-policy")) mappedHref = "/privacy";
-              else if (href.includes("terms-and-conditions") || href.includes("creator-terms")) mappedHref = "/terms";
-              else if (href.includes("refund-policy")) mappedHref = "/refund";
+            let mappedHref = href || "";
+            
+            if (mappedHref.endsWith(".md") && !mappedHref.startsWith("http")) {
+              if (mappedHref.includes("privacy-policy")) mappedHref = "/privacy";
+              else if (mappedHref.includes("terms-and-conditions")) mappedHref = "/terms";
+              else if (mappedHref.includes("refund-policy")) mappedHref = "/refund";
+              else if (mappedHref.includes("creator-terms")) mappedHref = "/creator-terms";
             }
-            return <a href={mappedHref} className="text-primary hover:underline font-medium" {...props} />;
+
+            const isInternal = mappedHref.startsWith("/") || mappedHref.startsWith("#");
+
+            if (isInternal) {
+              return <Link href={mappedHref} className="text-primary hover:underline font-medium" {...props} />;
+            }
+
+            return (
+              <a
+                href={mappedHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline font-medium"
+                {...props}
+              />
+            );
           },
           strong: ({ node, ...props }) => <strong className="font-semibold text-foreground" {...props} />,
           table: ({ node, ...props }) => (
