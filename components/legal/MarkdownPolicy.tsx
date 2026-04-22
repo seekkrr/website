@@ -9,7 +9,7 @@ interface MarkdownPolicyProps {
 export function MarkdownPolicy({ content }: MarkdownPolicyProps) {
   const stripFrontmatter = (md: string) => {
     if (md.startsWith("---")) {
-      const match = md.match(/^---[\s\S]*?---\n([\s\S]*)$/);
+      const match = md.match(/^---[\s\S]*?---\r?\n([\s\S]*)$/);
       if (match) return match[1];
     }
     return md;
