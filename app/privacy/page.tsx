@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PrivacyPolicyPage() {
-    const res = await fetch("https://cdn.jsdelivr.net/gh/seekkrr/policies@main/en/privacy-policy.md", { next: { revalidate: 3600 } });
+    const res = await fetch("https://cdn.jsdelivr.net/gh/seekkrr/policies@main/en/privacy-policy.md", { next: { revalidate: 60 } });
     const content = res.ok ? await res.text() : "Failed to load policy. Please try again later.";
 
     return (
