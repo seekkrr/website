@@ -7,16 +7,11 @@ import { registerCreator, ApiError } from "@/lib/api";
 import { clientState } from "@/lib/clientState";
 import { siteConfig } from "@/lib/config/site";
 import { useClientStatePolling } from "@/lib/hooks/useClientStatePolling";
+import { stripTags } from "@/lib/utils";
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
 const AUTO_CLOSE_DELAY_MS = 6_000;
-
-// ── Sanitisation ───────────────────────────────────────────────────────────
-// Strips HTML / script tags to prevent XSS when the value is ever rendered
-// or forwarded. This runs *before* zod's own validations via `.transform`.
-
-const stripTags = (v: string) => v.replace(/[<>]/g, "");
 
 // ── Zod Schema ─────────────────────────────────────────────────────────────
 
@@ -42,23 +37,31 @@ const registerSchema = z.object({
       z
         .string()
         .min(1, "Email is required")
-        .email("Enter a valid email address")
+        .regex(
+          /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+          "Enter a valid email address"
+        )
         .max(254, "Email is too long")
     ),
   phone: z
     .string()
     .transform((v) => stripTags(v).trim())
-    .pipe(
-      z
-        .string()
-        .regex(
-          /^$|^\+?\d[\d\s\-()]{7,18}\d$/,
-          "Enter a valid phone number (e.g. +91 9875543210)"
-        )
+    .refine(
+      (v) => !v || /^[+]?[\d\s\-()]{5,20}$/.test(v),
+      "Enter a valid phone number (e.g. +91 9875543210 or 098-7554-3210)"
     ),
   socialLinks: z
-    .array(z.string().transform((v) => stripTags(v).trim()))
-    .min(1, "Please provide at least one social media link"),
+    .array(
+      z
+        .string()
+        .transform((v) => stripTags(v).trim())
+        .refine(
+          (url) => url.startsWith("https://"),
+          "Social media links must be HTTPS URLs"
+        )
+    )
+    .min(1, "Please provide at least one social media link")
+    .max(10, "Maximum 10 social media links allowed"),
 });
 
 type FormErrors = Partial<
@@ -102,7 +105,8 @@ export function CreatorRegisterModal({
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [verificationStep, setVerificationStep] = useState(false);
-  const { hasState: persistedSuccess, forceCheck } = useClientStatePolling("creatorRegistered");
+  const { hasState: persistedSuccess, forceCheck } =
+    useClientStatePolling("creatorRegistered");
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const isSuccess = persistedSuccess || submitSuccess;
   const [apiError, setApiError] = useState<string | null>(null);
@@ -275,7 +279,9 @@ export function CreatorRegisterModal({
     } catch (err: any) {
       if (err?.status === 422 && err?.data?.failed_links) {
         const newStatuses: Record<number, LinkStatus> = {};
-        const failedUrls = err.data.failed_links.map((f: { url: string }) => f.url);
+        const failedUrls = err.data.failed_links.map(
+          (f: { url: string }) => f.url
+        );
 
         sanitised.socialLinks.forEach((link, i) => {
           if (failedUrls.includes(link)) {
@@ -296,7 +302,9 @@ export function CreatorRegisterModal({
         const errorMsg =
           err instanceof Error
             ? err.message
-            : err?.data?.message || err?.message || "Something went wrong. Please try again.";
+            : err?.data?.message ||
+              err?.message ||
+              "Something went wrong. Please try again.";
         setApiError(errorMsg);
       }
     } finally {
@@ -391,10 +399,11 @@ export function CreatorRegisterModal({
                       value={formData.name}
                       onChange={handleChange}
                       disabled={isSubmitting}
-                      className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.name
-                        ? "border-red-600 focus:border-red-600"
-                        : "border-black/80 focus:border-black"
-                        } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
+                      className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${
+                        errors.name
+                          ? "border-red-600 focus:border-red-600"
+                          : "border-black/80 focus:border-black"
+                      } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                     />
                     {errors.name && (
                       <p className="mt-1 text-[13px] text-red-700 font-medium tracking-tight">
@@ -419,10 +428,11 @@ export function CreatorRegisterModal({
                       value={formData.email}
                       onChange={handleChange}
                       disabled={isSubmitting}
-                      className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.email
-                        ? "border-red-600 focus:border-red-600"
-                        : "border-black/80 focus:border-black"
-                        } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
+                      className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${
+                        errors.email
+                          ? "border-red-600 focus:border-red-600"
+                          : "border-black/80 focus:border-black"
+                      } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                     />
                     {errors.email && (
                       <p className="mt-1 text-[13px] text-red-700 font-medium tracking-tight">
@@ -450,10 +460,11 @@ export function CreatorRegisterModal({
                       value={formData.phone}
                       onChange={handleChange}
                       disabled={isSubmitting}
-                      className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${errors.phone
-                        ? "border-red-600 focus:border-red-600"
-                        : "border-black/80 focus:border-black"
-                        } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
+                      className={`w-full px-4 py-3 bg-theme-beige border-2 rounded-lg text-black placeholder:text-black/40 text-[15px] outline-none transition-colors ${
+                        errors.phone
+                          ? "border-red-600 focus:border-red-600"
+                          : "border-black/80 focus:border-black"
+                      } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                     />
                     {errors.phone && (
                       <p className="mt-1 text-[13px] text-red-700 font-medium tracking-tight">
@@ -472,20 +483,22 @@ export function CreatorRegisterModal({
                       <span className="text-red-700">*</span>
                     </label>
                     <div
-                      className={`w-full px-4 py-2 bg-theme-beige border-2 rounded-lg flex flex-wrap gap-2 items-center transition-colors min-h-[50px] text-black ${errors.socialLinks
-                        ? "border-red-600 focus-within:border-red-600"
-                        : "border-black/80 focus-within:border-black"
-                        } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
+                      className={`w-full px-4 py-2 bg-theme-beige border-2 rounded-lg flex flex-wrap gap-2 items-center transition-colors min-h-[50px] text-black ${
+                        errors.socialLinks
+                          ? "border-red-600 focus-within:border-red-600"
+                          : "border-black/80 focus-within:border-black"
+                      } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
                     >
                       {formData.socialLinks.map((link, i) => (
                         <span
                           key={i}
-                          className={`flex items-center gap-1.5 bg-white border rounded-full px-3 py-1 text-[14px] font-medium text-black transition-colors ${linkStatuses[i] === "success"
-                            ? "border-green-500 bg-green-50"
-                            : linkStatuses[i] === "error"
-                              ? "border-red-500 bg-red-50"
-                              : "border-black/30"
-                            }`}
+                          className={`flex items-center gap-1.5 bg-white border rounded-full px-3 py-1 text-[14px] font-medium text-black transition-colors ${
+                            linkStatuses[i] === "success"
+                              ? "border-green-500 bg-green-50"
+                              : linkStatuses[i] === "error"
+                                ? "border-red-500 bg-red-50"
+                                : "border-black/30"
+                          }`}
                         >
                           {linkStatuses[i] === "verifying" && (
                             <svg
@@ -640,7 +653,8 @@ export function CreatorRegisterModal({
                     </button>
                     {verificationStep && (
                       <p className="mt-3 text-[13px] text-black/60 font-medium text-center px-4">
-                        Please wait 1-2 minutes while we verify your social media links.
+                        Please wait 1-2 minutes while we verify your social
+                        media links.
                       </p>
                     )}
                   </div>
