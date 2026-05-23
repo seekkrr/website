@@ -104,12 +104,12 @@ export function registerInterest(
 
 /**
  * Submit user queries from the contact us page.
- * POST /api/queries
+ * POST /api/v2/queries
  */
 export function submitQuery(
     payload: SubmitQueryPayload,
 ): Promise<SubmitQueryResponse> {
-    return request<SubmitQueryResponse>("/api/queries", {
+    return request<SubmitQueryResponse>("/api/v2/queries", {
         method: "POST",
         body: JSON.stringify(payload),
     });
@@ -118,12 +118,12 @@ export function submitQuery(
 
 /**
  * Register creator interest (Application).
- * POST /api/creator/apply
+ * POST /api/v2/creator-applications
  */
 export async function registerCreator(
     payload: RegisterCreatorPayload,
 ): Promise<ApiResponse> {
-    return request<ApiResponse>("/api/creator/apply", {
+    return request<ApiResponse>("/api/v2/creator-applications", {
         method: "POST",
         body: JSON.stringify(payload),
     });
