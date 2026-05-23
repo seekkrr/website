@@ -26,7 +26,7 @@ const contactSchema = z
       .transform((v) => stripTags(v).trim().toLowerCase())
       .optional()
       .refine(
-        (val) => !val || /^[^@\s]+@[^@\s]+\.[a-zA-Z0-9]+$/.test(val),
+        (val) => !val || /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(val),
         "Enter a valid email address"
       ),
     phone: z
