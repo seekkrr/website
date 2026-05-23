@@ -7,16 +7,11 @@ import { registerCreator, ApiError } from "@/lib/api";
 import { clientState } from "@/lib/clientState";
 import { siteConfig } from "@/lib/config/site";
 import { useClientStatePolling } from "@/lib/hooks/useClientStatePolling";
+import { stripTags } from "@/lib/utils";
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
 const AUTO_CLOSE_DELAY_MS = 6_000;
-
-// ── Sanitisation ───────────────────────────────────────────────────────────
-// Strips HTML / script tags to prevent XSS when the value is ever rendered
-// or forwarded. This runs *before* zod's own validations via `.transform`.
-
-const stripTags = (v: string) => v.replace(/[<>]/g, "");
 
 // ── Zod Schema ─────────────────────────────────────────────────────────────
 

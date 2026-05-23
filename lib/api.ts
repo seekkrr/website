@@ -4,44 +4,43 @@
 // ────────────────────────────────────────────────────────────────────────────
 
 const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://api.seekkrr.com";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://api.seekkrr.com";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
 export interface RegisterInterestPayload {
-    name: string;
-    email: string;
-    phone?: string;
+  name: string;
+  email: string;
+  phone?: string;
 }
 
 export interface RegisterCreatorPayload {
-    name: string;
-    email: string;
-    phone?: string;
-    social_links: string[];
+  name: string;
+  email: string;
+  phone?: string;
+  social_links: string[];
 }
 
-
 export interface SubmitQueryPayload {
-    name: string;
-    email: string;
-    phone?: string;
-    message: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  message: string;
 }
 
 export interface SubmitQueryResponse {
-    message: string;
-    queries_id?: string;
+  message: string;
+  queries_id?: string;
 }
 
 export interface ApiSuccessResponse {
-    success: true;
-    message: string;
+  success: true;
+  message: string;
 }
 
 export interface ApiErrorResponse {
-    success: false;
-    message: string;
+  success: false;
+  message: string;
 }
 
 export type ApiResponse = ApiSuccessResponse | ApiErrorResponse;
@@ -49,42 +48,42 @@ export type ApiResponse = ApiSuccessResponse | ApiErrorResponse;
 // ── Helpers ────────────────────────────────────────────────────────────────
 
 export class ApiError extends Error {
-    public status: number;
-    public data: any;
+  public status: number;
+  public data: any;
 
-    constructor(message: string, status: number, data: any) {
-        super(message);
-        this.status = status;
-        this.data = data;
-        this.name = "ApiError";
-    }
+  constructor(message: string, status: number, data: any) {
+    super(message);
+    this.status = status;
+    this.data = data;
+    this.name = "ApiError";
+  }
 }
 
 async function request<T>(
-    endpoint: string,
-    options: RequestInit = {},
+  endpoint: string,
+  options: RequestInit = {}
 ): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
+  const url = `${API_BASE_URL}${endpoint}`;
 
-    const res = await fetch(url, {
-        headers: {
-            "Content-Type": "application/json",
-            ...options.headers,
-        },
-        ...options,
-    });
+  const res = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+    ...options,
+  });
 
-    // Attempt to parse JSON regardless of status to capture server error messages
-    const data = await res.json().catch(() => null);
+  // Attempt to parse JSON regardless of status to capture server error messages
+  const data = await res.json().catch(() => null);
 
-    if (!res.ok) {
-        const message =
-            (data as ApiErrorResponse)?.message ??
-            `Request failed with status ${res.status}`;
-        throw new ApiError(message, res.status, data);
-    }
+  if (!res.ok) {
+    const message =
+      (data as ApiErrorResponse)?.message ??
+      `Request failed with status ${res.status}`;
+    throw new ApiError(message, res.status, data);
+  }
 
-    return data as T;
+  return data as T;
 }
 
 // ── Endpoints ──────────────────────────────────────────────────────────────
@@ -94,12 +93,12 @@ async function request<T>(
  * POST /api/interest
  */
 export function registerInterest(
-    payload: RegisterInterestPayload,
+  payload: RegisterInterestPayload
 ): Promise<ApiResponse> {
-    return request<ApiResponse>("/api/interest", {
-        method: "POST",
-        body: JSON.stringify(payload),
-    });
+  return request<ApiResponse>("/api/interest", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
 
 /**
@@ -107,24 +106,23 @@ export function registerInterest(
  * POST /api/v2/queries
  */
 export function submitQuery(
-    payload: SubmitQueryPayload,
+  payload: SubmitQueryPayload
 ): Promise<SubmitQueryResponse> {
-    return request<SubmitQueryResponse>("/api/v2/queries", {
-        method: "POST",
-        body: JSON.stringify(payload),
-    });
+  return request<SubmitQueryResponse>("/api/v2/queries", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
-
 
 /**
  * Register creator interest (Application).
  * POST /api/v2/creator-applications
  */
 export async function registerCreator(
-    payload: RegisterCreatorPayload,
+  payload: RegisterCreatorPayload
 ): Promise<ApiResponse> {
-    return request<ApiResponse>("/api/v2/creator-applications", {
-        method: "POST",
-        body: JSON.stringify(payload),
-    });
+  return request<ApiResponse>("/api/v2/creator-applications", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }

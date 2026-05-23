@@ -8,17 +8,15 @@ import { Loader2 } from "lucide-react";
 import { submitQuery } from "@/lib/api";
 import { clientState } from "@/lib/clientState";
 import { useClientStatePolling } from "@/lib/hooks/useClientStatePolling";
-
-const stripTags = (v: string) => v.replace(/[<>]/g, "");
+import { stripTags } from "@/lib/utils";
 
 const contactSchema = z
   .object({
     name: z
       .string()
       .transform((v) => stripTags(v).trim())
-      .optional()
       .refine(
-        (val) => !val || (val.length >= 2 && val.length <= 100),
+        (val) => val.length >= 2 && val.length <= 100,
         "Name must be 2-100 characters"
       ),
     email: z
@@ -34,8 +32,8 @@ const contactSchema = z
       .transform((v) => stripTags(v).trim())
       .optional()
       .refine(
-        (val) => !val || /^\+?\d{9,15}$/.test(val),
-        "Please enter a valid phone number"
+        (val) => !val || /^[+]?[\d\s\-()]{5,20}$/.test(val),
+        "Please enter a valid phone number (e.g. +91 9875543210 or 098-7554-3210)"
       ),
     message: z
       .string()
@@ -79,8 +77,8 @@ export default function ContactUsPage() {
     try {
       setSubmitError("");
       const result = await submitQuery({
-        name: data.name,
-        email: data.email,
+        name: data.name || undefined,
+        email: data.email || undefined,
         phone: data.phone || undefined,
         message: data.message,
       });
