@@ -99,7 +99,7 @@ export default function AboutPage() {
               delay={0.1 * (i + 1)}
             >
               {/* Profile Image Wrap */}
-              <div className="relative w-[150px] h-[150px] sm:w-[150px] sm:h-[150px] md:w-[160px] md:h-[160px] lg:w-[170px] lg:h-[170px] mb-4 md:mb-5 hover:-translate-y-1 transition-transform duration-300">
+              <div className="relative w-[150px] h-[150px] md:w-[160px] md:h-[160px] lg:w-[170px] lg:h-[170px] mb-4 md:mb-5 hover:-translate-y-1 transition-transform duration-300">
                 <Image
                   src={profile.image}
                   alt={`${profile.name} Photo`}
