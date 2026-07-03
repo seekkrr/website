@@ -19,4 +19,10 @@ export const profiles = [
     image: CloudinaryIcons.profileRishabh,
     shadowColor: "#8398FF",
   },
+  {
+    name: "Deepak",
+    quote: "Why drink & drive when you can smoke & paraglide",
+    image: CloudinaryIcons.profileDeepak,
+    shadowColor: "#C86C51",
+  },
 ];

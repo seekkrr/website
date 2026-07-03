@@ -128,6 +128,9 @@ export const CloudinaryIcons = {
   profileRishabh: enrichCloudinaryUrl(
     "https://res.cloudinary.com/seekkrr/image/upload/v1772307241/rishabh_ub8zrf.png"
   ),
+  profileDeepak: enrichCloudinaryUrl(
+    "https://res.cloudinary.com/seekkrr/image/upload/v1783110921/Ellipse_1840_ko7tbg.png"
+  ),
 
   // About Page - Letters & Special Content
   dearReaderLetter: enrichCloudinaryUrl(
