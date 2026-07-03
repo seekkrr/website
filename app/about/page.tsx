@@ -91,7 +91,7 @@ export default function AboutPage() {
         </div>
 
         {/* Team Profiles */}
-        <div className="w-full max-w-[860px] mx-auto flex flex-col md:flex-row justify-between items-center md:items-start gap-10 md:gap-4 lg:gap-0 mb-12">
+        <div className="w-full max-w-[1080px] mx-auto grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-10 mb-12 justify-items-center">
           {profiles.map((profile, i) => (
             <AnimatedSection
               key={profile.name}
@@ -99,7 +99,7 @@ export default function AboutPage() {
               delay={0.1 * (i + 1)}
             >
               {/* Profile Image Wrap */}
-              <div className="relative w-[150px] h-[150px] md:w-[160px] md:h-[160px] lg:w-[170px] lg:h-[170px] mb-4 md:mb-5 hover:-translate-y-1 transition-transform duration-300">
+              <div className="relative w-[150px] h-[150px] sm:w-[150px] sm:h-[150px] md:w-[160px] md:h-[160px] lg:w-[170px] lg:h-[170px] mb-4 md:mb-5 hover:-translate-y-1 transition-transform duration-300">
                 <Image
                   src={profile.image}
                   alt={`${profile.name} Photo`}
@@ -111,7 +111,7 @@ export default function AboutPage() {
 
               {/* Info Box */}
               <div
-                className="border border-black rounded-2xl bg-[#FFFFF3] py-5 px-6 w-[260px] h-auto flex flex-col justify-center items-center"
+                className="border border-black rounded-2xl bg-[#FFFFF3] py-5 px-6 w-full max-w-[260px] flex flex-col justify-center items-center"
                 style={{ boxShadow: `4px 4px 0px 0px ${profile.shadowColor}` }}
               >
                 <h3 className="text-[22px] font-normal mb-2 text-black">
