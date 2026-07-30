@@ -4,137 +4,137 @@ export const CloudinaryIcons = {
   // We can inject the transformation string before the version number.
 
   balloon: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772045174/balloon_wtw4pu.svg"
+    "https://img.seekkrr.com/website/seekkrr/balloon_wtw4pu.svg"
   ),
   coffee: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772045142/coffee_v35gbd.svg"
+    "https://img.seekkrr.com/website/seekkrr/coffee_v35gbd.svg"
   ),
   backpack: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772044911/bagpack_kgex1i.svg"
+    "https://img.seekkrr.com/website/seekkrr/bagpack_kgex1i.svg"
   ),
   boat: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772044912/boat_xwygu6.svg"
+    "https://img.seekkrr.com/website/seekkrr/boat_xwygu6.svg"
   ),
   sleepingBag: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772044911/tent_xk1gpt.svg"
+    "https://img.seekkrr.com/website/seekkrr/tent_xk1gpt.svg"
   ),
   tent: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772044911/sleepbag_zpfawr.svg"
+    "https://img.seekkrr.com/website/seekkrr/sleepbag_zpfawr.svg"
   ),
 
   // Built for Explorers Icons
   board: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772129611/board_avyzsw.svg"
+    "https://img.seekkrr.com/website/seekkrr/board_avyzsw.svg"
   ),
   kayake: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772129609/kayake_j8s4xn.svg"
+    "https://img.seekkrr.com/website/seekkrr/kayake_j8s4xn.svg"
   ),
   compass: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772129602/compass_hhkehx.svg"
+    "https://img.seekkrr.com/website/seekkrr/compass_hhkehx.svg"
   ),
   mountain: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772129602/mountain_vuahx6.svg"
+    "https://img.seekkrr.com/website/seekkrr/mountain_vuahx6.svg"
   ),
   lamp: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772129602/lamp_yxmd89.svg"
+    "https://img.seekkrr.com/website/seekkrr/lamp_yxmd89.svg"
   ),
   fire: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772129602/fire_mz1p4s.svg"
+    "https://img.seekkrr.com/website/seekkrr/fire_mz1p4s.svg"
   ),
 
   // Freedom Section Icons
   trees: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772131758/trees_wqd6os.svg"
+    "https://img.seekkrr.com/website/seekkrr/trees_wqd6os.svg"
   ),
   sun: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772131761/sun_upedrc.svg"
+    "https://img.seekkrr.com/website/seekkrr/sun_upedrc.svg"
   ),
   drink: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772131760/drink_jydbdw.svg"
+    "https://img.seekkrr.com/website/seekkrr/drink_jydbdw.svg"
   ),
   guitar: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772131759/guitar_wby5hz.svg"
+    "https://img.seekkrr.com/website/seekkrr/guitar_wby5hz.svg"
   ),
   binoculars: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772131758/bino_l7bpod.svg"
+    "https://img.seekkrr.com/website/seekkrr/bino_l7bpod.svg"
   ),
   camera: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772131758/camera_rnwp8z.svg"
+    "https://img.seekkrr.com/website/seekkrr/camera_rnwp8z.svg"
   ),
 
   // The SeekKrr Way Icons
   blackboardDesktop: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772137812/blackboard_desktop_zvhiot.jpg"
+    "https://img.seekkrr.com/website/seekkrr/blackboard_desktop_zvhiot.jpg"
   ),
   blackboardMobile: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772137811/blackboard_mobile_huvqqb.jpg"
+    "https://img.seekkrr.com/website/seekkrr/blackboard_mobile_huvqqb.jpg"
   ),
 
   // What You Get Section
   painter: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772219160/painter_atiahu.png"
+    "https://img.seekkrr.com/website/seekkrr/painter_atiahu.png"
   ),
   photographer: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772219159/photographer_mrry45.png"
+    "https://img.seekkrr.com/website/seekkrr/photographer_mrry45.png"
   ),
   phoneMap: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772219161/phone_map_pvn1gd.png"
+    "https://img.seekkrr.com/website/seekkrr/phone_map_pvn1gd.png"
   ),
   route: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772219159/route_gfbbrj.png"
+    "https://img.seekkrr.com/website/seekkrr/route_gfbbrj.png"
   ),
   conversation: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772219160/conversation_dldupe.png"
+    "https://img.seekkrr.com/website/seekkrr/conversation_dldupe.png"
   ),
   seekkrrText: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772219159/seekkrr_text_qczfju.png"
+    "https://img.seekkrr.com/website/seekkrr/seekkrr_text_qczfju.png"
   ),
 
   // Creator Portal Hero
   creatorHero: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772362908/creator_hero_zclfoo.png"
+    "https://img.seekkrr.com/website/seekkrr/creator_hero_zclfoo.png"
   ),
 
   // Creator Portal Steps & Features
   creatorBox1: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772361359/creator_box1_x4vilt.png"
+    "https://img.seekkrr.com/website/seekkrr/creator_box1_x4vilt.png"
   ),
   creatorBox2: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772361359/creator_box2_fz8zsd.png"
+    "https://img.seekkrr.com/website/seekkrr/creator_box2_fz8zsd.png"
   ),
   creatorBox3: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772361359/creator_box3_xpzynh.png"
+    "https://img.seekkrr.com/website/seekkrr/creator_box3_xpzynh.png"
   ),
   creatorBox4: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772361358/creator_box4_a4nnz6.png"
+    "https://img.seekkrr.com/website/seekkrr/creator_box4_a4nnz6.png"
   ),
   creatorCheckpoints: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772361358/checkpoints_fqyjwb.png"
+    "https://img.seekkrr.com/website/seekkrr/checkpoints_fqyjwb.png"
   ),
   creatorBaat: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772361358/baat_frari6.png"
+    "https://img.seekkrr.com/website/seekkrr/baat_frari6.png"
   ),
   creatorMilestone: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772361358/friend_milestone_xqwshw.png"
+    "https://img.seekkrr.com/website/seekkrr/friend_milestone_xqwshw.png"
   ),
 
   // About Page - Team Profiles
   profileSudhanshu: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772307241/sudhanshu_mths0x.png"
+    "https://img.seekkrr.com/website/seekkrr/sudhanshu_mths0x.png"
   ),
   profileSarthak: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772307242/sarthak_ocbbnb.png"
+    "https://img.seekkrr.com/website/seekkrr/sarthak_ocbbnb.png"
   ),
   profileRishabh: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772307241/rishabh_ub8zrf.png"
+    "https://img.seekkrr.com/website/seekkrr/rishabh_ub8zrf.png"
   ),
   profileDeepak: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1783110921/Ellipse_1840_ko7tbg.png"
+    "https://img.seekkrr.com/website/seekkrr/Ellipse_1840_ko7tbg.png"
   ),
 
   // About Page - Letters & Special Content
   dearReaderLetter: enrichCloudinaryUrl(
-    "https://res.cloudinary.com/seekkrr/image/upload/v1772307241/dear_reader_co3mu3.png"
+    "https://img.seekkrr.com/website/seekkrr/dear_reader_co3mu3.png"
   ),
 };
 
