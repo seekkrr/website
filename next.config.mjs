@@ -29,6 +29,13 @@ const nextConfig = {
         formats: ["image/avif", "image/webp"],
         remotePatterns: [
             {
+                // Primary asset CDN (lib/config/assets.ts).
+                protocol: "https",
+                hostname: "img.seekkrr.com",
+                pathname: "/**",
+            },
+            {
+                // Still used by lib/cloudinaryLoader.ts (CreatorSteps).
                 protocol: "https",
                 hostname: "res.cloudinary.com",
                 pathname: "/**",

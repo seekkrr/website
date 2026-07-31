@@ -14,18 +14,17 @@ export default function cloudinaryLoader({
         `q_${quality || "auto"}`,
     ].join(",");
 
-    // If the src is already a Cloudinary URL, just return it
+    // Any absolute URL is already a fully-qualified asset URL — Cloudinary, or the
+    // img.seekkrr.com CDN that most assets moved to. Serve it untouched; wrapping it
+    // in a Cloudinary transform path produces .../upload/<params>/https:/img.seekkrr.com/...
+    // which 404s.
     try {
-        const url = new URL(src);
-        const hostname = url.hostname.toLowerCase();
-        if (
-            hostname === "cloudinary.com" ||
-            hostname.endsWith(".cloudinary.com")
-        ) {
+        const { protocol } = new URL(src);
+        if (protocol === "https:" || protocol === "http:") {
             return src;
         }
     } catch {
-        // src is likely a relative path; fall through and construct a Cloudinary URL
+        // src is a relative path or bare Cloudinary public ID; fall through and build one.
     }
 
     // Otherwise, construct the URL using the project's cloud name

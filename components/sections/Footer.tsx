@@ -14,6 +14,19 @@ export function Footer() {
                     <div className="flex flex-col">
                         <span className="font-jakarta text-[24px] font-bold text-white tracking-tight">{siteConfig.name}</span>
                     </div>
+                    {/* Registered entity details — kept visible for business-verification
+                        checks (Meta, payment gateways) that scrape the homepage. */}
+                    <address className="not-italic font-jakarta text-gray-400 text-[13px] text-center md:text-left leading-relaxed">
+                        {siteConfig.address}, {siteConfig.postalCode}, {siteConfig.jurisdiction}
+                        <br />
+                        <a href={`tel:${siteConfig.phone.replace(/\s/g, "")}`} className="hover:text-theme-yellow transition-colors">
+                            {siteConfig.phone}
+                        </a>
+                        <span className="mx-2">|</span>
+                        <a href={`mailto:${siteConfig.email}`} className="hover:text-theme-yellow transition-colors">
+                            {siteConfig.email}
+                        </a>
+                    </address>
                     <p className="font-jakarta text-gray-400 text-[14px] text-center md:text-left pt-1">
                         {new Date().getFullYear()} <span className="mx-1">|</span> &copy; {siteConfig.company} <span className="mx-1">|</span> All rights reserved.
                     </p>
