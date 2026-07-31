@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { CloudinaryIcons } from "@/lib/config/assets";
-import cloudinaryLoader from "@/lib/cloudinaryLoader";
 
 export function HeroCreator() {
     return (
@@ -60,7 +59,6 @@ export function HeroCreator() {
                         className="relative w-full max-w-[260px] sm:max-w-[340px] lg:max-w-[380px] xl:max-w-[420px] h-[95%] lg:h-[88%] xl:h-[92%] flex items-end"
                     >
                         <Image
-                            loader={cloudinaryLoader}
                             src={CloudinaryIcons.creatorHero}
                             alt="Creator Hero Illustration"
                             fill

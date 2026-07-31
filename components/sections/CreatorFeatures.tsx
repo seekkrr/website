@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { CloudinaryIcons } from "@/lib/config/assets";
-import cloudinaryLoader from "@/lib/cloudinaryLoader";
 
 export function CreatorFeatures() {
     return (
@@ -36,7 +35,6 @@ export function CreatorFeatures() {
                     <div className="relative w-full flex-[1] flex items-end justify-center rounded-b-[24px] overflow-hidden -mb-[2px]">
                         <div className="relative w-[90%] lg:w-[85%] h-[95%]">
                             <Image
-                                loader={cloudinaryLoader}
                                 src={CloudinaryIcons.creatorCheckpoints}
                                 alt="Navigate Spots"
                                 fill
@@ -60,7 +58,6 @@ export function CreatorFeatures() {
                     >
                         <div className="relative w-full sm:w-1/2 h-[160px] sm:h-[180px] md:h-[200px] lg:h-[160px] xl:h-full flex items-center justify-center">
                             <Image
-                                loader={cloudinaryLoader}
                                 src={CloudinaryIcons.creatorBaat}
                                 alt="Ek Samay ki Baat Hai"
                                 fill
@@ -92,7 +89,6 @@ export function CreatorFeatures() {
                             <div className="relative w-full flex-[1] flex items-end justify-center rounded-b-[24px] overflow-hidden -mb-[2px]">
                                 <div className="relative w-[90%] lg:w-[85%] h-full">
                                     <Image
-                                        loader={cloudinaryLoader}
                                         src={CloudinaryIcons.creatorMilestone}
                                         alt="Solve Milestones"
                                         fill

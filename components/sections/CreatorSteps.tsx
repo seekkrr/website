@@ -5,7 +5,6 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { CloudinaryIcons } from "@/lib/config/assets";
-import cloudinaryLoader from "@/lib/cloudinaryLoader";
 import { useClientStatePolling } from "@/lib/hooks/useClientStatePolling";
 
 // Dynamic import for CreatorRegisterModal - code split automatically
@@ -139,7 +138,6 @@ export function CreatorSteps() {
             </h4>
             <div className="relative w-full flex-1 flex flex-col items-center mx-0 px-0 justify-end mt-auto -mb-[2px]">
               <Image
-                loader={cloudinaryLoader}
                 src={step.image}
                 alt={step.title}
                 width={400}

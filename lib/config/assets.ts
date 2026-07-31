@@ -1,7 +1,7 @@
 export const CloudinaryIcons = {
-  // We add f_auto,q_auto to the Cloudinary URL path for automatic optimization to WebP/AVIF where applicable.
-  // Given the base URL format: https://res.cloudinary.com/seekkrr/image/upload/v...
-  // We can inject the transformation string before the version number.
+
+  // Logo
+  logoIcon:"https://img.seekkrr.com/website/seekkrr/SeekKrr_Logo_mw9777.svg",
 
   balloon:"https://img.seekkrr.com/website/seekkrr/balloon_wtw4pu.svg",
   coffee:"https://img.seekkrr.com/website/seekkrr/coffee_v35gbd.svg",
@@ -59,12 +59,3 @@ export const CloudinaryIcons = {
   // About Page - Letters & Special Content
   dearReaderLetter:"https://img.seekkrr.com/website/seekkrr/dear_reader_co3mu3.png",
 };
-
-/**
- * Ensures a cloudinary URL has optimal delivery parameters applied.
- */
-function enrichCloudinaryUrl(url: string, params: string = "f_auto/q_auto") {
-  if (url.includes(params)) return url;
-  // Inject parameters right after 'upload/'
-  return url.replace("/upload/", `/upload/${params}/`);
-}
