@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import cloudinaryLoader from "@/lib/cloudinaryLoader";
+import { CloudinaryIcons } from "@/lib/config/assets";
 import { siteConfig } from "@/lib/config/site";
 
 const NAV_LINKS = [
@@ -35,11 +35,10 @@ export function Navbar() {
                             priority
                         />
                     </div>
-                    {/* Icon SVG optimized via custom Cloudinary loader */}
+                    {/* Icon SVG from CDN */}
                     <div className="relative h-10 w-10 sm:h-12 sm:w-12 transition-transform hover:scale-105">
                         <Image
-                            loader={cloudinaryLoader}
-                            src={siteConfig.assets.logoIconId}
+                            src={CloudinaryIcons.logoIcon}
                             alt={`${siteConfig.name} Logo`}
                             fill
                             sizes="(max-width: 640px) 40px, 48px"

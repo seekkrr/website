@@ -2,9 +2,11 @@ export const siteConfig = {
   name: "SeekKrr",
   company: "SOLOQUEST PRIVATE LIMITED",
   address: "HIG-29A, Kaushambi Kunj, Kalindipuram, Rajrooppur, Allahabad",
+  postalCode: "211011",
   jurisdiction: "Uttar Pradesh, India",
   disputeLocation: "Allahabad, Uttar Pradesh, India",
   email: "support@seekkrr.com",
+  phone: "+91 9310785883",
   url: "https://seekkrr.com",
   playStoreUrl: "https://play.google.com/store/apps/details?id=com.seekkrr.app",
   termsLastUpdated: "February 23, 2026",
@@ -15,8 +17,7 @@ export const siteConfig = {
   description:
     "SeekKrr is the ultimate quest travel app. Transform your journeys into extraordinary adventures with gamified quests, exploration challenges, and a community of creators.",
   assets: {
-    logoIconId: "v1772038022/SeekKrr_Logo_mw9777.svg", // For cloudinaryLoader
-    logoTextPath: "/assets/images/SeekKrr_Text.png", // For public/assets
+    logoTextPath: "/assets/images/SeekKrr_Text.png",
   },
   socials: {
     whatsapp: "https://chat.whatsapp.com/FZxZgnAoDdc2GpiXTW2ZWS",
