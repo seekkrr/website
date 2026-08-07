@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "SeekKrr",
   company: "SOLOQUEST PRIVATE LIMITED",
-  address: "HIG-29A, Kaushambi Kunj, Kalindipuram, Rajrooppur, Allahabad",
+  address: "Rajrooppur, Allahabad",
   postalCode: "211011",
   jurisdiction: "Uttar Pradesh, India",
   disputeLocation: "Allahabad, Uttar Pradesh, India",
