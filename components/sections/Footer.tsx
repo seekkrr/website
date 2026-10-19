@@ -4,6 +4,16 @@ import Link from "next/link";
 import { Instagram, Linkedin } from "lucide-react";
 import { siteConfig } from "@/lib/config/site";
 
+const FOOTER_LINKS = [
+    { name: "For Business", href: "/business" },
+    { name: "Places", href: "/places" },
+    { name: "Business Pricing", href: "/business/pricing" },
+    { name: "Terms and Conditions", href: "/terms" },
+    { name: "Privacy Policy", href: "/privacy" },
+    { name: "Creator Terms", href: siteConfig.creatorTermsLink },
+    { name: "Business Terms", href: siteConfig.businessTermsLink },
+];
+
 export function Footer() {
     return (
         <footer className="w-full bg-black text-white px-6 md:px-12 py-4 md:py-8">
@@ -33,14 +43,13 @@ export function Footer() {
                 </div>
 
                 {/* Center: Legal Links */}
-                <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 font-jakarta text-[14px] md:text-[15px]">
-                    <Link href="/terms" className="text-gray-300 hover:text-theme-yellow transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-theme-yellow hover:after:w-full after:transition-all">
-                        Terms and Conditions
-                    </Link>
-                    <Link href="/privacy" className="text-gray-300 hover:text-theme-yellow transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-theme-yellow hover:after:w-full after:transition-all">
-                        Privacy Policy
-                    </Link>
-                </div>
+                <nav aria-label="Footer" className="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center items-center gap-x-8 gap-y-3 font-jakarta text-[14px] md:text-[15px] max-w-[520px] text-center sm:text-left">
+                    {FOOTER_LINKS.map((link) => (
+                        <Link key={link.href} href={link.href} className="text-gray-300 hover:text-theme-yellow transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-theme-yellow hover:after:w-full after:transition-all">
+                            {link.name}
+                        </Link>
+                    ))}
+                </nav>
 
                 {/* Right: Social Media Icons */}
                 <div className="flex items-center gap-4">

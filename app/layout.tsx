@@ -74,7 +74,7 @@ export const metadata: Metadata = {
       "Transform your travels into extraordinary quests. Discover the ultimate quest travel app for explorers and creators.",
     images: [
       {
-        url: "/assets/images/og-image.png", // Placeholder, will check if exists or needs creation
+        url: "/assets/images/og-image.png", // Branded 1200x630 default (public/assets/images)
         width: 1200,
         height: 630,
         alt: `${siteConfig.name} — Discover Your Next Adventure`,

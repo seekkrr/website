@@ -12,7 +12,9 @@ const NAV_LINKS = [
     { name: "Home", href: "/" },
     { name: "About Us", href: "/about" },
     { name: "Travel Stories", href: "/stories" },
+    { name: "Places", href: "/places" },
     { name: "Become a creator", href: "/creators" },
+    { name: "For Business", href: "/business" },
     { name: "Contact Us", href: "/contact" },
 ];
 
@@ -49,7 +51,7 @@ export function Navbar() {
                 </Link>
 
                 {/* Navigation Links (Desktop) */}
-                <nav className="hidden lg:flex items-center gap-8">
+                <nav className="hidden xl:flex items-center gap-8">
                     {NAV_LINKS.map((link) => (
                         <Link
                             key={link.name}
@@ -63,7 +65,7 @@ export function Navbar() {
 
                 {/* Hamburger Toggle (Mobile/Tablet) */}
                 <button
-                    className="lg:hidden flex items-center justify-center p-2 text-white hover:text-theme-yellow transition-colors z-50"
+                    className="xl:hidden flex items-center justify-center p-2 text-white hover:text-theme-yellow transition-colors z-50"
                     onClick={() => setIsOpen(!isOpen)}
                     aria-label="Toggle Menu"
                 >
@@ -79,7 +81,7 @@ export function Navbar() {
                         animate={{ opacity: 1, height: "100vh" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="fixed inset-0 z-40 bg-black/95 backdrop-blur-md flex flex-col items-center justify-center overflow-hidden lg:hidden"
+                        className="fixed inset-0 z-40 bg-black/95 backdrop-blur-md flex flex-col items-center justify-center overflow-hidden xl:hidden"
                     >
                         <nav className="flex flex-col items-center gap-8 mt-16 w-full px-6">
                             {NAV_LINKS.map((link, index) => (

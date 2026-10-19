@@ -1,7 +1,10 @@
 import { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/config/site";
+import { getPublicBusinessSlugs } from "@/lib/collabs";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const revalidate = 3600;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.url;
 
   // Use current date for static routes to signal freshness
@@ -50,7 +53,53 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.3,
     },
+    {
+      url: `${baseUrl}/business`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/business/pricing`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/business/apply`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/places`,
+      lastModified,
+      changeFrequency: "daily",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/creator-terms`,
+      lastModified,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/business-terms`,
+      lastModified,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
   ];
 
-  return staticRoutes;
+  // Public business pages; getPublicBusinessSlugs() returns [] if the API is down,
+  // so the sitemap (and the build) never fail on it.
+  const slugs = await getPublicBusinessSlugs();
+  const placeRoutes: MetadataRoute.Sitemap = slugs.map(({ slug, updated_at }) => ({
+    url: `${baseUrl}/places/${encodeURIComponent(slug)}`,
+    lastModified: updated_at ?? lastModified,
+    changeFrequency: "weekly",
+    priority: 0.7,
+  }));
+
+  return [...staticRoutes, ...placeRoutes];
 }

@@ -12,3 +12,4 @@ export { Footer } from "./Footer";
 export { HeroCreator } from "./HeroCreator";
 export { CreatorSteps } from "./CreatorSteps";
 export { CreatorFeatures } from "./CreatorFeatures";
+export { CreatorCollabs } from "./CreatorCollabs";

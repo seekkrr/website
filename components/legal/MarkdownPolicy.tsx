@@ -36,6 +36,7 @@ export function MarkdownPolicy({ content }: MarkdownPolicyProps) {
               else if (mappedHref.includes("terms-and-conditions")) mappedHref = "/terms";
               else if (mappedHref.includes("refund-policy")) mappedHref = "/refund";
               else if (mappedHref.includes("creator-terms")) mappedHref = "/creator-terms";
+              else if (mappedHref.includes("business-terms")) mappedHref = "/business-terms";
             }
 
             const isInternal = mappedHref.startsWith("/") || mappedHref.startsWith("#");

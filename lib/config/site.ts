@@ -9,10 +9,18 @@ export const siteConfig = {
   phone: "+91 9310785883",
   url: "https://seekkrr.com",
   playStoreUrl: "https://play.google.com/store/apps/details?id=com.seekkrr.app",
+  appStoreUrl: "https://apps.apple.com/in/app/seekkrr/id6813190942",
+  // Backend smart link: iOS -> App Store, Android -> Play Store, desktop -> chooser.
+  appDownloadUrl: "https://api.seekkrr.com/api/v2/app",
+  // Partner Portal (the business dashboard lives in the creator portal).
+  partnerPortalUrl: "https://creator.seekkrr.com",
+  appScheme: "seekkrr://",
   termsLastUpdated: "February 23, 2026",
   privacyLastUpdated: "February 9, 2026",
   refundLastUpdated: "April 4, 2026",
   creatorPayoutLink: "/creator-terms",
+  creatorTermsLink: "/creator-terms",
+  businessTermsLink: "/business-terms",
   tagline: "Discover Your Next Adventure",
   description:
     "SeekKrr is the ultimate quest travel app. Transform your journeys into extraordinary adventures with gamified quests, exploration challenges, and a community of creators.",
