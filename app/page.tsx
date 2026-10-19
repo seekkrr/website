@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { HeroTripod, EarlyAccess, BuiltForExplorers, WhatYouGet, FreedomSection, TheSeekKrrWay, TravelWithSeekKrr } from "@/components/sections";
 import { siteConfig } from "@/lib/config/site";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { PartnerWall } from "@/components/business/PartnerWall";
 
 export const metadata: Metadata = {
   title: `${siteConfig.name} — Quest Travel App for Explorers`,
@@ -58,6 +59,9 @@ export default function HomePage() {
 
       {/* What You Get Section */}
       <WhatYouGet />
+
+      {/* Partner wall: featured SeekKrr businesses (hidden when there are none) */}
+      <PartnerWall />
 
       {/* Freedom Section */}
       <FreedomSection />

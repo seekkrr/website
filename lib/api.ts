@@ -3,7 +3,7 @@
 // the base URL, headers, and error handling live in one place.
 // ────────────────────────────────────────────────────────────────────────────
 
-const API_BASE_URL =
+export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://api.seekkrr.com";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -49,9 +49,9 @@ export type ApiResponse = ApiSuccessResponse | ApiErrorResponse;
 
 export class ApiError extends Error {
   public status: number;
-  public data: any;
+  public data: unknown;
 
-  constructor(message: string, status: number, data: any) {
+  constructor(message: string, status: number, data: unknown) {
     super(message);
     this.status = status;
     this.data = data;
@@ -59,28 +59,45 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(
+/**
+ * Pull a human-readable message out of an error body. AppError responses carry
+ * `message`; FastAPI body validation (422) carries `detail` (string or array).
+ */
+function errorMessageFrom(data: unknown, status: number): string {
+  if (data && typeof data === "object") {
+    const body = data as { message?: unknown; detail?: unknown };
+    if (typeof body.message === "string" && body.message) return body.message;
+    if (typeof body.detail === "string" && body.detail) return body.detail;
+    if (Array.isArray(body.detail) && body.detail.length > 0) {
+      const first = body.detail[0] as { msg?: unknown };
+      if (typeof first?.msg === "string") return first.msg;
+    }
+  }
+  return `Request failed with status ${status}`;
+}
+
+export async function request<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
-  const res = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-    ...options,
-  });
+  // Merge headers explicitly and pass them last: spreading `options` after a
+  // merged `headers` object would let a caller's `options.headers` replace the
+  // merged set and silently drop Content-Type.
+  const headers = new Headers(options.headers);
+  if (options.body !== undefined && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+  if (!headers.has("Accept")) headers.set("Accept", "application/json");
+
+  const res = await fetch(url, { ...options, headers });
 
   // Attempt to parse JSON regardless of status to capture server error messages
   const data = await res.json().catch(() => null);
 
   if (!res.ok) {
-    const message =
-      (data as ApiErrorResponse)?.message ??
-      `Request failed with status ${res.status}`;
-    throw new ApiError(message, res.status, data);
+    throw new ApiError(errorMessageFrom(data, res.status), res.status, data);
   }
 
   return data as T;

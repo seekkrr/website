@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { HeroCreator, CreatorSteps, CreatorFeatures } from "@/components/sections";
+import { HeroCreator, CreatorSteps, CreatorFeatures, CreatorCollabs } from "@/components/sections";
 import { siteConfig } from "@/lib/config/site";
 
 import { StructuredData } from "@/components/seo/StructuredData";
@@ -25,6 +25,7 @@ export default function CreatorsPage() {
             <HeroCreator />
             <CreatorSteps />
             <CreatorFeatures />
+            <CreatorCollabs />
         </div>
     );
 }
