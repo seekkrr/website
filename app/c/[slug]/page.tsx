@@ -293,7 +293,7 @@ export default async function CreatorPage({ params }: { params: Params }) {
         <div className="flex flex-col items-start gap-4 rounded-[24px] border-[3px] border-black bg-theme-green p-6 text-theme-beige sm:flex-row sm:items-center sm:justify-between sm:p-8 xl:rounded-[32px]">
           <p className="max-w-[520px] text-[16px] leading-relaxed">
             <span className="font-jakarta font-bold">Run a café, stay or adventure?</span> Businesses on SeekKrr
-            can invite creators like {creator.display_name} through SeekKrr Match.
+            Pro can find and invite creators like {creator.display_name} with AI creator matching.
           </p>
           <Link href="/business" className={buttonVariants({ variant: "light", size: "md" })}>
             SeekKrr for Business

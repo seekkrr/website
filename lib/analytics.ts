@@ -1,11 +1,12 @@
 import { track } from "@vercel/analytics";
 
-/** Funnel events for SeekKrr for Business (Vercel Web Analytics custom events). */
+/** Funnel events (Vercel Web Analytics custom events). */
 export type FunnelEvent =
   | "business_builder_used"
-  | `apply_step_${number}`
-  | "apply_submitted"
-  | "pricing_toggle";
+  | "pricing_toggle"
+  // Hand-offs to the Partner Portal, where sign-in and the sign-up forms live.
+  | "business_signup_handoff"
+  | "creator_signup_handoff";
 
 type EventProps = Record<string, string | number | boolean | null>;
 

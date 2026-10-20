@@ -1,6 +1,13 @@
 import { Accordion, type AccordionItem } from "@/components/ui/Accordion";
 import { SectionHeading } from "@/components/collabs/SectionHeading";
 
+/** Shared by the /business and /business/pricing FAQs. */
+export const AI_MATCHING_FAQ = {
+  id: "ai-matching",
+  q: "How does AI creator matching work?",
+  a: "SeekKrr Match AI uses recommendation algorithms to rank the creators who have opted in to collabs, separately for each of your collabs. It weighs how well their interests and content categories fit your place, who's in town now (recent check-ins nearby), their ratings and how reliably they post, whether their formats suit your brief, and which creators similar businesses rated well. Every match shows reason chips that tell you why it fits. Full AI matching, with creator invites and the score breakdown, is on the Pro plan; Free and Growth get a top-3 match preview each month.",
+};
+
 export const BUSINESS_FAQ: { id: string; q: string; a: string }[] = [
   {
     id: "pay-creators",
@@ -12,6 +19,7 @@ export const BUSINESS_FAQ: { id: string; q: string; a: string }[] = [
     q: "Which creators can redeem my collab?",
     a: "Only creators who have opted in to collabs, confirmed they're 18+ and accepted the collab terms. With an Approval collab you see their profile, verified handles and track record before saying yes, and you can limit a collab to verified creators.",
   },
+  AI_MATCHING_FAQ,
   {
     id: "redeem-code",
     q: "How does the redeem code work?",
@@ -53,7 +61,7 @@ export function BusinessFaq({ title = "Questions businesses ask", items = BUSINE
   return (
     <section
       aria-labelledby="faq-title"
-      className="relative w-full bg-theme-beige px-4 py-16 sm:px-6 md:px-12 lg:px-24 lg:py-20"
+      className="relative w-full bg-theme-beige px-4 py-10 sm:px-6 md:px-12 md:py-14 lg:px-24 lg:py-16"
     >
       <div className="mx-auto w-full max-w-[860px]">
         <SectionHeading id="faq-title" eyebrow="Good to know" title={title} />

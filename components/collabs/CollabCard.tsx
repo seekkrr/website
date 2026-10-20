@@ -17,8 +17,9 @@ interface CollabCardProps {
 
 /**
  * Mirrors the app's "Available Collaborations" card on the business check-in
- * page: Want / For / Description, a "New" badge and the Redeem/Avail action.
- * Purely presentational: the action is shown, not wired.
+ * page: Want / For / Description, a "New" badge, the mode pill and the brief.
+ * Purely presentational. The in-app Redeem/Avail action is left out on the
+ * website on purpose.
  */
 export function CollabCard({
   want,
@@ -94,18 +95,6 @@ export function CollabCard({
           Brief: {brief}
         </p>
       )}
-
-      <div className="flex items-center justify-between gap-3 pt-1">
-        <p className="text-[13px] text-black/55">
-          {mode === "open" ? "Staff enter your code to redeem" : "You approve before they visit"}
-        </p>
-        <span
-          aria-hidden="true"
-          className="inline-flex shrink-0 items-center rounded-full border-2 border-black bg-black px-5 py-2 font-jakarta text-[14px] font-bold text-white"
-        >
-          {mode === "open" ? "Redeem" : "Avail"}
-        </span>
-      </div>
     </article>
   );
 }

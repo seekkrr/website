@@ -127,7 +127,7 @@ export default async function PlacePage({ params }: { params: Params }) {
   const photos = business.photos.length ? business.photos : business.places.map((p) => p.image).filter((x): x is string => !!x);
 
   return (
-    <div className="relative min-h-screen bg-theme-beige px-4 pb-20 pt-32 sm:px-6 md:px-12 lg:px-24">
+    <div className="relative min-h-screen bg-theme-beige px-4 pb-12 pt-24 sm:px-6 sm:pt-28 md:px-12 md:pb-16 lg:px-24">
       <StructuredData
         data={[
           { name: "Home", item: "/" },
@@ -138,7 +138,7 @@ export default async function PlacePage({ params }: { params: Params }) {
       <StructuredData type="LocalBusiness" data={localBusinessJsonLd(business)} />
 
       <div className="mx-auto w-full max-w-[1240px]">
-        <nav aria-label="Breadcrumb" className="mb-6">
+        <nav aria-label="Breadcrumb" className="mb-4">
           <ol className="flex flex-wrap items-center gap-1 text-[14px] font-medium text-black/60">
             <li>
               <Link href="/places" className="underline-offset-4 hover:text-black hover:underline">
@@ -154,7 +154,7 @@ export default async function PlacePage({ params }: { params: Params }) {
           </ol>
         </nav>
 
-        <header className="mb-8 flex flex-col gap-3">
+        <header className="mb-6 flex flex-col gap-2.5">
           <div className="flex flex-wrap gap-2">
             {business.region_name && (
               <Badge variant="yellow" size="lg">
@@ -186,8 +186,8 @@ export default async function PlacePage({ params }: { params: Params }) {
           )}
         </header>
 
-        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[1.5fr_1fr] lg:gap-12">
-          <div className="flex min-w-0 flex-col gap-10">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1.5fr_1fr] lg:gap-10">
+          <div className="flex min-w-0 flex-col gap-8">
             {photos.length > 0 && <PhotoCarousel photos={photos} name={business.name} />}
 
             {business.description && (
@@ -206,7 +206,7 @@ export default async function PlacePage({ params }: { params: Params }) {
                 <h2 id="collabs-title" className="font-handwriting text-[40px] font-bold leading-none text-black sm:text-[48px]">
                   Open for collabs
                 </h2>
-                <p className="mb-5 mt-2 text-[15px] leading-relaxed text-black/70">
+                <p className="mb-4 mt-1.5 text-[15px] leading-relaxed text-black/70">
                   Creators: check in at {business.name} in the SeekKrr app to see the full brief and redeem.
                 </p>
                 <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -279,7 +279,7 @@ export default async function PlacePage({ params }: { params: Params }) {
             )}
           </div>
 
-          <aside className="flex flex-col gap-6 lg:sticky lg:top-28" aria-label={`Visit ${business.name}`}>
+          <aside className="flex flex-col gap-5 lg:sticky lg:top-24" aria-label={`Visit ${business.name}`}>
             <div className="rounded-[24px] border-[3px] border-black bg-white p-6 [box-shadow:8px_8px_0_var(--color-blue-accent)] xl:rounded-[32px]">
               <h2 className="font-jakarta text-[22px] font-extrabold leading-tight text-black">
                 Visit with SeekKrr

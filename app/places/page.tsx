@@ -7,7 +7,7 @@ import { SectionHeading } from "@/components/collabs/SectionHeading";
 import { CtaStrip } from "@/components/business/CtaStrip";
 import { PlacesFilters } from "@/components/places/PlacesFilters";
 import { StructuredData } from "@/components/seo/StructuredData";
-import { getPublicBusinesses, type PublicBusiness } from "@/lib/collabs";
+import { getBusinessCategories, getPublicBusinesses, type BusinessCategory, type PublicBusiness } from "@/lib/collabs";
 import { siteConfig } from "@/lib/config/site";
 import { cn } from "@/lib/utils";
 
@@ -70,37 +70,59 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
   };
 }
 
-function facets(businesses: PublicBusiness[], filters: Filters, current: PublicBusiness[]) {
+function regionOptions(...lists: PublicBusiness[][]) {
   const regions = new Map<string, string>();
-  const categories = new Set<string>();
-  for (const b of [...businesses, ...current]) {
+  for (const b of lists.flat()) {
     if (b.region_id && b.region_name) regions.set(b.region_id, b.region_name);
-    b.categories.forEach((c) => categories.add(c));
   }
-  if (filters.category) categories.add(filters.category);
-  return {
-    regions: [...regions.entries()]
-      .map(([value, label]) => ({ value, label }))
-      .sort((a, b) => a.label.localeCompare(b.label)),
-    categories: [...categories].sort((a, b) => a.localeCompare(b)).map((c) => ({ value: c, label: c })),
-  };
+  return [...regions.entries()]
+    .map(([value, label]) => ({ value, label }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+}
+
+/**
+ * Match a `?category=` value to the catalog's spelling (category or
+ * sub-category, case-insensitive). The API matches names exactly, so `cafe`
+ * becomes `Cafe`; unknown values pass through unchanged.
+ */
+function canonicalCategory(value: string | undefined, categories: BusinessCategory[]) {
+  if (!value) return undefined;
+  const wanted = value.toLowerCase();
+  for (const c of categories) {
+    if (c.name.toLowerCase() === wanted) return c.name;
+    const sub = c.sub_categories.find((s) => s.toLowerCase() === wanted);
+    if (sub) return sub;
+  }
+  return value;
 }
 
 export default async function PlacesPage({ searchParams }: { searchParams: SearchParams }) {
-  const filters = parseFilters(await searchParams);
-  const filtered = !!(filters.region || filters.category || filters.q);
+  const parsed = parseFilters(await searchParams);
 
-  const [list, facetSource, featured] = await Promise.all([
+  // Cached for an hour (ISR); falls back to a static list if the endpoint is unavailable.
+  const categoriesRequest = getBusinessCategories();
+  const listFor = (category: string | undefined) =>
     getPublicBusinesses({
-      region_id: filters.region,
-      category: filters.category,
-      q: filters.q,
-      page: filters.page,
+      region_id: parsed.region,
+      category,
+      q: parsed.q,
+      page: parsed.page,
       page_size: PAGE_SIZE,
-    }),
+    });
+  const unfiltered = !(parsed.region || parsed.category || parsed.q);
+
+  const [{ categories }, list, facetSource, featured] = await Promise.all([
+    categoriesRequest,
+    // Only a category filter has to wait for the catalog (to fix its spelling).
+    parsed.category
+      ? categoriesRequest.then(({ categories: c }) => listFor(canonicalCategory(parsed.category, c)))
+      : listFor(undefined),
     getPublicBusinesses({ page_size: 60 }),
-    filtered || filters.page > 1 ? Promise.resolve(null) : getPublicBusinesses({ featured: true, page_size: 6 }),
+    unfiltered && parsed.page === 1 ? getPublicBusinesses({ featured: true, page_size: 6 }) : Promise.resolve(null),
   ]);
+
+  const filters: Filters = { ...parsed, category: canonicalCategory(parsed.category, categories) };
+  const filtered = !unfiltered;
 
   const businesses = list?.items ?? [];
   const featuredItems = (featured?.items ?? []).slice(0, 3);
@@ -109,7 +131,7 @@ export default async function PlacesPage({ searchParams }: { searchParams: Searc
   const gridItems = businesses.some((b) => !featuredIds.has(b.id))
     ? businesses.filter((b) => !featuredIds.has(b.id))
     : businesses;
-  const { regions, categories } = facets(facetSource?.items ?? [], filters, businesses);
+  const regions = regionOptions(facetSource?.items ?? [], businesses);
   const regionName = filters.region ? regions.find((r) => r.value === filters.region)?.label : undefined;
   const totalPages = list?.total_pages ?? 1;
 
@@ -137,7 +159,7 @@ export default async function PlacesPage({ searchParams }: { searchParams: Searc
         />
       )}
 
-      <section className="relative w-full px-4 pb-10 pt-32 sm:px-6 md:px-12 lg:px-24">
+      <section className="relative w-full px-4 pb-6 pt-24 sm:px-6 sm:pt-28 md:px-12 lg:px-24">
         <div className="mx-auto w-full max-w-[1240px]">
           <SectionHeading
             as="h1"
@@ -148,11 +170,11 @@ export default async function PlacesPage({ searchParams }: { searchParams: Searc
           />
 
           {featuredItems.length > 0 && (
-            <div className="mb-12 rounded-[24px] border-[3px] border-black bg-theme-yellow p-5 [box-shadow:8px_8px_0_#000] sm:p-8 xl:rounded-[32px]">
-              <h2 className="mb-6 font-handwriting text-[36px] font-bold leading-none text-black sm:text-[44px]">
+            <div className="mb-8 rounded-[24px] border-[3px] border-black bg-theme-yellow p-5 [box-shadow:8px_8px_0_#000] sm:p-6 xl:rounded-[32px]">
+              <h2 className="mb-4 font-handwriting text-[34px] font-bold leading-none text-black sm:text-[42px]">
                 Featured this month
               </h2>
-              <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {featuredItems.map((business, i) => (
                   <li key={business.id}>
                     <BusinessCard business={business} priority={i === 0} />
@@ -184,7 +206,7 @@ export default async function PlacesPage({ searchParams }: { searchParams: Searc
             </div>
           )}
 
-          <div className="mt-8">
+          <div className="mt-6">
             {list === null ? (
               <EmptyState
                 title="The directory is taking a breather"
@@ -203,11 +225,11 @@ export default async function PlacesPage({ searchParams }: { searchParams: Searc
               />
             ) : (
               <>
-                <p className="mb-5 font-jakarta text-[15px] font-semibold text-black/70" aria-live="polite">
+                <p className="mb-4 font-jakarta text-[15px] font-semibold text-black/70" aria-live="polite">
                   {list.total} {list.total === 1 ? "place" : "places"}
                   {regionName ? ` in ${regionName}` : ""}
                 </p>
-                <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-8">
+                <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:gap-6">
                   {gridItems.map((business, i) => (
                     <li key={business.id}>
                       <BusinessCard business={business} priority={i < 3 && featuredItems.length === 0} />
@@ -215,7 +237,7 @@ export default async function PlacesPage({ searchParams }: { searchParams: Searc
                   ))}
                 </ul>
                 {totalPages > 1 && (
-                  <nav aria-label="Pagination" className="mt-12 flex items-center justify-center gap-3">
+                  <nav aria-label="Pagination" className="mt-8 flex items-center justify-center gap-3">
                     <PageLink
                       href={hrefFor(filters, { page: filters.page - 1 })}
                       disabled={filters.page <= 1}
@@ -295,10 +317,10 @@ function PageLink({
 
 function EmptyState({ title, body, showClear }: { title: string; body: string; showClear: boolean }) {
   return (
-    <div className="mx-auto max-w-[640px] rounded-[24px] border-[3px] border-black bg-white px-6 py-10 text-center shadow-[8px_8px_0_var(--color-orange-accent)] sm:px-10">
+    <div className="mx-auto max-w-[640px] rounded-[24px] border-[3px] border-black bg-white px-6 py-8 text-center shadow-[8px_8px_0_var(--color-orange-accent)] sm:px-10">
       <h2 className="font-jakarta text-[24px] font-extrabold tracking-tight text-black sm:text-[28px]">{title}</h2>
       <p className="mx-auto mt-3 max-w-[480px] text-[16px] leading-relaxed text-black/75">{body}</p>
-      <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+      <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <Link href="/business/apply" className={buttonVariants({ variant: "primary" })}>
           List your business
         </Link>

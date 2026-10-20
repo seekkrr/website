@@ -6,26 +6,26 @@ const ITEMS: { icon: LucideIcon; title: string; body: string; tone: string }[] =
   {
     icon: MapPinned,
     title: "Check-in verified visits",
-    body: "A collab's details and Redeem button unlock only after a same-day check-in at your place, so every redemption is a real visit.",
-    tone: "bg-white [box-shadow:6px_6px_0_var(--color-yellow-accent)]",
+    body: "Collab details unlock only after a same-day check-in at your place.",
+    tone: "bg-white [box-shadow:5px_5px_0_var(--color-yellow-accent)]",
   },
   {
     icon: KeyRound,
     title: "Your staff, your code",
-    body: "Set a 4-digit redeem code for each location and change it any time. Wrong guesses are rate-limited, and staff can scan a QR when the creator has no signal.",
-    tone: "bg-theme-blue [box-shadow:6px_6px_0_var(--color-orange-accent)]",
+    body: "A 4-digit code per location, rate-limited, with a QR fallback.",
+    tone: "bg-theme-blue [box-shadow:5px_5px_0_var(--color-orange-accent)]",
   },
   {
     icon: Ban,
     title: "Report & block",
-    body: "Block a creator in one tap and they can no longer see or request your collabs. Reports go to a moderation queue run by people, not bots.",
-    tone: "bg-white [box-shadow:6px_6px_0_var(--color-blue-accent)]",
+    body: "Block a creator in one tap. Reports go to a human moderation team.",
+    tone: "bg-white [box-shadow:5px_5px_0_var(--color-blue-accent)]",
   },
   {
     icon: Hash,
     title: "Disclosure built in",
-    body: "Every brief carries an #ad, #collab or #gifted label that creators tick off before posting, following ASCI influencer guidelines.",
-    tone: "bg-theme-yellow [box-shadow:6px_6px_0_#000]",
+    body: "Every brief carries #ad, #collab or #gifted, in line with ASCI guidelines.",
+    tone: "bg-theme-yellow [box-shadow:5px_5px_0_#000]",
   },
 ];
 
@@ -33,26 +33,24 @@ export function TrustSafety() {
   return (
     <section
       aria-labelledby="trust-title"
-      className="relative w-full bg-theme-beige px-4 py-16 sm:px-6 md:px-12 lg:px-24 lg:py-20"
+      className="relative w-full bg-theme-beige px-4 py-10 sm:px-6 md:px-12 md:py-14 lg:px-24 lg:py-16"
     >
       <div className="mx-auto w-full max-w-[1240px]">
-        <SectionHeading
-          id="trust-title"
-          eyebrow="Built for real places and real people"
-          title="Trust & safety"
-        />
-        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <SectionHeading id="trust-title" eyebrow="Built for real places and real people" title="Trust & safety" />
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
           {ITEMS.map(({ icon: Icon, title, body, tone }, index) => (
-            <Reveal key={title} as="li" delay={index * 0.1} lift className="h-full">
-              <div className={`flex h-full flex-col gap-3 rounded-[24px] border-[3px] border-black p-6 xl:rounded-[32px] ${tone}`}>
+            <Reveal key={title} as="li" delay={index * 0.08} lift className="h-full">
+              <div className={`flex h-full items-start gap-3 rounded-[20px] border-[3px] border-black p-4 sm:flex-col sm:p-5 xl:rounded-[24px] ${tone}`}>
                 <span
                   aria-hidden="true"
-                  className="flex h-12 w-12 items-center justify-center rounded-full border-[3px] border-black bg-theme-beige"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-[3px] border-black bg-theme-beige"
                 >
-                  <Icon className="h-6 w-6 text-theme-green" />
+                  <Icon className="h-5 w-5 text-theme-green" />
                 </span>
-                <h3 className="font-jakarta text-[19px] font-bold leading-tight text-black">{title}</h3>
-                <p className="text-[15px] leading-relaxed text-black/80">{body}</p>
+                <div className="min-w-0">
+                  <h3 className="font-jakarta text-[17px] font-bold leading-tight text-black">{title}</h3>
+                  <p className="mt-1 text-[14px] leading-snug text-black/80">{body}</p>
+                </div>
               </div>
             </Reveal>
           ))}

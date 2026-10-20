@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Loader2, Search } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Field";
+import type { BusinessCategory } from "@/lib/collabs";
 
 interface Option {
   value: string;
@@ -13,8 +14,14 @@ interface Option {
 
 interface PlacesFiltersProps {
   regions: Option[];
-  categories: Option[];
+  /** Predefined place categories with their sub-categories (API or static fallback). */
+  categories: BusinessCategory[];
   current: { region?: string; category?: string; q?: string };
+}
+
+/** True when `value` is one of the catalog's categories or sub-categories. */
+function inCatalog(categories: BusinessCategory[], value: string) {
+  return categories.some((c) => c.name === value || c.sub_categories.includes(value));
 }
 
 function buildHref(values: { region?: string; category?: string; q?: string }) {
@@ -108,10 +115,18 @@ export function PlacesFilters({ regions, categories, current }: PlacesFiltersPro
           }}
         >
           <option value="">All categories</option>
+          {/* Keep an unknown value from the URL selectable rather than silently showing "All". */}
+          {category && !inCatalog(categories, category) && <option value={category}>{category}</option>}
+          {/* The backend matches a category or a sub-category, so both are valid values. */}
           {categories.map((c) => (
-            <option key={c.value} value={c.value}>
-              {c.label}
-            </option>
+            <optgroup key={c.name} label={c.name}>
+              <option value={c.name}>{c.sub_categories.length > 0 ? `All ${c.name}` : c.name}</option>
+              {c.sub_categories.map((sub) => (
+                <option key={sub} value={sub}>
+                  {sub}
+                </option>
+              ))}
+            </optgroup>
           ))}
         </Select>
       </div>

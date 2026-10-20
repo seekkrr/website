@@ -29,20 +29,20 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "mb-10 flex flex-col gap-2",
+        "mb-6 flex flex-col gap-1.5 md:mb-8",
         align === "center" ? "items-center text-center" : "items-start text-left",
         className
       )}
     >
       {eyebrow && (
-        <p className="font-jakarta text-[18px] font-medium text-black md:text-[22px] lg:text-[24px]">
+        <p className="font-jakarta text-[16px] font-medium text-black md:text-[20px] lg:text-[22px]">
           {eyebrow}
         </p>
       )}
       <div className="relative inline-flex items-start gap-2">
         <Tag
           id={id}
-          className="font-handwriting text-[44px] font-bold leading-[0.95] text-black drop-shadow-sm sm:text-[50px] md:text-[60px] lg:text-[72px] text-balance"
+          className="font-handwriting text-[40px] font-bold leading-[0.95] text-black drop-shadow-sm sm:text-[48px] md:text-[56px] lg:text-[64px] text-balance"
         >
           {title}
         </Tag>
@@ -60,7 +60,7 @@ export function SectionHeading({
       {intro && (
         <p
           className={cn(
-            "mt-2 max-w-[640px] font-sans text-[16px] leading-relaxed text-black/75 md:text-[18px]",
+            "mt-1 max-w-[600px] font-sans text-[15px] leading-relaxed text-black/75 md:text-[17px]",
             align === "center" && "mx-auto"
           )}
         >

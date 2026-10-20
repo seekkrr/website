@@ -1,11 +1,35 @@
 import type { Plan, PlanEntitlements } from "@/lib/collabs";
 
-export type Cell = { kind: "text"; value: string } | { kind: "bool"; value: boolean; label?: string };
+/** `label` replaces the dash when a feature is missing; `note` sits beside the tick when it's included. */
+export type Cell =
+  | { kind: "text"; value: string }
+  | { kind: "bool"; value: boolean; label?: string; note?: string };
 
 export interface FeatureRow {
   key: keyof PlanEntitlements;
   label: string;
+  /** Small badge beside the row label (e.g. the Pro headline feature). */
+  badge?: string;
   render: (plan: Plan) => Cell;
+}
+
+/**
+ * Full AI creator matching (SeekKrr Match AI): more reveals, creator invites
+ * and the score breakdown. Plans without it get a top-N preview.
+ */
+export function hasFullMatching(plan: Plan) {
+  return plan.entitlements.match_breakdown;
+}
+
+function matchingCell(plan: Plan): Cell {
+  const reveals = plan.entitlements.match_reveals_per_month;
+  if (reveals === 0) return { kind: "bool", value: false };
+  if (!hasFullMatching(plan)) return { kind: "text", value: reveals === null ? "Preview" : `Top ${reveals} preview` };
+  return {
+    kind: "bool",
+    value: true,
+    note: reveals === null ? "Full · unlimited" : `Full · ${reveals.toLocaleString("en-IN")}/mo`,
+  };
 }
 
 const limit = (plan: Plan, value: number | null, zero = "—"): Cell => {
@@ -30,11 +54,9 @@ export const FEATURE_ROWS: FeatureRow[] = [
   { key: "locations", label: "Locations", render: (p) => limit(p, p.entitlements.locations) },
   {
     key: "match_reveals_per_month",
-    label: "SeekKrr Match reveals / month",
-    render: (p) =>
-      !p.entitlements.match_breakdown && p.entitlements.match_reveals_per_month
-        ? { kind: "text", value: `Top ${p.entitlements.match_reveals_per_month}` }
-        : limit(p, p.entitlements.match_reveals_per_month),
+    label: "AI creator matching",
+    badge: "Pro",
+    render: matchingCell,
   },
   {
     key: "invites_per_month",
@@ -77,6 +99,9 @@ export function planHighlights(plan: Plan): string[] {
   if (plan.custom) {
     return [
       "Everything in Pro",
+      ...(e.match_reveals_per_month === null && e.invites_per_month === null
+        ? ["Unlimited AI creator matching and invites"]
+        : []),
       "Custom limits for every location",
       "Group billing with GST invoices",
       "Hands-on onboarding for your team",
@@ -90,12 +115,14 @@ export function planHighlights(plan: Plan): string[] {
       : `${plural(e.redemptions_per_month, "redemption", "redemptions")} / month`
   );
   if (e.approval_mode) out.push("Approval mode + advance requests");
-  if (e.match_reveals_per_month !== null && e.match_reveals_per_month > 0) {
+  if (hasFullMatching(plan)) {
     out.push(
-      e.match_breakdown
-        ? `${e.match_reveals_per_month} match reveals${e.invites_per_month ? ` + ${e.invites_per_month} invites` : ""} / month`
-        : `See your top ${e.match_reveals_per_month} SeekKrr matches`
+      e.match_reveals_per_month === null
+        ? "Unlimited AI match reveals and invites"
+        : `${e.match_reveals_per_month} AI match reveals${e.invites_per_month ? ` + ${e.invites_per_month} invites` : ""} / month`
     );
+  } else if (e.match_reveals_per_month !== null && e.match_reveals_per_month > 0) {
+    out.push(`Top ${e.match_reveals_per_month} AI creator match preview each month`);
   }
   if (e.featured) out.push("Featured map pin + priority listing");
   else if (e.attribution) out.push("Attribution + content library");
