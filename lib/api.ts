@@ -14,13 +14,6 @@ export interface RegisterInterestPayload {
   phone?: string;
 }
 
-export interface RegisterCreatorPayload {
-  name: string;
-  email: string;
-  phone?: string;
-  social_links: string[];
-}
-
 export interface SubmitQueryPayload {
   name?: string;
   email?: string;
@@ -126,19 +119,6 @@ export function submitQuery(
   payload: SubmitQueryPayload
 ): Promise<SubmitQueryResponse> {
   return request<SubmitQueryResponse>("/api/v2/queries", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
-}
-
-/**
- * Register creator interest (Application).
- * POST /api/v2/creator-applications
- */
-export async function registerCreator(
-  payload: RegisterCreatorPayload
-): Promise<ApiResponse> {
-  return request<ApiResponse>("/api/v2/creator-applications", {
     method: "POST",
     body: JSON.stringify(payload),
   });

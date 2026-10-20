@@ -16,7 +16,7 @@ export async function PartnerWall() {
   return (
     <section
       aria-labelledby="partners-title"
-      className="relative w-full bg-theme-beige px-4 py-12 sm:px-6 md:px-12 lg:px-24"
+      className="relative w-full bg-theme-beige px-4 py-8 sm:px-6 md:px-12 md:py-10 lg:px-24"
     >
       <div className="mx-auto w-full max-w-[1240px]">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">

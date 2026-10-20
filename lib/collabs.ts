@@ -134,47 +134,37 @@ export interface CreatorPortfolio {
   }[];
 }
 
-export interface MarkerSearchResult {
-  id: string;
-  title: string;
-  address: string | null;
-  region_id: string | null;
-  region_name: string | null;
-  categories: string[];
-  image: string | null;
-}
-
-export interface BusinessApplicationPayload {
-  business_name: string;
-  contact_name: string;
-  email: string;
-  phone: string;
-  claimed_marker_id?: string | null;
-  maps_url?: string | null;
-  region_id?: string | null;
-  categories: string[];
-  social_links: string[];
-  requested_plan?: PlanCode | null;
-  gstin?: string | null;
-  message?: string | null;
-  source: "website";
-}
-
-export interface BusinessApplicationResult {
-  application: {
-    id: string;
-    business_name: string;
-    status: string;
-    applied_at: string;
-  };
-}
-
 export interface TrackingClickResult {
   marker_id: string;
   business_id: string;
   deep_link: string;
   web_url: string;
 }
+
+export interface BusinessCategory {
+  name: string;
+  sub_categories: string[];
+}
+
+/** Outcome of a claim-link preview, as far as the API can tell them apart. */
+export type ClaimPreviewResult =
+  | { status: "ok"; preview: ClaimPreview }
+  /** Unknown, expired, already used or revoked: the API answers all of these with one 404. */
+  | { status: "not_found" }
+  /** The link is live but the listing it points to has been deleted. */
+  | { status: "listing_removed" }
+  /** Too many preview requests (the endpoint is rate limited). */
+  | { status: "rate_limited"; retryAfterSeconds: number | null };
+
+// ── Static category fallback (used when the categories endpoint is unavailable) ──
+
+export const FALLBACK_BUSINESS_CATEGORIES: BusinessCategory[] = [
+  { name: "Food", sub_categories: ["Cafe", "Restaurant", "Local Food"] },
+  { name: "Stays", sub_categories: ["Hostel", "Homestay", "Hotel"] },
+  { name: "Experiences", sub_categories: ["Treks", "Workshop", "Adventure"] },
+  { name: "Shopping", sub_categories: [] },
+  { name: "Rentals", sub_categories: [] },
+];
 
 // ── Static plan fallback (mirrors backend DEFAULT_PLANS) ──────────────────
 
@@ -224,9 +214,10 @@ export const FALLBACK_PLANS: Plan[] = [
     redemptions_per_month: 30,
     approval_mode: true,
     team_members: 3,
-    match_reveals_per_month: 25,
-    invites_per_month: 10,
-    match_breakdown: true,
+    // AI creator matching is a Pro feature: Free and Growth get a top-3 preview, no invites.
+    match_reveals_per_month: 3,
+    invites_per_month: 0,
+    match_breakdown: false,
     attribution: true,
     content_library: true,
     featured: false,
@@ -450,6 +441,29 @@ function normaliseCreator(v: unknown): CreatorPortfolio | null {
   };
 }
 
+/** Keep well-formed, de-duplicated (case-insensitive) categories and sub-categories. */
+function normaliseCategories(v: unknown): BusinessCategory[] {
+  if (!Array.isArray(v)) return [];
+  const seen = new Set<string>();
+  const out: BusinessCategory[] = [];
+  for (const item of v) {
+    const o = asObj(item);
+    const name = str(o.name)?.trim();
+    if (!name || seen.has(name.toLowerCase())) continue;
+    seen.add(name.toLowerCase());
+    const subs: string[] = [];
+    for (const sub of strArr(o.sub_categories)) {
+      const value = sub.trim();
+      if (value && !seen.has(value.toLowerCase())) {
+        seen.add(value.toLowerCase());
+        subs.push(value);
+      }
+    }
+    out.push({ name, sub_categories: subs });
+  }
+  return out;
+}
+
 // ── Helpers ────────────────────────────────────────────────────────────────
 
 function qs(params: Record<string, string | number | boolean | null | undefined>) {
@@ -531,6 +545,28 @@ export async function getPublicBusinesses(
   } catch (err) {
     logServerError("getPublicBusinesses", err);
     return null;
+  }
+}
+
+/**
+ * GET /api/v2/businesses/categories — the predefined place categories (with
+ * sub-categories) businesses are filed under. Falls back to a static list when
+ * the endpoint is unavailable or returns nothing, so filters always render.
+ */
+export async function getBusinessCategories(
+  revalidate = 3600
+): Promise<{ categories: BusinessCategory[]; live: boolean }> {
+  try {
+    const data = await request<Raw>("/api/v2/businesses/categories", {
+      next: { revalidate },
+      signal: AbortSignal.timeout(DEFAULT_TIMEOUT_MS),
+    });
+    const categories = normaliseCategories(data.categories);
+    if (categories.length === 0) return { categories: FALLBACK_BUSINESS_CATEGORIES, live: false };
+    return { categories, live: true };
+  } catch (err) {
+    logServerError("getBusinessCategories", err);
+    return { categories: FALLBACK_BUSINESS_CATEGORIES, live: false };
   }
 }
 
@@ -636,9 +672,10 @@ export async function getTermsVersions(
 
 /**
  * GET /api/v2/businesses/claim/{token} — never cached (one-time links).
- * Returns null when the link is expired, used or unknown (404).
+ * Maps the API's 404s and 429 to distinct states; throws on anything else so
+ * the route's error boundary can offer a retry.
  */
-export async function getClaimPreview(token: string): Promise<ClaimPreview | null> {
+export async function getClaimPreview(token: string): Promise<ClaimPreviewResult> {
   try {
     const data = await request<Raw>(
       `/api/v2/businesses/claim/${encodeURIComponent(token)}`,
@@ -646,21 +683,34 @@ export async function getClaimPreview(token: string): Promise<ClaimPreview | nul
     );
     const b = asObj(data.business);
     return {
-      business: {
-        name: str(b.name) ?? "Your business",
-        tagline: str(b.tagline),
-        photos: strArr(b.photos),
-        logo_url: str(b.logo_url),
-        region_name: str(b.region_name),
-        categories: strArr(b.categories),
+      status: "ok",
+      preview: {
+        business: {
+          name: str(b.name) ?? "Your business",
+          tagline: str(b.tagline),
+          photos: strArr(b.photos),
+          logo_url: str(b.logo_url),
+          region_name: str(b.region_name),
+          categories: strArr(b.categories),
+        },
+        already_claimed: data.already_claimed === true,
+        requires_phone_verification: data.requires_phone_verification === true,
+        phone_hint: str(data.phone_hint),
+        expires_at: str(data.expires_at),
       },
-      already_claimed: data.already_claimed === true,
-      requires_phone_verification: data.requires_phone_verification === true,
-      phone_hint: str(data.phone_hint),
-      expires_at: str(data.expires_at),
     };
   } catch (err) {
-    if (isNotFound(err)) return null;
+    if (isNotFound(err)) {
+      // "Claim link not found" (no live invite) vs "Business not found" (invite
+      // is live but the listing was deleted) — the only signal is the message.
+      return /^business not found/i.test((err as ApiError).message)
+        ? { status: "listing_removed" }
+        : { status: "not_found" };
+    }
+    if (err instanceof ApiError && err.status === 429) {
+      const retry = num(asObj(asObj(err.data).detail).retry_after);
+      return { status: "rate_limited", retryAfterSeconds: retry !== null && retry > 0 ? retry : null };
+    }
     throw err;
   }
 }
@@ -713,50 +763,6 @@ export async function recordTrackingClick(
     if (isNotFound(err)) return null;
     throw err;
   }
-}
-
-// ── Client calls ───────────────────────────────────────────────────────────
-
-/**
- * Search existing SeekKrr places to claim. Uses the unauthenticated public
- * explore feed (`/api/v2/markers/public`): the plain `/api/v2/markers` list
- * requires a signed-in user, and the website has no auth.
- */
-export async function searchPlaces(
-  query: string,
-  signal?: AbortSignal
-): Promise<MarkerSearchResult[]> {
-  const data = await request<Raw>(
-    `/api/v2/markers/public${qs({ search: query, page_size: 8, lean: true })}`,
-    { signal }
-  );
-  return (Array.isArray(data.markers) ? data.markers : [])
-    .map((m): MarkerSearchResult | null => {
-      const o = asObj(m);
-      const id = str(o.id);
-      const title = str(o.title);
-      if (!id || !title) return null;
-      return {
-        id,
-        title,
-        address: str(o.address),
-        region_id: str(o.region_id),
-        region_name: str(o.region_name),
-        categories: strArr(o.categories),
-        image: strArr(o.media)[0] ?? null,
-      };
-    })
-    .filter((m): m is MarkerSearchResult => !!m);
-}
-
-/** POST /api/v2/business-applications (3 per 5 min per IP). */
-export function submitBusinessApplication(
-  payload: BusinessApplicationPayload
-): Promise<BusinessApplicationResult> {
-  return request<BusinessApplicationResult>("/api/v2/business-applications", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
 }
 
 // ── Formatting helpers shared by pages ─────────────────────────────────────

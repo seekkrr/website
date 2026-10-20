@@ -14,8 +14,9 @@ export function CtaStrip({
   href = "/business/apply",
 }: CtaStripProps) {
   return (
-    <section className="relative w-full bg-theme-beige px-4 pb-20 pt-6 sm:px-6 md:px-12 lg:px-24">
-      <Reveal className="mx-auto flex w-full max-w-fit flex-col items-center justify-center gap-4 rounded-[32px] bg-black px-6 py-6 text-center text-white shadow-2xl sm:flex-row sm:gap-8 sm:rounded-[40px] sm:px-10 sm:py-5 md:px-12">
+    // data-sticky-cta-stop: the phone sticky CTA bar hides when this strip is on screen.
+    <section data-sticky-cta-stop className="relative w-full bg-theme-beige px-4 pb-12 pt-2 sm:px-6 md:px-12 md:pb-16 lg:px-24">
+      <Reveal className="mx-auto flex w-full max-w-fit flex-col items-center justify-center gap-4 rounded-[32px] bg-black px-6 py-5 text-center text-white shadow-[6px_6px_0_0_var(--color-yellow-accent)] sm:flex-row sm:gap-8 sm:rounded-[40px] sm:px-10 sm:py-5 md:px-12">
         <h2 className="font-jakarta text-[20px] font-semibold tracking-tight sm:text-[24px] lg:text-[28px]">
           {title}
         </h2>

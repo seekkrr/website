@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { BusinessHero } from "@/components/business/BusinessHero";
+import { CategoryMarquee } from "@/components/business/CategoryMarquee";
+import { StickyBusinessCta } from "@/components/business/StickyBusinessCta";
 import { CollabBuilder } from "@/components/business/CollabBuilder";
 import { HowItWorks } from "@/components/business/HowItWorks";
 import { MatchExplainer } from "@/components/business/MatchExplainer";
@@ -17,7 +19,7 @@ export const revalidate = 600;
 export const metadata: Metadata = {
   title: "SeekKrr for Business | Creator collabs for cafés, stays & adventures",
   description:
-    "Post a collab, let travel creators check in and redeem it with your staff code, and get disclosed content that brings travellers to your door. Free to start, piloting in Bir.",
+    "Post a collab, let travel creators check in and redeem it with your staff code, and find creators who fit your place with AI creator matching. Free to start, piloting in Bir.",
   alternates: { canonical: "/business" },
   openGraph: {
     title: "SeekKrr for Business",
@@ -40,14 +42,16 @@ export default async function BusinessPage() {
       />
       <StructuredData type="FAQPage" data={faqJsonLd(BUSINESS_FAQ)} />
       <BusinessHero />
+      <CategoryMarquee />
       <PartnerWall />
       <CollabBuilder />
       <HowItWorks />
-      <MatchExplainer />
+      <MatchExplainer plans={plans} />
       <TrustSafety />
       <PricingTeaser plans={plans} />
       <BusinessFaq />
       <CtaStrip />
+      <StickyBusinessCta />
     </div>
   );
 }

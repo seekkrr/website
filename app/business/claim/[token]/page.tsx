@@ -7,7 +7,7 @@ import { OpenInAppButton } from "@/components/collabs/OpenInAppButton";
 import { SafeImage } from "@/components/collabs/SafeImage";
 import { StoreBadges } from "@/components/collabs/StoreBadges";
 import { getClaimPreview, type ClaimPreview } from "@/lib/collabs";
-import { siteConfig } from "@/lib/config/site";
+import { portalLinks, siteConfig } from "@/lib/config/site";
 
 // One-time, expiring links: always render fresh and keep them out of search.
 export const dynamic = "force-dynamic";
@@ -42,27 +42,72 @@ function Shell({ children }: { children: React.ReactNode }) {
   );
 }
 
-function ExpiredState() {
+function StateCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <Shell>
       <div className="rounded-[24px] border-[3px] border-black bg-white px-6 py-10 text-center shadow-[8px_8px_0_var(--color-orange-accent)] sm:px-12">
-        <h1 className="mb-4 font-jakarta text-[26px] font-extrabold tracking-tight text-black sm:text-[32px]">
-          This claim link has expired or was already used
-        </h1>
-        <p className="mb-8 text-[16px] leading-relaxed text-black/75">
-          Claim links work once and only for a limited time. Ask your SeekKrr contact to send a fresh one,
-          or apply to list your business and we&apos;ll get you set up.
-        </p>
-        <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link href="/business/apply" className={buttonVariants({ variant: "primary" })}>
-            List your business
-          </Link>
-          <a href={`mailto:${siteConfig.email}?subject=New%20claim%20link`} className={buttonVariants({ variant: "outline" })}>
-            Email support
-          </a>
-        </div>
+        <h1 className="mb-4 font-jakarta text-[26px] font-extrabold tracking-tight text-black sm:text-[32px]">{title}</h1>
+        {children}
       </div>
     </Shell>
+  );
+}
+
+function SupportActions({ subject }: { subject: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+      <Link href="/business/apply" className={buttonVariants({ variant: "primary" })}>
+        List your business
+      </Link>
+      <a
+        href={`mailto:${siteConfig.email}?subject=${encodeURIComponent(subject)}`}
+        className={buttonVariants({ variant: "outline" })}
+      >
+        Email support
+      </a>
+    </div>
+  );
+}
+
+/** No live invite for this token: the API can't say whether it's mistyped, expired, used or revoked. */
+function NotFoundState() {
+  return (
+    <StateCard title="We couldn't find this claim link">
+      <p className="mb-8 text-[16px] leading-relaxed text-black/75">
+        It may be incomplete (check you opened the whole link), or it may have expired or already been
+        used: claim links work once and only for a limited time. Ask your SeekKrr contact for a fresh one,
+        or list your business yourself in a couple of minutes.
+      </p>
+      <SupportActions subject="New claim link" />
+    </StateCard>
+  );
+}
+
+function ListingRemovedState() {
+  return (
+    <StateCard title="This listing is no longer on SeekKrr">
+      <p className="mb-8 text-[16px] leading-relaxed text-black/75">
+        The claim link is still valid, but the business listing it points to has been removed. Email us
+        and we&apos;ll help you get set up again, or list your business yourself.
+      </p>
+      <SupportActions subject="Claim link for a removed listing" />
+    </StateCard>
+  );
+}
+
+function RateLimitedState({ retryAfterSeconds, deepLink }: { retryAfterSeconds: number | null; deepLink: string }) {
+  const minutes = retryAfterSeconds ? Math.max(1, Math.ceil(retryAfterSeconds / 60)) : null;
+  return (
+    <StateCard title="Too many checks right now">
+      <p className="mb-8 text-[16px] leading-relaxed text-black/75">
+        We couldn&apos;t check this claim link because of a burst of requests.{" "}
+        {minutes ? `Try again in about ${minutes} ${minutes === 1 ? "minute" : "minutes"}` : "Try again in a few minutes"},
+        or open it in the SeekKrr app.
+      </p>
+      <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <OpenInAppButton deepLink={deepLink}>Open in the SeekKrr app</OpenInAppButton>
+      </div>
+    </StateCard>
   );
 }
 
@@ -97,13 +142,19 @@ function BusinessPreview({ preview }: { preview: ClaimPreview }) {
 
 export default async function ClaimPage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
-  if (!TOKEN_RE.test(token)) return <ExpiredState />;
+  // A malformed token is almost always a truncated or mangled link.
+  if (!TOKEN_RE.test(token)) return <NotFoundState />;
 
-  const preview = await getClaimPreview(token);
-  if (!preview) return <ExpiredState />;
-
-  const expires = formatExpiry(preview.expires_at);
   const deepLink = `${siteConfig.appScheme}claim/${encodeURIComponent(token)}`;
+  const result = await getClaimPreview(token);
+  if (result.status === "not_found") return <NotFoundState />;
+  if (result.status === "listing_removed") return <ListingRemovedState />;
+  if (result.status === "rate_limited") {
+    return <RateLimitedState retryAfterSeconds={result.retryAfterSeconds} deepLink={deepLink} />;
+  }
+
+  const { preview } = result;
+  const expires = formatExpiry(preview.expires_at);
 
   if (preview.already_claimed) {
     return (
@@ -125,7 +176,7 @@ export default async function ClaimPage({ params }: { params: Promise<{ token: s
           </p>
           <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <OpenInAppButton deepLink={deepLink}>Open SeekKrr</OpenInAppButton>
-            <a href={siteConfig.partnerPortalUrl} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "outline" })}>
+            <a href={portalLinks.business} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "outline" })}>
               Partner Portal <ExternalLink className="h-4 w-4" aria-hidden="true" />
             </a>
           </div>
@@ -201,7 +252,7 @@ export default async function ClaimPage({ params }: { params: Promise<{ token: s
           <StoreBadges />
           <p className="mt-4 text-[13px] text-black/60">
             After claiming, manage collabs, team and billing from the{" "}
-            <a href={siteConfig.partnerPortalUrl} target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-2">
+            <a href={portalLinks.business} target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-2">
               Partner Portal
             </a>
             .

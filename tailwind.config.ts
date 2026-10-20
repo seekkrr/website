@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 const config: Config = {
   darkMode: ["class"],
@@ -68,16 +69,22 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateX(20px)" },
           "100%": { opacity: "1", transform: "translateX(0)" },
         },
+        // The track holds two copies of its content, so -50% loops seamlessly.
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.6s ease-out forwards",
         "fade-in": "fade-in 0.5s ease-out forwards",
         "scale-in": "scale-in 0.5s ease-out forwards",
         "slide-in-right": "slide-in-right 0.5s ease-out forwards",
+        marquee: "marquee 36s linear infinite",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 };
 
 export default config;

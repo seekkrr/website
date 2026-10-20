@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { PricingPlans } from "@/components/pricing/PricingPlans";
-import { BusinessFaq, faqJsonLd } from "@/components/business/BusinessFaq";
+import { AI_MATCHING_FAQ, BusinessFaq, faqJsonLd } from "@/components/business/BusinessFaq";
 import { CtaStrip } from "@/components/business/CtaStrip";
+import { hasFullMatching } from "@/components/pricing/planFeatures";
 import { SectionHeading } from "@/components/collabs/SectionHeading";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { getPlans, type Plan } from "@/lib/collabs";
@@ -12,7 +13,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "Pricing | SeekKrr for Business",
   description:
-    "Simple INR plans for cafés, stays and adventure businesses. Start free, try Growth free for 14 days, and pay annually for 2 months free. Prices + GST.",
+    "Simple INR plans for cafés, stays and adventures. Start free, try Growth free for 14 days, and unlock AI creator matching on Pro. Annual billing gets 2 months free. Prices + GST.",
   alternates: { canonical: "/business/pricing" },
 };
 
@@ -42,6 +43,7 @@ const PRICING_FAQ = [
     q: "How do I pay?",
     a: "Through Razorpay: UPI, cards and netbanking all work. Plans are managed in the Partner Portal on the web; the SeekKrr app shows your plan and usage but doesn't take payments.",
   },
+  AI_MATCHING_FAQ,
   {
     id: "limits",
     q: "What counts as a redemption?",
@@ -52,8 +54,14 @@ const PRICING_FAQ = [
 function productJsonLd(plans: Plan[]) {
   const offers = plans.flatMap((plan) => {
     if (plan.custom || plan.price_monthly_inr === null) return [];
+    const reveals = plan.entitlements.match_reveals_per_month;
     const base = {
       "@type": "Offer",
+      description: hasFullMatching(plan)
+        ? "Includes AI creator matching (SeekKrr Match AI) with creator invites and the match score breakdown."
+        : reveals
+          ? `Includes a top-${reveals} AI creator match preview each month.`
+          : undefined,
       priceCurrency: "INR",
       availability: "https://schema.org/InStock",
       url: `${siteConfig.url}/business/apply?plan=${plan.code}`,
@@ -95,7 +103,7 @@ function productJsonLd(plans: Plan[]) {
     "@type": "Product",
     name: "SeekKrr for Business",
     description:
-      "Creator collaboration plans for local businesses: post collabs, verify visits with a staff redeem code, and find creators with SeekKrr Match.",
+      "Creator collaboration plans for local businesses: post collabs, verify visits with a staff redeem code, and find creators who fit your place with AI creator matching (SeekKrr Match AI) on Pro.",
     brand: { "@type": "Brand", name: siteConfig.name },
     url: `${siteConfig.url}/business/pricing`,
     offers,
@@ -117,7 +125,7 @@ export default async function PricingPage() {
       <StructuredData type="Product" data={productJsonLd(plans)} />
       <StructuredData type="FAQPage" data={faqJsonLd(PRICING_FAQ)} />
 
-      <section className="relative w-full overflow-x-clip px-4 pb-10 pt-32 sm:px-6 md:px-12 lg:px-24">
+      <section className="relative w-full overflow-x-clip px-4 pb-6 pt-24 sm:px-6 sm:pt-28 md:px-12 lg:px-24">
         <div className="mx-auto w-full max-w-[1240px]">
           <SectionHeading
             as="h1"

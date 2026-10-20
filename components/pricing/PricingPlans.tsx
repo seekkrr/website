@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Check, Minus } from "lucide-react";
+import { Check, Minus, Sparkles } from "lucide-react";
 import { Accordion } from "@/components/ui/Accordion";
 import { Badge } from "@/components/ui/Badge";
 import { buttonVariants } from "@/components/ui/Button";
@@ -11,7 +11,7 @@ import { Reveal } from "@/components/collabs/Reveal";
 import { trackEvent } from "@/lib/analytics";
 import { formatInr, type Plan } from "@/lib/collabs";
 import { cn } from "@/lib/utils";
-import { FEATURE_ROWS, planHighlights, type Cell } from "./planFeatures";
+import { FEATURE_ROWS, hasFullMatching, planHighlights, type Cell, type FeatureRow } from "./planFeatures";
 
 type Period = "monthly" | "annual";
 
@@ -67,9 +67,13 @@ function CellView({ cell }: { cell: Cell }) {
   if (cell.kind === "text") return <span className="font-jakarta font-bold">{cell.value}</span>;
   if (cell.value)
     return (
-      <span className="inline-flex items-center">
-        <Check className="h-5 w-5 text-theme-green" strokeWidth={3} aria-hidden="true" />
-        <span className="sr-only">Included</span>
+      <span className="inline-flex items-center gap-1.5">
+        <Check className="h-5 w-5 shrink-0 text-theme-green" strokeWidth={3} aria-hidden="true" />
+        {cell.note ? (
+          <span className="whitespace-nowrap font-jakarta text-[14px] font-bold">{cell.note}</span>
+        ) : (
+          <span className="sr-only">Included</span>
+        )}
       </span>
     );
   if (cell.label) return <span className="text-[14px] text-black/60">{cell.label}</span>;
@@ -78,6 +82,36 @@ function CellView({ cell }: { cell: Cell }) {
       <Minus className="h-5 w-5 text-black/30" aria-hidden="true" />
       <span className="sr-only">Not included</span>
     </span>
+  );
+}
+
+function RowLabel({ row }: { row: FeatureRow }) {
+  return (
+    <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
+      {row.label}
+      {row.badge && (
+        <Badge variant="dark" size="sm" className="text-theme-yellow">
+          <Sparkles className="h-3 w-3" aria-hidden="true" />
+          {row.badge}
+        </Badge>
+      )}
+    </span>
+  );
+}
+
+/** Pro's headline feature, shown above its bullets. */
+function MatchingCallout() {
+  return (
+    <div className="rounded-2xl border-[3px] border-black bg-theme-yellow p-4 shadow-[4px_4px_0_0_#000]">
+      <p className="flex items-center gap-2 font-jakarta text-[16px] font-extrabold leading-tight text-black">
+        <Sparkles className="h-5 w-5 shrink-0" strokeWidth={2.5} aria-hidden="true" />
+        AI creator matching
+      </p>
+      <p className="mt-1.5 text-[14px] leading-snug text-black/80">
+        SeekKrr Match AI ranks the creators who fit your place, tells you why, and shows the full score
+        breakdown.
+      </p>
+    </div>
   );
 }
 
@@ -95,7 +129,7 @@ export function PricingPlans({ plans }: PricingPlansProps) {
 
   return (
     <>
-      <div className="mb-14 flex flex-col items-center gap-3">
+      <div className="mb-10 flex flex-col items-center gap-2.5">
         <SegmentedToggle<Period>
           ariaLabel="Billing period"
           value={period}
@@ -118,15 +152,16 @@ export function PricingPlans({ plans }: PricingPlansProps) {
         </p>
       </div>
 
-      <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4 xl:gap-6">
+      <ul className="grid grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-4 xl:gap-5">
         {plans.map((plan, index) => {
           const popular = plan.code === POPULAR;
+          const aiSticker = hasFullMatching(plan) && !plan.custom && !popular;
           const cta = ctaFor(plan);
           return (
             <Reveal as="li" key={plan.code} delay={index * 0.08} className="h-full">
               <div
                 className={cn(
-                  "relative flex h-full flex-col gap-6 rounded-[24px] border-[3px] border-black p-6 pt-8 xl:rounded-[32px]",
+                  "relative flex h-full flex-col gap-5 rounded-[24px] border-[3px] border-black p-5 pt-7 transition-transform duration-200 hover:-translate-y-1.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 xl:rounded-[28px]",
                   popular
                     ? "bg-white [box-shadow:8px_8px_0_var(--color-yellow-accent)]"
                     : "bg-theme-beige"
@@ -136,9 +171,19 @@ export function PricingPlans({ plans }: PricingPlansProps) {
                   <Badge
                     variant="dark"
                     size="lg"
-                    className="absolute -top-4 left-6 shadow-[3px_3px_0_var(--color-yellow-accent)]"
+                    className="absolute -top-4 left-5 -rotate-3 shadow-[3px_3px_0_var(--color-yellow-accent)]"
                   >
                     Most popular
+                  </Badge>
+                )}
+                {aiSticker && (
+                  <Badge
+                    variant="yellow"
+                    size="lg"
+                    className="absolute -top-4 left-5 rotate-2 border-[3px] uppercase shadow-[3px_3px_0_#000]"
+                  >
+                    <Sparkles className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
+                    AI Match
                   </Badge>
                 )}
                 {plan.trial_days > 0 && (
@@ -156,6 +201,7 @@ export function PricingPlans({ plans }: PricingPlansProps) {
                   )}
                 </div>
                 <PriceBlock plan={plan} period={period} />
+                {hasFullMatching(plan) && !plan.custom && <MatchingCallout />}
                 <ul className="flex flex-col gap-2.5">
                   {planHighlights(plan).map((line) => (
                     <li key={line} className="flex items-start gap-2 text-[15px] leading-snug text-black/85">
@@ -180,8 +226,8 @@ export function PricingPlans({ plans }: PricingPlansProps) {
       </ul>
 
       {/* Comparison: a table from md up, one accordion per plan on phones. */}
-      <div className="mt-20">
-        <h2 className="mb-8 text-center font-handwriting text-[44px] font-bold leading-none text-black sm:text-[56px]">
+      <div className="mt-14">
+        <h2 className="mb-6 text-center font-handwriting text-[40px] font-bold leading-none text-black sm:text-[52px]">
           Compare plans
         </h2>
 
@@ -193,11 +239,11 @@ export function PricingPlans({ plans }: PricingPlansProps) {
             <caption className="sr-only">Feature comparison across SeekKrr for Business plans</caption>
             <thead>
               <tr className="border-b-[3px] border-black bg-theme-yellow">
-                <th scope="col" className="px-5 py-4 font-jakarta text-[15px] font-bold">
+                <th scope="col" className="px-5 py-3 font-jakarta text-[15px] font-bold">
                   Feature
                 </th>
                 {plans.map((plan) => (
-                  <th key={plan.code} scope="col" className="px-4 py-4 text-center font-jakarta text-[16px] font-extrabold">
+                  <th key={plan.code} scope="col" className="px-4 py-3 text-center font-jakarta text-[16px] font-extrabold">
                     {plan.name}
                   </th>
                 ))}
@@ -206,11 +252,11 @@ export function PricingPlans({ plans }: PricingPlansProps) {
             <tbody>
               {FEATURE_ROWS.map((row, i) => (
                 <tr key={row.key} className={cn("border-b border-black/10 last:border-0", i % 2 === 1 && "bg-theme-beige/60")}>
-                  <th scope="row" className="px-5 py-3.5 text-[15px] font-medium text-black/85">
-                    {row.label}
+                  <th scope="row" className="px-5 py-2.5 text-[15px] font-medium text-black/85">
+                    <RowLabel row={row} />
                   </th>
                   {plans.map((plan) => (
-                    <td key={plan.code} className="px-4 py-3.5 text-center text-[15px]">
+                    <td key={plan.code} className="px-4 py-2.5 text-center text-[15px]">
                       <CellView cell={row.render(plan)} />
                     </td>
                   ))}
@@ -231,7 +277,9 @@ export function PricingPlans({ plans }: PricingPlansProps) {
                 <dl className="divide-y divide-black/10">
                   {FEATURE_ROWS.map((row) => (
                     <div key={row.key} className="flex items-center justify-between gap-4 py-2.5">
-                      <dt className="text-[14px] text-black/75">{row.label}</dt>
+                      <dt className="text-[14px] text-black/75">
+                        <RowLabel row={row} />
+                      </dt>
                       <dd className="shrink-0 text-right text-[14px] text-black">
                         <CellView cell={row.render(plan)} />
                       </dd>
