@@ -7,8 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // /t/ links are tracking redirects. Claim pages (/business/claim/*) stay
-        // crawlable on purpose so crawlers can see their `noindex` meta tag.
+        // /t/ links are tracking redirects.
         disallow: ["/api/", "/t/"],
       },
     ],

@@ -100,21 +100,6 @@ export interface PublicCollab {
   business_slug: string | null;
 }
 
-export interface ClaimPreview {
-  business: {
-    name: string;
-    tagline: string | null;
-    photos: string[];
-    logo_url: string | null;
-    region_name: string | null;
-    categories: string[];
-  };
-  already_claimed: boolean;
-  requires_phone_verification: boolean;
-  phone_hint: string | null;
-  expires_at: string | null;
-}
-
 export interface CreatorPortfolio {
   slug: string;
   display_name: string;
@@ -145,16 +130,6 @@ export interface BusinessCategory {
   name: string;
   sub_categories: string[];
 }
-
-/** Outcome of a claim-link preview, as far as the API can tell them apart. */
-export type ClaimPreviewResult =
-  | { status: "ok"; preview: ClaimPreview }
-  /** Unknown, expired, already used or revoked: the API answers all of these with one 404. */
-  | { status: "not_found" }
-  /** The link is live but the listing it points to has been deleted. */
-  | { status: "listing_removed" }
-  /** Too many preview requests (the endpoint is rate limited). */
-  | { status: "rate_limited"; retryAfterSeconds: number | null };
 
 // ── Static category fallback (used when the categories endpoint is unavailable) ──
 
@@ -667,51 +642,6 @@ export async function getTermsVersions(
   } catch (err) {
     logServerError("getTermsVersions", err);
     return { creator: null, business: null };
-  }
-}
-
-/**
- * GET /api/v2/businesses/claim/{token} — never cached (one-time links).
- * Maps the API's 404s and 429 to distinct states; throws on anything else so
- * the route's error boundary can offer a retry.
- */
-export async function getClaimPreview(token: string): Promise<ClaimPreviewResult> {
-  try {
-    const data = await request<Raw>(
-      `/api/v2/businesses/claim/${encodeURIComponent(token)}`,
-      { cache: "no-store", signal: AbortSignal.timeout(DEFAULT_TIMEOUT_MS) }
-    );
-    const b = asObj(data.business);
-    return {
-      status: "ok",
-      preview: {
-        business: {
-          name: str(b.name) ?? "Your business",
-          tagline: str(b.tagline),
-          photos: strArr(b.photos),
-          logo_url: str(b.logo_url),
-          region_name: str(b.region_name),
-          categories: strArr(b.categories),
-        },
-        already_claimed: data.already_claimed === true,
-        requires_phone_verification: data.requires_phone_verification === true,
-        phone_hint: str(data.phone_hint),
-        expires_at: str(data.expires_at),
-      },
-    };
-  } catch (err) {
-    if (isNotFound(err)) {
-      // "Claim link not found" (no live invite) vs "Business not found" (invite
-      // is live but the listing was deleted) — the only signal is the message.
-      return /^business not found/i.test((err as ApiError).message)
-        ? { status: "listing_removed" }
-        : { status: "not_found" };
-    }
-    if (err instanceof ApiError && err.status === 429) {
-      const retry = num(asObj(asObj(err.data).detail).retry_after);
-      return { status: "rate_limited", retryAfterSeconds: retry !== null && retry > 0 ? retry : null };
-    }
-    throw err;
   }
 }
 
