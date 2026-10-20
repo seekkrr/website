@@ -30,7 +30,7 @@ interface Step {
 const STEPS: Record<View, Step[]> = {
   business: [
     {
-      title: "Post a collab",
+      title: "Post a UGC brief",
       body: "Say what you want to create (a reel, stories or posts) and what you offer for it.",
       icon: PenLine,
       visual: "collab",
@@ -97,7 +97,7 @@ function Screen({ visual, reduceMotion }: { visual: Visual; reduceMotion: boolea
   if (visual === "collab") {
     return (
       <div className="flex h-full flex-col gap-3 p-3">
-        <p className="font-jakarta text-[12px] font-extrabold text-black">New collab</p>
+        <p className="font-jakarta text-[12px] font-extrabold text-black">New UGC brief</p>
         <div className="flex flex-col gap-2 rounded-xl border-2 border-black bg-white p-2.5">
           <span className="font-jakarta text-[9px] font-bold uppercase tracking-wider text-black/50">Want</span>
           <Bar className="w-11/12 bg-theme-green/40" />
@@ -114,7 +114,7 @@ function Screen({ visual, reduceMotion }: { visual: Visual; reduceMotion: boolea
         </div>
         <div className="mt-auto flex flex-col items-center gap-2">
           <span className="w-full rounded-full bg-black py-2 text-center font-jakarta text-[11px] font-bold text-white">
-            Post collab
+            Post a UGC brief
           </span>
           <DoneChip label="Posted" delay={0.5} reduceMotion={reduceMotion} />
         </div>

@@ -5,7 +5,7 @@ import { SectionHeading } from "@/components/collabs/SectionHeading";
 export const AI_MATCHING_FAQ = {
   id: "ai-matching",
   q: "How does AI creator matching work?",
-  a: "SeekKrr Match AI uses recommendation algorithms to rank the creators who have opted in to collabs, separately for each of your collabs. It weighs how well their interests and content categories fit your place, who's in town now (recent check-ins nearby), their ratings and how reliably they post, whether their formats suit your brief, and which creators similar businesses rated well. Every match shows reason chips that tell you why it fits. Full AI matching, with creator invites and the score breakdown, is on the Pro plan; Free and Growth get a top-3 match preview each month.",
+  a: "SeekKrr Match AI uses recommendation algorithms to rank the creators who have opted in to UGC briefs, separately for each of your UGC briefs. It weighs how well their interests and content categories fit your place, who's in town now (recent check-ins nearby), their ratings and how reliably they post, whether their formats suit your brief, and which creators similar businesses rated well. Every match shows reason chips that tell you why it fits. Full AI matching, with creator invites and the score breakdown, is on the Pro plan; Free and Growth get a top-3 match preview each month.",
 };
 
 export const BUSINESS_FAQ: { id: string; q: string; a: string }[] = [
@@ -16,8 +16,8 @@ export const BUSINESS_FAQ: { id: string; q: string; a: string }[] = [
   },
   {
     id: "who-redeems",
-    q: "Which creators can redeem my collab?",
-    a: "Only creators who have opted in to collabs, confirmed they're 18+ and accepted the collab terms. With an Approval collab you see their profile, verified handles and track record before saying yes, and you can limit a collab to verified creators.",
+    q: "Which creators can redeem my UGC brief?",
+    a: "Only creators who have opted in to UGC briefs, confirmed they're 18+ and accepted the creator terms. With an Approval UGC brief you see their profile, verified handles and track record before saying yes, and you can limit a UGC brief to verified creators.",
   },
   AI_MATCHING_FAQ,
   {
@@ -28,17 +28,17 @@ export const BUSINESS_FAQ: { id: string; q: string; a: string }[] = [
   {
     id: "no-post",
     q: "What if a creator doesn't post?",
-    a: "Every brief has a post-within window. If no links arrive, the collab is marked overdue and then a no-show, which lowers that creator's reliability in SeekKrr Match. You can also report or block them.",
+    a: "Every brief has a post-within window. If no links arrive, the UGC brief is marked overdue and then a no-show, which lowers that creator's reliability in SeekKrr Match. You can also report or block them.",
   },
   {
     id: "where",
     q: "Where is SeekKrr live?",
-    a: "We're piloting collabs in Bir, Himachal Pradesh, and opening more towns region by region. Apply now and we'll switch your listing on as soon as your region launches.",
+    a: "We're piloting UGC briefs in Bir, Himachal Pradesh, and opening more towns region by region. Apply now and we'll switch your listing on as soon as your region launches.",
   },
   {
     id: "team",
     q: "Can my team help run it?",
-    a: "Yes. Managers can edit collabs; staff can see the redeem code, scan creator QR codes and approve visits. Only the owner can change billing or the team.",
+    a: "Yes. Managers can edit UGC briefs; staff can see the redeem code, scan creator QR codes and approve visits. Only the owner can change billing or the team.",
   },
   {
     id: "gst",

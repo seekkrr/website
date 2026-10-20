@@ -26,7 +26,18 @@ function detect(link: SocialLink): { label: string; Icon: LucideIcon | typeof XG
   return { label: host || "Website", Icon: Globe };
 }
 
-export function SocialLinks({ links, name }: { links: SocialLink[]; name: string }) {
+/** Only real https links: emails typed as links (user@host) and junk are hidden. */
+function isWebLink(url: string): boolean {
+  try {
+    const u = new URL(url);
+    return u.protocol === "https:" && !u.username && !u.password && u.hostname.includes(".");
+  } catch {
+    return false;
+  }
+}
+
+export function SocialLinks({ links: all, name }: { links: SocialLink[]; name: string }) {
+  const links = all.filter((l) => isWebLink(l.url));
   if (links.length === 0) return null;
   return (
     <ul className="flex flex-wrap gap-2">

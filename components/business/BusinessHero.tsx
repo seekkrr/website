@@ -36,7 +36,7 @@ function RotatingCollabCard() {
       className="relative"
       role="group"
       aria-roledescription="carousel"
-      aria-label="Example collabs"
+      aria-label="Example UGC briefs"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setFocused(true)}
@@ -194,7 +194,7 @@ export function BusinessHero() {
               List your business
             </Link>
             <a href="#builder" className={buttonVariants({ variant: "outline", size: "lg" })}>
-              Build a collab
+              Build a UGC brief
             </a>
           </motion.div>
         </div>

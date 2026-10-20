@@ -6,7 +6,7 @@ const ITEMS: { icon: LucideIcon; title: string; body: string; tone: string }[] =
   {
     icon: MapPinned,
     title: "Check-in verified visits",
-    body: "Collab details unlock only after a same-day check-in at your place.",
+    body: "UGC brief details unlock only after a same-day check-in at your place.",
     tone: "bg-white [box-shadow:5px_5px_0_var(--color-yellow-accent)]",
   },
   {

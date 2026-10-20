@@ -25,7 +25,7 @@ const SIGNALS: { icon: LucideIcon; label: string; body: string }[] = [
   { icon: Compass, label: "Interest & category fit", body: "Their content themes vs. what your place is about" },
   { icon: MapPin, label: "In town now", body: "Recent check-ins near you" },
   { icon: BadgeCheck, label: "Content-format fit", body: "Formats they've proven vs. your brief" },
-  { icon: Star, label: "Ratings", body: "How businesses rated their collabs" },
+  { icon: Star, label: "Ratings", body: "How businesses rated them on past UGC briefs" },
   { icon: ShieldCheck, label: "Reliability", body: "How often they post after redeeming" },
   { icon: Users, label: "Similar businesses", body: "Who places like yours rated well" },
   { icon: Activity, label: "Activity", body: "Recently active on SeekKrr" },
@@ -187,7 +187,7 @@ export function MatchExplainer({ plans = FALLBACK_PLANS }: { plans?: Plan[] }) {
               AI creator matching
             </h2>
             <p className="mt-3 max-w-[520px] text-[15px] leading-relaxed text-theme-beige/85 md:text-[17px]">
-              SeekKrr Match AI ranks the opted-in creators who fit your place for every collab, and tells you why.
+              SeekKrr Match AI ranks the opted-in creators who fit your place for every UGC brief, and tells you why.
             </p>
 
             <ul className="mt-6 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">

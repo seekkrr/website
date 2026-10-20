@@ -72,7 +72,7 @@ export function CollabBuilder() {
         <SectionHeading
           id={`${id}-title`}
           eyebrow="Try it before you sign up"
-          title="Build your first collab"
+          title="Build your first UGC brief"
           intro="This is the card creators see in the app when they check in at your place. Play with it here, then post the real thing once your listing is live."
           stars
         />
@@ -195,7 +195,7 @@ export function CollabBuilder() {
                   How creators get it
                 </p>
                 <SegmentedToggle
-                  ariaLabel="Collab mode"
+                  ariaLabel="UGC brief mode"
                   value={draft.mode}
                   onChange={(v) => update("mode", v)}
                   options={[
@@ -206,8 +206,8 @@ export function CollabBuilder() {
                 />
                 <p className="text-[13px] leading-snug text-black/65">
                   {draft.mode === "open"
-                    ? "Creators walk in directly to redeem collab"
-                    : "Business reviews and approves the creator to confirm collab"}
+                    ? "Creators walk in directly to redeem the UGC brief"
+                    : "Business reviews and approves the creator to confirm the UGC brief"}
                 </p>
               </div>
 
@@ -255,7 +255,7 @@ export function CollabBuilder() {
                 </Link>
                 <p className="text-[14px] text-black/60">
                   Free to start and about 2 minutes to sign up. Once your listing is verified, post
-                  your collab from the Partner Portal.
+                  your UGC brief from the Partner Portal.
                 </p>
               </div>
             </Reveal>

@@ -17,9 +17,9 @@ import { siteConfig } from "@/lib/config/site";
 export const revalidate = 600;
 
 export const metadata: Metadata = {
-  title: "SeekKrr for Business | Creator collabs for cafés, stays & adventures",
+  title: "For Business | UGC from travel creators for cafés & stays",
   description:
-    "Post a collab, let travel creators check in and redeem it with your staff code, and find creators who fit your place with AI creator matching. Free to start, piloting in Bir.",
+    "Post a UGC brief, let travel creators check in and redeem it with your staff code, and find creators who fit your place with AI creator matching. Free to start, piloting in Bir.",
   alternates: { canonical: "/business" },
   openGraph: {
     title: "SeekKrr for Business",

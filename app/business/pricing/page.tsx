@@ -26,7 +26,7 @@ const PRICING_FAQ = [
   {
     id: "trial",
     q: "What happens when the Growth trial ends?",
-    a: "Your trial runs for 14 days with no card needed. If you don't subscribe, you move to the Free plan automatically. Extra collabs are paused, never deleted.",
+    a: "Your trial runs for 14 days with no card needed. If you don't subscribe, you move to the Free plan automatically. Extra UGC briefs are paused, never deleted.",
   },
   {
     id: "annual",
@@ -47,7 +47,7 @@ const PRICING_FAQ = [
   {
     id: "limits",
     q: "What counts as a redemption?",
-    a: "Each time a creator redeems one of your collabs with your staff code or a staff QR scan. Counters reset on the 1st of every month (IST). We email you at 80% and 100% of your limit.",
+    a: "Each time a creator redeems one of your UGC briefs with your staff code or a staff QR scan. Counters reset on the 1st of every month (IST). We email you at 80% and 100% of your limit.",
   },
 ];
 
@@ -103,7 +103,7 @@ function productJsonLd(plans: Plan[]) {
     "@type": "Product",
     name: "SeekKrr for Business",
     description:
-      "Creator collaboration plans for local businesses: post collabs, verify visits with a staff redeem code, and find creators who fit your place with AI creator matching (SeekKrr Match AI) on Pro.",
+      "UGC content plans for local businesses: post UGC briefs, verify visits with a staff redeem code, and find creators who fit your place with AI creator matching (SeekKrr Match AI) on Pro.",
     brand: { "@type": "Brand", name: siteConfig.name },
     url: `${siteConfig.url}/business/pricing`,
     offers,
@@ -131,7 +131,7 @@ export default async function PricingPage() {
             as="h1"
             eyebrow="SeekKrr for Business"
             title="Plans that grow with your footfall"
-            intro="Start free with one collab. Move up when creators are bringing people through your door."
+            intro="Start free with one UGC brief. Move up when creators are bringing people through your door."
             stars
           />
           <PricingPlans plans={plans} />
