@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { siteFeatures } from "@/lib/config/site";
 
 /**
  * Phones only: a bottom CTA bar that shows once the hero (#business-hero) has
@@ -61,10 +62,16 @@ export function StickyBusinessCta() {
             className="pointer-events-auto flex min-h-[52px] items-center justify-between gap-3 rounded-full border-[3px] border-black bg-black py-2 pl-5 pr-2 text-white shadow-[4px_4px_0_0_var(--color-yellow-accent)] active:scale-[0.98] motion-reduce:active:scale-100"
           >
             <span className="font-jakarta text-[16px] font-bold">List your business</span>
-            <span className="inline-flex items-center gap-1 rounded-full bg-theme-yellow px-3 py-1.5 font-jakarta text-[13px] font-extrabold text-black">
-              ₹0 to start
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </span>
+            {siteFeatures.plans ? (
+              <span className="inline-flex items-center gap-1 rounded-full bg-theme-yellow px-3 py-1.5 font-jakarta text-[13px] font-extrabold text-black">
+                ₹0 to start
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </span>
+            ) : (
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-theme-yellow text-black">
+                <ArrowRight className="h-5 w-5" aria-hidden="true" />
+              </span>
+            )}
           </Link>
         </motion.div>
       )}

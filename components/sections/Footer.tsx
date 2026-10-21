@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { Instagram, Linkedin } from "lucide-react";
-import { siteConfig } from "@/lib/config/site";
+import { siteConfig, siteFeatures } from "@/lib/config/site";
 
 const FOOTER_LINKS = [
     { name: "For Business", href: "/business" },
     { name: "Places", href: "/places" },
-    { name: "Business Pricing", href: "/business/pricing" },
+    ...(siteFeatures.plans ? [{ name: "Business Pricing", href: "/business/pricing" }] : []),
     { name: "Terms and Conditions", href: "/terms" },
     { name: "Privacy Policy", href: "/privacy" },
     { name: "Creator Terms", href: siteConfig.creatorTermsLink },

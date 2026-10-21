@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle";
 import { SectionHeading } from "@/components/collabs/SectionHeading";
+import { siteFeatures } from "@/lib/config/site";
 import { cn } from "@/lib/utils";
 
 type View = "business" | "creator";
@@ -43,7 +44,9 @@ const STEPS: Record<View, Step[]> = {
     },
     {
       title: "Get Content, Repeat, Scale",
-      body: "Match with creators that fit your brand and grow your business.",
+      body: siteFeatures.matchmaking
+        ? "Match with creators that fit your brand and grow your business."
+        : "Work with creators that fit your brand and grow your business.",
       icon: TrendingUp,
       visual: "content",
     },
@@ -61,12 +64,19 @@ const STEPS: Record<View, Step[]> = {
       icon: Ticket,
       visual: "code",
     },
-    {
-      title: "Post with disclosure, get rated",
-      body: "Follow the brief, add #ad, #collab or #gifted, and drop your links in the app.",
-      icon: Camera,
-      visual: "content",
-    },
+    siteFeatures.disclosureLabel
+      ? {
+          title: "Post with disclosure, get rated",
+          body: "Follow the brief, add #ad, #collab or #gifted, and drop your links in the app.",
+          icon: Camera,
+          visual: "content",
+        }
+      : {
+          title: "Post your content, get rated",
+          body: "Follow the brief, tag the place and drop your links in the app.",
+          icon: Camera,
+          visual: "content",
+        },
   ],
 };
 
@@ -181,9 +191,11 @@ function Screen({ visual, reduceMotion }: { visual: Visual; reduceMotion: boolea
         >
           <Play className="h-4 w-4 fill-black" aria-hidden="true" />
         </motion.span>
-        <span className="absolute left-2 top-2 rounded-full border-2 border-black bg-white px-2 py-0.5 font-jakarta text-[10px] font-bold">
-          #collab
-        </span>
+        {siteFeatures.disclosureLabel && (
+          <span className="absolute left-2 top-2 rounded-full border-2 border-black bg-white px-2 py-0.5 font-jakarta text-[10px] font-bold">
+            #collab
+          </span>
+        )}
       </div>
       <Bar className="w-5/6" />
       <DoneChip label="Link added" delay={0.5} reduceMotion={reduceMotion} />

@@ -41,6 +41,23 @@ export const siteConfig = {
   },
 };
 
+/**
+ * Product switches for features that are hidden for now but coming back.
+ * Flip one to true to bring it back everywhere on the site.
+ */
+export const siteFeatures: Readonly<{
+  /** Plans and pricing: /business/pricing, the pricing teaser, plan badges and "free" copy. */
+  plans: boolean;
+  /** AI creator matching (SeekKrr Match): the explainer section, "AI Match" badges and copy. */
+  matchmaking: boolean;
+  /** The #collab / #ad / #gifted label on UGC briefs and the builder's label picker. */
+  disclosureLabel: boolean;
+}> = {
+  plans: false,
+  matchmaking: false,
+  disclosureLabel: false,
+};
+
 /** Fixed Partner Portal routes the website hands visitors off to. */
 export const portalLinks = {
   /** Business sign-up: Google sign-in, phone, then business details. */

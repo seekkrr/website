@@ -1,16 +1,22 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-// Hosts allowed by next.config.mjs `images.remotePatterns`. Anything else
-// (e.g. Cloudinary marker media) renders as a plain lazy <img>, because
-// next/image throws at runtime for unconfigured hosts.
-const OPTIMIZABLE_HOSTS = new Set(["img.seekkrr.com"]);
+// Hosts (and path prefixes) allowed by next.config.mjs `images.remotePatterns`.
+// Anything else renders as a plain lazy <img>, because next/image throws at
+// runtime for unconfigured hosts.
+const OPTIMIZABLE: { host: string; pathPrefix: string }[] = [
+  { host: "img.seekkrr.com", pathPrefix: "/" },
+  { host: "res.cloudinary.com", pathPrefix: "/seekkrr/" },
+];
 
 function isOptimizable(src: string) {
   if (src.startsWith("/")) return true;
   try {
     const url = new URL(src);
-    return url.protocol === "https:" && OPTIMIZABLE_HOSTS.has(url.hostname);
+    return (
+      url.protocol === "https:" &&
+      OPTIMIZABLE.some((o) => url.hostname === o.host && url.pathname.startsWith(o.pathPrefix))
+    );
   } catch {
     return false;
   }

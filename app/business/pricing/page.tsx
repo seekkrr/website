@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { PricingPlans } from "@/components/pricing/PricingPlans";
 import { AI_MATCHING_FAQ, BusinessFaq, faqJsonLd } from "@/components/business/BusinessFaq";
 import { CtaStrip } from "@/components/business/CtaStrip";
@@ -6,7 +7,7 @@ import { hasFullMatching } from "@/components/pricing/planFeatures";
 import { SectionHeading } from "@/components/collabs/SectionHeading";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { getPlans, type Plan } from "@/lib/collabs";
-import { siteConfig } from "@/lib/config/site";
+import { siteConfig, siteFeatures } from "@/lib/config/site";
 
 export const revalidate = 3600;
 
@@ -111,6 +112,9 @@ function productJsonLd(plans: Plan[]) {
 }
 
 export default async function PricingPage() {
+  // Plans are hidden for now: send old links to /business (temporary, so it can come back).
+  if (!siteFeatures.plans) redirect("/business");
+
   const { plans } = await getPlans();
 
   return (

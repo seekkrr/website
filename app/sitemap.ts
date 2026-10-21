@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { siteConfig } from "@/lib/config/site";
+import { siteConfig, siteFeatures } from "@/lib/config/site";
 import { getPublicBusinessSlugs } from "@/lib/collabs";
 
 export const revalidate = 3600;
@@ -59,12 +59,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.9,
     },
-    {
-      url: `${baseUrl}/business/pricing`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
+    // /business/pricing redirects to /business while plans are hidden.
+    ...(siteFeatures.plans
+      ? [
+          {
+            url: `${baseUrl}/business/pricing`,
+            lastModified,
+            changeFrequency: "monthly" as const,
+            priority: 0.8,
+          },
+        ]
+      : []),
     {
       url: `${baseUrl}/business/apply`,
       lastModified,

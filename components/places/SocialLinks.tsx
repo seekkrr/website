@@ -27,7 +27,7 @@ function detect(link: SocialLink): { label: string; Icon: LucideIcon | typeof XG
 }
 
 /** Only real https links: emails typed as links (user@host) and junk are hidden. */
-function isWebLink(url: string): boolean {
+export function isWebLink(url: string): boolean {
   try {
     const u = new URL(url);
     return u.protocol === "https:" && !u.username && !u.password && u.hostname.includes(".");

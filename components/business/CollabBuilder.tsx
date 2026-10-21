@@ -10,6 +10,7 @@ import { CollabCard } from "@/components/collabs/CollabCard";
 import { Reveal } from "@/components/collabs/Reveal";
 import { SectionHeading } from "@/components/collabs/SectionHeading";
 import { trackEvent } from "@/lib/analytics";
+import { siteFeatures } from "@/lib/config/site";
 import {
   DELIVERABLE_TYPES,
   DISCLOSURES,
@@ -211,21 +212,23 @@ export function CollabBuilder() {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-2">
-                <p className="font-jakarta text-[15px] font-semibold text-black">Disclosure label</p>
-                <SegmentedToggle<Disclosure>
-                  ariaLabel="Disclosure label"
-                  size="sm"
-                  value={draft.disclosure}
-                  onChange={(v) => update("disclosure", v)}
-                  options={DISCLOSURES.map((d) => ({ value: d, label: d }))}
-                  className="self-start"
-                />
-                <p className="text-[13px] leading-snug text-black/65">
-                  Always on. Creators see it as a checklist item, in line with ASCI influencer
-                  guidelines.
-                </p>
-              </div>
+              {siteFeatures.disclosureLabel && (
+                <div className="flex flex-col gap-2">
+                  <p className="font-jakarta text-[15px] font-semibold text-black">Disclosure label</p>
+                  <SegmentedToggle<Disclosure>
+                    ariaLabel="Disclosure label"
+                    size="sm"
+                    value={draft.disclosure}
+                    onChange={(v) => update("disclosure", v)}
+                    options={DISCLOSURES.map((d) => ({ value: d, label: d }))}
+                    className="self-start"
+                  />
+                  <p className="text-[13px] leading-snug text-black/65">
+                    Always on. Creators see it as a checklist item, in line with ASCI influencer
+                    guidelines.
+                  </p>
+                </div>
+              )}
             </div>
           </Reveal>
 
@@ -254,8 +257,8 @@ export function CollabBuilder() {
                   <ArrowRight className="h-5 w-5" aria-hidden="true" />
                 </Link>
                 <p className="text-[14px] text-black/60">
-                  Free to start and about 2 minutes to sign up. Once your listing is verified, post
-                  your UGC brief from the Partner Portal.
+                  {siteFeatures.plans ? "Free to start and about 2 minutes to sign up." : "About 2 minutes to sign up."}{" "}
+                  Once your listing is verified, post your UGC brief from the Partner Portal.
                 </p>
               </div>
             </Reveal>

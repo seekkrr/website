@@ -1,8 +1,9 @@
 import { Ban, Hash, KeyRound, MapPinned, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/collabs/Reveal";
 import { SectionHeading } from "@/components/collabs/SectionHeading";
+import { siteFeatures } from "@/lib/config/site";
 
-const ITEMS: { icon: LucideIcon; title: string; body: string; tone: string }[] = [
+const ALL_ITEMS: { icon: LucideIcon; title: string; body: string; tone: string; disclosure?: true }[] = [
   {
     icon: MapPinned,
     title: "Check-in verified visits",
@@ -26,8 +27,14 @@ const ITEMS: { icon: LucideIcon; title: string; body: string; tone: string }[] =
     title: "Disclosure built in",
     body: "Every brief carries #ad, #collab or #gifted, in line with ASCI guidelines.",
     tone: "bg-theme-yellow [box-shadow:5px_5px_0_#000]",
+    disclosure: true,
   },
 ];
+
+const ITEMS = ALL_ITEMS.filter((item) => !item.disclosure || siteFeatures.disclosureLabel);
+
+// Three cards sit in one row from sm up; four go 2×2, then one row on large screens.
+const GRID_COLS = ITEMS.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-4";
 
 export function TrustSafety() {
   return (
@@ -37,7 +44,7 @@ export function TrustSafety() {
     >
       <div className="mx-auto w-full max-w-[1240px]">
         <SectionHeading id="trust-title" eyebrow="Built for real places and real people" title="Trust & safety" />
-        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+        <ul className={`grid grid-cols-1 gap-4 lg:gap-5 ${GRID_COLS}`}>
           {ITEMS.map(({ icon: Icon, title, body, tone }, index) => (
             <Reveal key={title} as="li" delay={index * 0.08} lift className="h-full">
               <div className={`flex h-full items-start gap-3 rounded-[20px] border-[3px] border-black p-4 sm:flex-col sm:p-5 xl:rounded-[24px] ${tone}`}>

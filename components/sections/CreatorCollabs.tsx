@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BadgeCheck, Hash, KeyRound, MapPin, Star, ToggleRight, type LucideIcon } from "lucide-react";
+import { BadgeCheck, Camera, Hash, KeyRound, MapPin, Star, ToggleRight, type LucideIcon } from "lucide-react";
 import { Accordion } from "@/components/ui/Accordion";
 import { Reveal } from "@/components/collabs/Reveal";
 import { StoreBadges } from "@/components/collabs/StoreBadges";
-import { siteConfig } from "@/lib/config/site";
+import { siteConfig, siteFeatures } from "@/lib/config/site";
 
 const STEPS: { icon: LucideIcon; title: string; body: string }[] = [
   {
@@ -17,15 +17,23 @@ const STEPS: { icon: LucideIcon; title: string; body: string }[] = [
     title: "Redeem with the staff code",
     body: "Open: staff type their 4-digit code on your phone. Approval: tap Avail and the business reviews and approves you to confirm the collab.",
   },
-  {
-    icon: Hash,
-    title: "Post with disclosure",
-    body: "Follow the brief, tag the place, add #ad, #collab or #gifted, then drop your links in My Collabs.",
-  },
+  siteFeatures.disclosureLabel
+    ? {
+        icon: Hash,
+        title: "Post with disclosure",
+        body: "Follow the brief, tag the place, add #ad, #collab or #gifted, then drop your links in My Collabs.",
+      }
+    : {
+        icon: Camera,
+        title: "Post your content",
+        body: "Follow the brief, tag the place, then drop your links in My Collabs.",
+      },
   {
     icon: Star,
     title: "Get rated",
-    body: "Businesses rate you after each collab. Good ratings and on-time posts lift you in SeekKrr Match.",
+    body: siteFeatures.matchmaking
+      ? "Businesses rate you after each collab. Good ratings and on-time posts lift you in SeekKrr Match."
+      : "Businesses rate you after each collab. Good ratings and on-time posts build your track record.",
   },
 ];
 
@@ -40,7 +48,9 @@ const FAQ = [
   {
     id: "followers",
     q: "Do I need a big following?",
-    a: "No. Most collabs are open to every creator who has opted in. Some businesses ask for verified handles, and in SeekKrr Match your reliability and ratings count for more than follower numbers.",
+    a: siteFeatures.matchmaking
+      ? "No. Most collabs are open to every creator who has opted in. Some businesses ask for verified handles, and in SeekKrr Match your reliability and ratings count for more than follower numbers."
+      : "No. Most collabs are open to every creator who has opted in. Some businesses ask for verified handles, and your reliability and ratings count for more than follower numbers.",
   },
   {
     id: "paid",
@@ -124,8 +134,11 @@ export function CreatorCollabs() {
             <ToggleRight className="h-9 w-9 text-white" aria-hidden="true" />
             <h4 className="font-jakarta text-[22px] font-extrabold text-black">Open to collabs</h4>
             <p className="text-[16px] leading-relaxed text-black/85">
-              Switch on <strong>Open to collabs</strong> in your creator profile and businesses near you can
-              find you through SeekKrr Match. You&apos;ll need to be 18+, accept the{" "}
+              Switch on <strong>Open to collabs</strong> in your creator profile{" "}
+              {siteFeatures.matchmaking
+                ? "and businesses near you can find you through SeekKrr Match."
+                : "to unlock collabs from businesses near you."}{" "}
+              You&apos;ll need to be 18+, accept the{" "}
               <Link href={siteConfig.creatorTermsLink} className="font-semibold underline underline-offset-2">
                 creator collab terms
               </Link>{" "}

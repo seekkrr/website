@@ -8,6 +8,7 @@ import { Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { buttonVariants } from "@/components/ui/Button";
 import { CollabCard } from "@/components/collabs/CollabCard";
+import { siteFeatures } from "@/lib/config/site";
 import { cn } from "@/lib/utils";
 import { COLLAB_EXAMPLES } from "./collabExamples";
 
@@ -168,23 +169,32 @@ export function BusinessHero() {
             business requirements and manage leads in one app.
           </motion.p>
 
-          {/* Sticker: the tilt lives on the inner element so framer's inline transform can't reset it. */}
-          <motion.div {...enter(0.3, { y: 10 })} className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3">
-            <p className="inline-flex -rotate-3 items-center gap-2 rounded-[14px] border-[3px] border-black bg-theme-yellow px-4 py-2 font-jakarta text-[20px] font-extrabold leading-none tracking-tight text-black shadow-[4px_4px_0_0_#000] sm:text-[24px]">
-              <Sparkles className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" strokeWidth={2.5} aria-hidden="true" />
-              ₹0 to start
-            </p>
-            {/* Hidden on phones: there's no room beside the sticker, and wrapped under it the pair looks cramped. */}
-            <a
-              href="#ai-matching"
-              className="hidden rotate-2 items-center gap-1.5 whitespace-nowrap rounded-full border-2 border-black bg-black px-3 py-1.5 font-jakarta text-[13px] font-bold leading-none text-white transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-theme-blue motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:inline-flex sm:text-[14px]"
-            >
-              AI Match
-              <span className="rounded-full bg-theme-yellow px-1.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wide text-black">
-                Pro
-              </span>
-            </a>
-          </motion.div>
+          {/* Sticker: the tilt lives on the inner element so framer's inline transform can't reset it.
+              The row only renders while plans and/or AI matching are switched on. */}
+          {(siteFeatures.plans || siteFeatures.matchmaking) && (
+            <motion.div {...enter(0.3, { y: 10 })} className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3">
+              {siteFeatures.plans && (
+                <p className="inline-flex -rotate-3 items-center gap-2 rounded-[14px] border-[3px] border-black bg-theme-yellow px-4 py-2 font-jakarta text-[20px] font-extrabold leading-none tracking-tight text-black shadow-[4px_4px_0_0_#000] sm:text-[24px]">
+                  <Sparkles className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" strokeWidth={2.5} aria-hidden="true" />
+                  ₹0 to start
+                </p>
+              )}
+              {/* Hidden on phones: there's no room beside the sticker, and wrapped under it the pair looks cramped. */}
+              {siteFeatures.matchmaking && (
+                <a
+                  href="#ai-matching"
+                  className="hidden rotate-2 items-center gap-1.5 whitespace-nowrap rounded-full border-2 border-black bg-black px-3 py-1.5 font-jakarta text-[13px] font-bold leading-none text-white transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-theme-blue motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:inline-flex sm:text-[14px]"
+                >
+                  AI Match
+                  {siteFeatures.plans && (
+                    <span className="rounded-full bg-theme-yellow px-1.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wide text-black">
+                      Pro
+                    </span>
+                  )}
+                </a>
+              )}
+            </motion.div>
+          )}
 
           <motion.div
             {...enter(0.35, { y: 20 })}
