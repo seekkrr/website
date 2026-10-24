@@ -52,6 +52,7 @@ export interface PublicBusiness {
   tagline: string | null;
   description: string | null;
   categories: string[];
+  sub_categories: string[];
   region_id: string | null;
   region_name: string | null;
   socials: SocialLink[];
@@ -63,6 +64,16 @@ export interface PublicBusiness {
   open_collab_count: number;
 }
 
+/** A recent traveller review on a place (only reviews with a comment are sent). */
+export interface PlaceReview {
+  /** 1-5 stars. */
+  rating: number;
+  comment: string;
+  /** Short display name, e.g. "Riya S." */
+  author: string | null;
+  created_at: string | null;
+}
+
 export interface BusinessPlace {
   id: string;
   title: string;
@@ -70,8 +81,28 @@ export interface BusinessPlace {
   /** GeoJSON order: [lng, lat] */
   coordinates: [number, number] | null;
   categories: string[];
+  sub_categories: string[];
   region_name: string | null;
   image: string | null;
+  /** Up to 12 photo URLs, cover first. */
+  photos: string[];
+  description: string | null;
+  tags: string[];
+  /** "HH:MM" (24h) or null. */
+  opens_at: string | null;
+  closes_at: string | null;
+  /** Rough spend per person in INR; null (or 0) when unknown. */
+  min_expense: number | null;
+  max_expense: number | null;
+  /** Average rating 0-5 (one decimal); 0 when there are no reviews. */
+  rating: number;
+  review_count: number;
+  checkins_count: number;
+  likes_count: number;
+  website_url: string | null;
+  phone: string | null;
+  /** Latest reviews with comments (up to 3). */
+  reviews: PlaceReview[];
 }
 
 export interface PublicBusinessDetail extends PublicBusiness {
@@ -272,6 +303,7 @@ function normaliseBusiness(v: unknown): PublicBusiness | null {
     tagline: str(o.tagline),
     description: str(o.description),
     categories: strArr(o.categories),
+    sub_categories: strArr(o.sub_categories),
     region_id: str(o.region_id),
     region_name: str(o.region_name),
     socials: normaliseSocials(o.socials),
@@ -293,14 +325,67 @@ function normalisePlace(v: unknown): BusinessPlace | null {
     c && c.length >= 2 && typeof c[0] === "number" && typeof c[1] === "number"
       ? ([c[0], c[1]] as [number, number])
       : null;
+  const count = (x: unknown) => Math.max(0, Math.round(num(x) ?? 0));
+  const expense = (x: unknown) => {
+    const n = num(x);
+    return n !== null && n > 0 ? n : null;
+  };
+  const rating = num(o.rating) ?? 0;
   return {
     id,
     title: str(o.title) ?? "Untitled place",
     address: str(o.address),
     coordinates,
     categories: strArr(o.categories),
+    sub_categories: strArr(o.sub_categories),
     region_name: str(o.region_name),
     image: str(o.image),
+    photos: strArr(o.photos).filter(isHttpUrl),
+    description: str(o.description),
+    tags: strArr(o.tags),
+    opens_at: clockTime(o.opens_at),
+    closes_at: clockTime(o.closes_at),
+    min_expense: expense(o.min_expense),
+    max_expense: expense(o.max_expense),
+    rating: Math.min(5, Math.max(0, rating)),
+    review_count: count(o.review_count),
+    checkins_count: count(o.checkins_count),
+    likes_count: count(o.likes_count),
+    website_url: (() => {
+      const url = str(o.website_url);
+      return url && isHttpUrl(url) ? url : null;
+    })(),
+    phone: str(o.phone),
+    reviews: (Array.isArray(o.reviews) ? o.reviews : [])
+      .map(normaliseReview)
+      .filter((r): r is PlaceReview => !!r),
+  };
+}
+
+function isHttpUrl(url: string) {
+  return /^https?:\/\/[^\s]+$/i.test(url);
+}
+
+/** "9:30" / "09:30" / "09:30:00" -> "09:30"; anything else -> null. */
+function clockTime(v: unknown): string | null {
+  const m = typeof v === "string" ? /^(\d{1,2}):(\d{2})(?::\d{2})?$/.exec(v.trim()) : null;
+  if (!m) return null;
+  const h = Number(m[1]);
+  const min = Number(m[2]);
+  if (h > 24 || min > 59) return null;
+  return `${String(h).padStart(2, "0")}:${m[2]}`;
+}
+
+function normaliseReview(v: unknown): PlaceReview | null {
+  const o = asObj(v);
+  const comment = str(o.comment)?.trim();
+  const rating = num(o.rating);
+  if (!comment || rating === null) return null;
+  return {
+    rating: Math.min(5, Math.max(1, Math.round(rating))),
+    comment,
+    author: str(o.author),
+    created_at: str(o.created_at),
   };
 }
 

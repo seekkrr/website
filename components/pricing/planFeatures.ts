@@ -39,7 +39,7 @@ const limit = (plan: Plan, value: number | null, zero = "—"): Cell => {
 };
 
 export const FEATURE_ROWS: FeatureRow[] = [
-  { key: "active_collabs", label: "Active collabs", render: (p) => limit(p, p.entitlements.active_collabs) },
+  { key: "active_collabs", label: "Active UGC briefs", render: (p) => limit(p, p.entitlements.active_collabs) },
   {
     key: "redemptions_per_month",
     label: "Redemptions / month",
@@ -108,7 +108,7 @@ export function planHighlights(plan: Plan): string[] {
     ];
   }
   const out: string[] = [];
-  out.push(e.active_collabs === null ? "Unlimited active collabs" : plural(e.active_collabs, "active collab", "active collabs"));
+  out.push(e.active_collabs === null ? "Unlimited active UGC briefs" : plural(e.active_collabs, "active UGC brief", "active UGC briefs"));
   out.push(
     e.redemptions_per_month === null
       ? "Unlimited redemptions"

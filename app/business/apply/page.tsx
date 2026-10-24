@@ -8,12 +8,11 @@ import {
   GoogleIcon,
 } from "@/components/collabs/GoogleHandoffLink";
 import { StructuredData } from "@/components/seo/StructuredData";
-import { portalLinks, siteConfig } from "@/lib/config/site";
+import { portalLinks, siteConfig, siteFeatures } from "@/lib/config/site";
 
 export const metadata: Metadata = {
   title: "List your business | SeekKrr for Business",
-  description:
-    "List your café, stay or adventure on SeekKrr and start hosting travel creators. Continue with Google, add your phone number and tell us about your place: about 2 minutes, free to start.",
+  description: `List your café, stay or adventure on SeekKrr and start hosting travel creators. Continue with Google, add your phone number and tell us about your place: about 2 minutes${siteFeatures.plans ? ", free to start" : ""}.`,
   alternates: { canonical: "/business/apply" },
 };
 
@@ -35,8 +34,17 @@ const STEPS: { title: string; body: string; icon: LucideIcon | "google" }[] = [
   },
 ];
 
-// Partner referral links (`?ref=`), pricing CTAs (`?plan=`) and campaign tags ride along to the portal.
-const FORWARDED_PARAMS = ["ref", "plan", "utm_source", "utm_medium", "utm_campaign"] as const;
+// Partner referral links (`?ref=`), pricing CTAs (`?plan=`, only while plans are shown) and
+// campaign tags ride along to the portal.
+const FORWARDED_PARAMS = [
+  "ref",
+  ...(siteFeatures.plans ? ["plan"] : []),
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+] as const;
+
+const CHIPS = ["About 2 minutes", ...(siteFeatures.plans ? ["Free to start"] : []), "We review every listing"];
 
 function portalHost() {
   try {
@@ -108,7 +116,7 @@ export default function BusinessApplyPage() {
 
         <div className="flex flex-col gap-4 lg:self-start">
           <ul className="flex flex-wrap gap-2">
-            {["About 2 minutes", "Free to start", "We review every listing"].map((chip) => (
+            {CHIPS.map((chip) => (
               <li
                 key={chip}
                 className="inline-flex items-center gap-1.5 rounded-full border-2 border-black bg-white px-3 py-1 font-jakarta text-[13px] font-bold text-black"

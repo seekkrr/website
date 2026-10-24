@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/Button";
 import { FALLBACK_PLANS, type Plan } from "@/lib/collabs";
+import { siteFeatures } from "@/lib/config/site";
 import { cn } from "@/lib/utils";
 
 // Mirrors the scorers in the backend's SeekKrr Match pipeline (theme, local,
@@ -25,7 +26,7 @@ const SIGNALS: { icon: LucideIcon; label: string; body: string }[] = [
   { icon: Compass, label: "Interest & category fit", body: "Their content themes vs. what your place is about" },
   { icon: MapPin, label: "In town now", body: "Recent check-ins near you" },
   { icon: BadgeCheck, label: "Content-format fit", body: "Formats they've proven vs. your brief" },
-  { icon: Star, label: "Ratings", body: "How businesses rated their collabs" },
+  { icon: Star, label: "Ratings", body: "How businesses rated them on past UGC briefs" },
   { icon: ShieldCheck, label: "Reliability", body: "How often they post after redeeming" },
   { icon: Users, label: "Similar businesses", body: "Who places like yours rated well" },
   { icon: Activity, label: "Activity", body: "Recently active on SeekKrr" },
@@ -146,7 +147,10 @@ function MatchVisual({ reduceMotion }: { reduceMotion: boolean }) {
   );
 }
 
-/** "AI creator matching" feature section for /business (SeekKrr Match AI, a Pro feature). */
+/**
+ * "AI creator matching" feature section for /business (SeekKrr Match AI, a Pro feature).
+ * Rendered only with siteFeatures.matchmaking; the Pro sticker and plan row also need siteFeatures.plans.
+ */
 export function MatchExplainer({ plans = FALLBACK_PLANS }: { plans?: Plan[] }) {
   const reduceMotion = useReducedMotion() ?? false;
   const pro = plans.find((p) => p.code === "pro")?.entitlements;
@@ -162,18 +166,20 @@ export function MatchExplainer({ plans = FALLBACK_PLANS }: { plans?: Plan[] }) {
     >
       <div className="relative mx-auto w-full max-w-[1240px] rounded-[24px] border-[3px] border-black bg-theme-green px-5 pb-8 pt-10 text-theme-beige shadow-[8px_8px_0_0_var(--color-yellow-accent)] sm:px-8 lg:px-12 lg:pb-10 lg:pt-12 xl:rounded-[32px]">
         {/* Pro sticker: the tilt sits on a wrapper so framer's scale animation can't reset it. */}
-        <div className="absolute -top-5 left-5 -rotate-6 sm:left-8">
-          <motion.span
-            initial={reduceMotion ? false : { scale: 0.3, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 320, damping: 14 }}
-            className="inline-flex items-center gap-1.5 rounded-[14px] border-[3px] border-black bg-theme-yellow px-4 py-1.5 font-jakarta text-[18px] font-extrabold uppercase tracking-wide text-black shadow-[4px_4px_0_0_#000] sm:text-[20px]"
-          >
-            <Sparkles className="h-5 w-5" strokeWidth={2.5} aria-hidden="true" />
-            Pro feature
-          </motion.span>
-        </div>
+        {siteFeatures.plans && (
+          <div className="absolute -top-5 left-5 -rotate-6 sm:left-8">
+            <motion.span
+              initial={reduceMotion ? false : { scale: 0.3, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 320, damping: 14 }}
+              className="inline-flex items-center gap-1.5 rounded-[14px] border-[3px] border-black bg-theme-yellow px-4 py-1.5 font-jakarta text-[18px] font-extrabold uppercase tracking-wide text-black shadow-[4px_4px_0_0_#000] sm:text-[20px]"
+            >
+              <Sparkles className="h-5 w-5" strokeWidth={2.5} aria-hidden="true" />
+              Pro feature
+            </motion.span>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.05fr_1fr] lg:gap-12">
           <div className="min-w-0">
@@ -187,7 +193,7 @@ export function MatchExplainer({ plans = FALLBACK_PLANS }: { plans?: Plan[] }) {
               AI creator matching
             </h2>
             <p className="mt-3 max-w-[520px] text-[15px] leading-relaxed text-theme-beige/85 md:text-[17px]">
-              SeekKrr Match AI ranks the opted-in creators who fit your place for every collab, and tells you why.
+              SeekKrr Match AI ranks the opted-in creators who fit your place for every UGC brief, and tells you why.
             </p>
 
             <ul className="mt-6 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
@@ -211,31 +217,33 @@ export function MatchExplainer({ plans = FALLBACK_PLANS }: { plans?: Plan[] }) {
           <MatchVisual reduceMotion={reduceMotion} />
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-3 border-t-2 border-dashed border-theme-beige/25 pt-6 md:grid-cols-[1fr_1fr_auto] md:items-center md:gap-5">
-          <div className="rounded-[18px] border-2 border-theme-beige/40 px-4 py-3">
-            <p className="font-jakarta text-[15px] font-extrabold">Free &amp; Growth</p>
-            <p className="text-[14px] text-theme-beige/80">Top-{preview} match preview each month</p>
+        {siteFeatures.plans && (
+          <div className="mt-8 grid grid-cols-1 gap-3 border-t-2 border-dashed border-theme-beige/25 pt-6 md:grid-cols-[1fr_1fr_auto] md:items-center md:gap-5">
+            <div className="rounded-[18px] border-2 border-theme-beige/40 px-4 py-3">
+              <p className="font-jakarta text-[15px] font-extrabold">Free &amp; Growth</p>
+              <p className="text-[14px] text-theme-beige/80">Top-{preview} match preview each month</p>
+            </div>
+            <div className="rounded-[18px] border-[3px] border-black bg-theme-yellow px-4 py-3 text-black shadow-[4px_4px_0_0_#000]">
+              <p className="flex items-center gap-2 font-jakarta text-[15px] font-extrabold">
+                Pro
+                <span className="rounded-full bg-black px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-theme-yellow">
+                  Full AI matching
+                </span>
+              </p>
+              <p className="text-[14px] text-black/80">
+                {proReveals === null ? "Unlimited" : proReveals} reveals · {proInvites === null ? "unlimited" : proInvites} invites a
+                month · score breakdown
+              </p>
+            </div>
+            <Link
+              href="/business/pricing"
+              className={cn(buttonVariants({ variant: "yellow", size: "lg" }), "w-full md:w-auto")}
+            >
+              See Pro plans
+              <ArrowRight className="h-5 w-5" aria-hidden="true" />
+            </Link>
           </div>
-          <div className="rounded-[18px] border-[3px] border-black bg-theme-yellow px-4 py-3 text-black shadow-[4px_4px_0_0_#000]">
-            <p className="flex items-center gap-2 font-jakarta text-[15px] font-extrabold">
-              Pro
-              <span className="rounded-full bg-black px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-theme-yellow">
-                Full AI matching
-              </span>
-            </p>
-            <p className="text-[14px] text-black/80">
-              {proReveals === null ? "Unlimited" : proReveals} reveals · {proInvites === null ? "unlimited" : proInvites} invites a
-              month · score breakdown
-            </p>
-          </div>
-          <Link
-            href="/business/pricing"
-            className={cn(buttonVariants({ variant: "yellow", size: "lg" }), "w-full md:w-auto")}
-          >
-            See Pro plans
-            <ArrowRight className="h-5 w-5" aria-hidden="true" />
-          </Link>
-        </div>
+        )}
       </div>
     </section>
   );
