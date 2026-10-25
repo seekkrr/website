@@ -17,8 +17,8 @@ export const siteConfig = {
   url: "https://seekkrr.com",
   playStoreUrl: "https://play.google.com/store/apps/details?id=com.seekkrr.app",
   appStoreUrl: "https://apps.apple.com/in/app/seekkrr/id6813190942",
-  // Backend smart link: iOS -> App Store, Android -> Play Store, desktop -> chooser.
-  appDownloadUrl: "https://api.seekkrr.com/api/v2/app",
+  // The /app page: iOS -> App Store, Android -> Play Store, desktop -> both stores and a QR code.
+  appDownloadUrl: "https://seekkrr.com/app",
   partnerPortalUrl,
   appScheme: "seekkrr://",
   termsLastUpdated: "February 23, 2026",
