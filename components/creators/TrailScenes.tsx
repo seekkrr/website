@@ -43,7 +43,7 @@ function useLoop(play: boolean, duration: number, still: number) {
     let last = 0;
     const start = performance.now();
     const tick = (now: number) => {
-      if (now - last > 33) {
+      if (now - last > 40) {
         last = now;
         setT(((now - start) / 1000) % duration);
       }

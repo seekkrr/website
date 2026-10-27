@@ -55,16 +55,13 @@ function Sun({ go }: { go: boolean }) {
   return (
     <div className="absolute left-1/2 top-[110px] -translate-x-1/2">
       <motion.div initial={reduce ? false : { y: 260 }} animate={go ? { y: 0 } : {}} transition={{ duration: 1.8, ease: "easeOut" }} className="relative h-[240px] w-[240px] sm:h-[320px] sm:w-[320px]">
-        <motion.svg
-          viewBox="-100 -100 200 200"
-          className="absolute -inset-[30%] h-[160%] w-[160%]"
-          animate={reduce ? undefined : { rotate: 360 }}
-          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-        >
-          {Array.from({ length: 16 }, (_, i) => (
-            <path key={i} d="M-5 -66 L0 -98 L5 -66 Z" fill="#FECD36" stroke="#000" strokeWidth="1.6" strokeLinejoin="round" transform={`rotate(${i * 22.5})`} opacity={0.85} />
-          ))}
-        </motion.svg>
+        <div className="trail-turn absolute -inset-[30%]">
+          <svg viewBox="-100 -100 200 200" className="h-full w-full">
+            {Array.from({ length: 16 }, (_, i) => (
+              <path key={i} d="M-5 -66 L0 -98 L5 -66 Z" fill="#FECD36" stroke="#000" strokeWidth="1.6" strokeLinejoin="round" transform={`rotate(${i * 22.5})`} opacity={0.85} />
+            ))}
+          </svg>
+        </div>
         <span className="absolute inset-0 rounded-full border-[3px] border-black bg-theme-yellow" />
       </motion.div>
     </div>
@@ -83,9 +80,9 @@ export function TrailFinale() {
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
           <Sun go={go} />
           {[{ top: 70, left: "8%", w: 130, d: 20 }, { top: 190, left: "72%", w: 160, d: 26 }, { top: 420, left: "2%", w: 110, d: 22 }].map((c, i) => (
-            <motion.div key={i} className="absolute" style={{ top: c.top, left: c.left, width: c.w }} animate={reduce ? undefined : { x: [0, i % 2 ? -60 : 60, 0] }} transition={{ duration: c.d, repeat: Infinity, ease: "easeInOut" }}>
+            <div key={i} className="trail-drift absolute" style={{ top: c.top, left: c.left, width: c.w, animationDuration: `${c.d}s`, ["--drift" as string]: i % 2 ? "-60px" : "60px" }}>
               <Cloud className="h-auto w-full" />
-            </motion.div>
+            </div>
           ))}
           <svg className="absolute bottom-[96px] left-0 h-[300px] w-full sm:h-[360px]" viewBox="0 0 1240 360" preserveAspectRatio="none">
             <path d="M0 360V190l120-90 110 70 150-130 140 110 110-60 170 130 130-90 120 60 190-120V360Z" fill="#8398FF" stroke="#000" strokeWidth="3" strokeLinejoin="round" />

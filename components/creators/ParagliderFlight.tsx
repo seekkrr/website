@@ -140,14 +140,11 @@ export function ParagliderFlight() {
             </span>
           </motion.div>
 
-          <motion.div className="absolute left-0 top-0" style={{ x: gx, y: gy }}>
+          <motion.div className="absolute left-0 top-0 will-change-transform" style={{ x: gx, y: gy }}>
             <motion.div style={{ rotate: landed ? 0 : bank }} className="-ml-[46px] -mt-[104px] w-[92px] sm:-ml-[60px] sm:-mt-[136px] sm:w-[120px]">
-              <motion.div
-                animate={landed || reduce ? { y: 0 } : { y: [0, -5, 0] }}
-                transition={{ duration: 2.6, repeat: landed ? 0 : Infinity, ease: "easeInOut" }}
-              >
-                <Paraglider landed={landed} className="h-auto w-full drop-shadow-[3px_4px_0_rgba(0,0,0,0.2)]" />
-              </motion.div>
+              <div className={landed ? undefined : "trail-hover"}>
+                <Paraglider landed={landed} className="h-auto w-full" />
+              </div>
             </motion.div>
           </motion.div>
 

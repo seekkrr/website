@@ -12,6 +12,7 @@ import {
   useScroll,
   useSpring,
   useTransform,
+  useVelocity,
 } from "framer-motion";
 import { GoogleIcon } from "@/components/collabs/GoogleHandoffLink";
 import { trackEvent } from "@/lib/analytics";
@@ -87,8 +88,11 @@ const LISTING = [
 type Pt = { x: number; y: number };
 type Sample = Pt & { l: number };
 type Seg = { l0: number; l1: number; dir: 1 | -1 };
+type Chunk = { d: string; l0: number; len: number };
 type Geo = {
   d: string;
+  /** the yellow "ridden" line, in short pieces */
+  chunks: Chunk[];
   w: number;
   h: number;
   len: number;
@@ -180,16 +184,10 @@ function switchbacks(w: number, bands: { top: number; bottom: number; cardX: num
 /* ── Pieces ──────────────────────────────────────────────────────────── */
 
 function FloatingTile({ src, className = "", delay = 0 }: { src: string; className?: string; delay?: number }) {
-  const reduce = useReducedMotion();
   return (
-    <motion.div
-      aria-hidden="true"
-      className={`relative shrink-0 ${className}`}
-      animate={reduce ? undefined : { y: [0, -12, 0], rotate: [0, -4, 0] }}
-      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay }}
-    >
+    <div aria-hidden="true" className={`trail-bob relative shrink-0 ${className}`} style={{ animationDelay: `${delay}s` }}>
       <Image src={src} alt="" fill className="object-contain" sizes="110px" />
-    </motion.div>
+    </div>
   );
 }
 
@@ -296,15 +294,13 @@ function Ticket() {
           <span aria-hidden="true" className="absolute -bottom-[15px] -left-[15px] hidden h-[28px] w-[28px] rounded-full border-[3px] border-black bg-theme-beige md:block" />
           <div className="flex w-full items-center justify-between font-jakarta text-black">
             <div><p className="text-[10px] font-bold uppercase tracking-widest text-black/50">From</p><p className="text-[22px] font-extrabold leading-none">YOU</p></div>
-            <motion.svg width="38" height="18" viewBox="0 0 38 18" aria-hidden="true" animate={reduce ? undefined : { x: [0, 5, 0] }} transition={{ duration: 1.2, repeat: Infinity }}>
+            <svg width="38" height="18" viewBox="0 0 38 18" aria-hidden="true" className="trail-nudge">
               <path d="M2 9h30m-7-7 7 7-7 7" stroke="#000" strokeWidth="2.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-            </motion.svg>
+            </svg>
             <div className="text-right"><p className="text-[10px] font-bold uppercase tracking-widest text-black/50">To</p><p className="text-[22px] font-extrabold leading-none">BIR</p></div>
           </div>
           <span aria-hidden="true" className="relative h-9 w-full overflow-hidden" style={{ background: "repeating-linear-gradient(90deg,#000 0 2px,transparent 2px 4px,#000 4px 7px,transparent 7px 9px)" }}>
-            {!reduce && (
-              <motion.span className="absolute inset-y-0 w-[3px] bg-theme-orange shadow-[0_0_8px_#FF5B25]" animate={{ left: ["0%", "100%", "0%"] }} transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }} />
-            )}
+            <span className="trail-scan absolute inset-y-0 left-0 w-[3px] bg-theme-orange shadow-[0_0_8px_#FF5B25]" style={{ ["--scan" as string]: "min(186px, 80vw)" }} />
           </span>
           <a
             href={portalLinks.creatorApply}
@@ -383,9 +379,9 @@ function RoadPin({ n, reached, x, y }: { n: number; reached: boolean; x: number;
 }
 
 /** Flips up in 3D as it arrives, then leans towards the pointer. */
-function StopCard({ stop, n, side }: { stop: Stop; n: number; side: "left" | "right" }) {
+function StopCard({ stop, n, side, arrived }: { stop: Stop; n: number; side: "left" | "right"; arrived: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { amount: 0.35 });
+  const inView = useInView(ref, { amount: 0.6 });
   const reduce = useReducedMotion();
   const rx = useSpring(0, { stiffness: 200, damping: 18 });
   const ry = useSpring(0, { stiffness: 200, damping: 18 });
@@ -405,6 +401,10 @@ function StopCard({ stop, n, side }: { stop: Stop; n: number; side: "left" | "ri
       transition={{ type: "spring", stiffness: 80, damping: 14 }}
       style={{ transformPerspective: 1200 }}
     >
+      <motion.div
+        animate={arrived && !reduce ? { scale: [1, 1.045, 0.99, 1], y: [0, -10, 2, 0] } : { scale: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+      >
       <motion.article
         onPointerMove={lean}
         onPointerLeave={() => { rx.set(0); ry.set(0); }}
@@ -436,6 +436,7 @@ function StopCard({ stop, n, side }: { stop: Stop; n: number; side: "left" | "ri
           </div>
         </motion.div>
       </motion.article>
+      </motion.div>
     </motion.div>
   );
 }
@@ -467,7 +468,6 @@ function Roadside({ stop, index, side }: { stop: Stop; index: number; side: "lef
 }
 
 function Clouds() {
-  const reduce = useReducedMotion();
   const spots = [
     { top: "6%", left: "4%", w: 150, d: 18 },
     { top: "22%", left: "70%", w: 120, d: 22 },
@@ -479,15 +479,13 @@ function Clouds() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
       {spots.map((c, i) => (
-        <motion.div
+        <div
           key={i}
-          className="absolute opacity-80"
-          style={{ top: c.top, left: c.left, width: c.w }}
-          animate={reduce ? undefined : { x: [0, i % 2 ? -70 : 70, 0] }}
-          transition={{ duration: c.d, repeat: Infinity, ease: "easeInOut" }}
+          className="trail-drift absolute opacity-80"
+          style={{ top: c.top, left: c.left, width: c.w, animationDuration: `${c.d}s`, ["--drift" as string]: i % 2 ? "-70px" : "70px" }}
         >
           <Cloud className="h-auto w-full" />
-        </motion.div>
+        </div>
       ))}
     </div>
   );
@@ -519,7 +517,7 @@ export function CollabTrail() {
       const cards = cardRefs.current.filter((c): c is HTMLDivElement => !!c);
       if (!path || bands.length !== STOPS.length || cards.length !== STOPS.length) return;
       const wide = window.matchMedia("(min-width: 1024px)").matches;
-      let built: Omit<Geo, "w" | "h" | "samples" | "wide" | "pageLeft" | "pageTop">;
+      let built: Omit<Geo, "w" | "h" | "samples" | "wide" | "pageLeft" | "pageTop" | "chunks">;
       if (wide) {
         built = switchbacks(box.width, bands.map((b, i) => {
           const r = rel(b), c = rel(cards[i]);
@@ -547,11 +545,19 @@ export function CollabTrail() {
           return { ...p, l: best };
         });
       }
-      setGeo({ ...built, len: wide ? built.len : len, w: box.width, h: box.height, samples, wide, pageLeft: box.left + window.scrollX, pageTop: box.top + window.scrollY });
+      const chunks: Chunk[] = [];
+      for (let i = 0; i < samples.length - 1; ) {
+        let j = i, d = `M ${samples[i].x.toFixed(1)} ${samples[i].y.toFixed(1)}`;
+        while (j < samples.length - 1 && samples[j].l - samples[i].l < 140) { j++; d += ` L ${samples[j].x.toFixed(1)} ${samples[j].y.toFixed(1)}`; }
+        chunks.push({ d, l0: samples[i].l, len: samples[j].l - samples[i].l });
+        i = j;
+      }
+      setGeo({ ...built, chunks, len: wide ? built.len : len, w: box.width, h: box.height, samples, wide, pageLeft: box.left + window.scrollX, pageTop: box.top + window.scrollY });
     };
     const schedule = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(layout); };
     const ro = new ResizeObserver(schedule);
     ro.observe(wrap);
+    ro.observe(document.body);
     schedule();
     return () => { ro.disconnect(); cancelAnimationFrame(raf); };
   }, []);
@@ -564,10 +570,10 @@ export function CollabTrail() {
   const ridden = useTransform([smooth, keepUp], ([a, b]: number[]) => Math.max(a, b));
   const { scrollY } = useScroll();
   const follow = useCallback(() => {
-    const wrap = wrapRef.current;
-    if (!wrap || !geo) return;
+    if (!geo) return;
     // the bike rides in the lower part of the screen, leaving sky above it for the paraglider
-    const line = window.innerHeight * (geo.wide ? 0.66 : 0.62) - wrap.getBoundingClientRect().top;
+    // (page offsets are cached in the layout, so scrolling never forces a layout)
+    const line = window.scrollY + window.innerHeight * (geo.wide ? 0.66 : 0.62) - geo.pageTop;
     const l = reduce ? geo.len : interp(geo.anchors, (a) => a.y, line, (a) => a.l);
     travelled.set(l);
     keepUp.set(reduce ? geo.len : interp(geo.anchors, (a) => a.y, line - 60, (a) => a.l));
@@ -580,7 +586,24 @@ export function CollabTrail() {
     return () => cancelAnimationFrame(raf);
   }, [follow]);
 
-  const drawn = useTransform(ridden, (l) => (geo ? Math.min(1, l / geo.len) : 0));
+  const chunkEls = useRef<(SVGPathElement | null)[]>([]);
+  const chunkShown = useRef<number[]>([]);
+  const paintRidden = useCallback((l: number) => {
+    if (!geo) return;
+    geo.chunks.forEach((c, i) => {
+      const el = chunkEls.current[i];
+      if (!el) return;
+      const shown = Math.max(0, Math.min(c.len, l - c.l0));
+      if (Math.abs((chunkShown.current[i] ?? -1) - shown) < 0.5) return;
+      chunkShown.current[i] = shown;
+      el.style.strokeDashoffset = String(c.len - shown);
+    });
+  }, [geo]);
+  useMotionValueEvent(ridden, "change", paintRidden);
+  useEffect(() => {
+    chunkShown.current = [];
+    paintRidden(ridden.get());
+  }, [paintRidden, ridden]);
   const bikeX = useTransform(ridden, (l) => (geo ? pointAt(geo.samples, l).x : 0));
   const bikeY = useTransform(ridden, (l) => (geo ? pointAt(geo.samples, l).y : 0));
   const facing = useTransform(ridden, (l): number => {
@@ -600,6 +623,7 @@ export function CollabTrail() {
     return Math.max(-38, Math.min(38, rot));
   });
   const spin = useTransform(ridden, (l) => l * 3.4);
+  const speed = useTransform(useVelocity(ridden), (v) => Math.min(1, Math.max(0, (Math.abs(v) - 250) / 900)));
 
   // Tell the paraglider where the bike is (page coordinates).
   useEffect(() => {
@@ -658,7 +682,18 @@ export function CollabTrail() {
               <path d={geo.d} fill="none" stroke="#000" strokeWidth={geo.wide ? 44 : 26} strokeLinecap="round" strokeLinejoin="round" />
               <path d={geo.d} fill="none" stroke="#575C66" strokeWidth={geo.wide ? 37 : 20} strokeLinecap="round" strokeLinejoin="round" />
               <path d={geo.d} fill="none" stroke="#fff" strokeOpacity="0.85" strokeWidth={geo.wide ? 3 : 2} strokeDasharray={geo.wide ? "16 16" : "8 10"} />
-              <motion.path d={geo.d} fill="none" stroke="var(--color-yellow-accent)" strokeWidth={geo.wide ? 5 : 3.5} strokeLinecap="round" style={{ pathLength: drawn }} />
+              {geo.chunks.map((c, i) => (
+                <path
+                  key={i}
+                  ref={(el) => { chunkEls.current[i] = el; }}
+                  d={c.d}
+                  fill="none"
+                  stroke="var(--color-yellow-accent)"
+                  strokeWidth={geo.wide ? 5 : 3.5}
+                  strokeDasharray={`${c.len + 1} ${c.len + 1}`}
+                  strokeDashoffset={c.len + 1}
+                />
+              ))}
             </>
           )}
         </svg>
@@ -692,9 +727,9 @@ export function CollabTrail() {
 
         {/* the bike */}
         {geo && (
-          <motion.div aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-30" style={{ x: bikeX, y: bikeY }}>
+          <motion.div aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-30 will-change-transform" style={{ x: bikeX, y: bikeY }}>
             <motion.div style={{ rotate: lean, scaleX: flip }} className={geo.wide ? "-ml-[95px] -mt-[130px] w-[190px]" : "-ml-[34px] -mt-[57px] w-[84px]"}>
-              <Motorbike spin={spin} className="h-auto w-full drop-shadow-[3px_4px_0_rgba(0,0,0,0.25)]" />
+              <Motorbike spin={spin} speed={speed} className="h-auto w-full" />
             </motion.div>
           </motion.div>
         )}
@@ -721,7 +756,7 @@ export function CollabTrail() {
                       </div>
                     )}
                     <div ref={(el) => { cardRefs.current[i] = el; }}>
-                      <StopCard stop={stop} n={i + 1} side={side} />
+                      <StopCard stop={stop} n={i + 1} side={side} arrived={reached > i} />
                     </div>
                   </div>
                   <div className={`row-start-1 hidden h-full lg:block ${side === "left" ? "lg:col-start-2" : "lg:col-start-1"}`}>
