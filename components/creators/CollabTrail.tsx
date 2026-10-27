@@ -596,7 +596,8 @@ export function CollabTrail() {
       const shown = Math.max(0, Math.min(c.len, l - c.l0));
       if (Math.abs((chunkShown.current[i] ?? -1) - shown) < 0.5) return;
       chunkShown.current[i] = shown;
-      el.style.strokeDashoffset = String(c.len - shown);
+      // nudge an unridden piece fully off so no sliver shows at its start
+      el.style.strokeDashoffset = String(c.len + 2 - shown + (shown < 0.5 ? 3 : 0));
     });
   }, [geo]);
   useMotionValueEvent(ridden, "change", paintRidden);
@@ -690,8 +691,8 @@ export function CollabTrail() {
                   fill="none"
                   stroke="var(--color-yellow-accent)"
                   strokeWidth={geo.wide ? 5 : 3.5}
-                  strokeDasharray={`${c.len + 1} ${c.len + 1}`}
-                  strokeDashoffset={c.len + 1}
+                  strokeDasharray={`${c.len + 2} ${c.len + 40}`}
+                  strokeDashoffset={c.len + 5}
                 />
               ))}
             </>
