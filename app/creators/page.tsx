@@ -3,6 +3,7 @@ import { HeroCreator, CreatorRegister, CreatorSteps, CreatorFeatures, CreatorCol
 import { siteConfig } from "@/lib/config/site";
 
 import { StructuredData } from "@/components/seo/StructuredData";
+import { ParagliderFlight } from "@/components/creators/ParagliderFlight";
 
 export const metadata: Metadata = {
     title: `Creators | Collab with local businesses on ${siteConfig.name}`,
@@ -27,6 +28,8 @@ export default function CreatorsPage() {
             <CreatorCollabs />
             <CreatorSteps />
             <CreatorFeatures />
+            {/* takes off at the top, lands in the collab finale */}
+            <ParagliderFlight />
         </div>
     );
 }
