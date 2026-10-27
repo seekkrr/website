@@ -27,7 +27,7 @@ const DELIVERABLE_NAMES: Record<DeliverableType, string> = {
   reel: "Reels",
   story: "Stories",
   post: "Posts",
-  video: "Videos",
+  video: "YouTube Shorts",
   review: "Reviews",
 };
 

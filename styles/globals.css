@@ -155,3 +155,104 @@
     transform: rotate(180deg) scaleY(1) translateY(0);
   }
 }
+/* Collab trail (creators page): the always-on decorative loops run as CSS
+   animations so the browser can play them off the main thread. */
+@keyframes trail-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(-4deg); }
+}
+@keyframes trail-drift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(var(--drift, 70px)); }
+}
+@keyframes trail-flutter {
+  0%, 100% { transform: rotate(0deg) skewX(0deg); }
+  30% { transform: rotate(9deg) skewX(-6deg); }
+  65% { transform: rotate(-6deg) skewX(4deg); }
+}
+@keyframes trail-wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-7deg); }
+  50% { transform: rotate(2deg); }
+  75% { transform: rotate(-5deg); }
+}
+@keyframes trail-puff {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.3); }
+  25% { opacity: 0.95; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.7); }
+}
+@keyframes trail-rumble {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1.2px); }
+}
+@keyframes trail-sway {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(4deg); }
+}
+@keyframes trail-swing {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(8deg); }
+}
+@keyframes trail-hover {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes trail-nudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+@keyframes trail-scan {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(var(--scan, 180px)); }
+}
+@keyframes trail-sock {
+  0%, 100% { transform: rotate(0deg) skewY(0deg); }
+  25% { transform: rotate(6deg) skewY(4deg); }
+  50% { transform: rotate(-3deg) skewY(-2deg); }
+  75% { transform: rotate(4deg) skewY(3deg); }
+}
+@keyframes trail-turn {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .trail-bob { animation: trail-bob 4s ease-in-out infinite; }
+  .trail-drift { animation: trail-drift 20s ease-in-out infinite; }
+  .trail-flutter { animation: trail-flutter 1.4s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 0%; }
+  .trail-wave { animation: trail-wave 0.5s ease-in-out infinite; transform-box: fill-box; }
+  .trail-puff { animation: trail-puff 1.4s ease-out infinite; transform-box: fill-box; transform-origin: center; opacity: 0; }
+  .trail-rumble { animation: trail-rumble 0.22s linear infinite; }
+  .trail-sway { animation: trail-sway 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 0%; }
+  .trail-swing { animation: trail-swing 1.2s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 0%; }
+  .trail-hover { animation: trail-hover 2.6s ease-in-out infinite; }
+  .trail-nudge { animation: trail-nudge 1.2s ease-in-out infinite; }
+  .trail-scan { animation: trail-scan 2.4s ease-in-out infinite; }
+  .trail-sock { animation: trail-sock 1.4s ease-in-out infinite; transform-box: fill-box; transform-origin: 0% 50%; }
+  .trail-turn { animation: trail-turn 60s linear infinite; }
+}
+@keyframes trail-speed {
+  0% { transform: translateX(10px); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateX(-30px); opacity: 0; }
+}
+@keyframes trail-breathe {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(1.035); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .trail-speed { animation: trail-speed 0.45s linear infinite; transform-box: fill-box; }
+  .trail-breathe { animation: trail-breathe 2.8s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+}
+@keyframes trail-brake {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(12deg); }
+}
+@keyframes trail-wind {
+  0% { transform: translateX(26px); opacity: 0; }
+  25% { opacity: 0.9; }
+  100% { transform: translateX(-46px); opacity: 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .trail-brake { animation: trail-brake 3.2s ease-in-out infinite; transform-box: fill-box; }
+  .trail-wind { animation: trail-wind 1.6s linear infinite; transform-box: fill-box; }
+}
