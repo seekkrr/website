@@ -29,6 +29,7 @@ export function ParagliderFlight() {
   const landedRef = useRef(false);
   const lastX = useRef<number | null>(null);
   const last = useRef({ sy: 0, y: -Infinity });
+  const dodge = useRef<0 | 1 | -1>(0);
 
   // Page coordinates of the take-off, the landing spot and this layer.
   useEffect(() => {
@@ -87,7 +88,10 @@ export function ParagliderFlight() {
       x = lerp(startX, meet, k) + Math.sin((y - startY) / 420) * w * 0.07 * (1 - k);
     } else {
       y = Math.min(landY, line);
-      x = lerp(ready ? trailBike.endX.get() : offX + w * 0.5, landX, smoothstep(roadEndY, landY - 250, y));
+      // leave the bike parked at the finish: head for the other side of the screen, then the landing site
+      const parkedX = ready ? trailBike.endX.get() : offX + w * 0.5;
+      const away = parkedX < offX + w / 2 ? offX + w * 0.74 : offX + w * 0.26;
+      x = lerp(away, landX, smoothstep(roadEndY + 150, landY - 250, y));
     }
 
     // with the bike: just above and a little ahead of it
@@ -115,6 +119,24 @@ export function ParagliderFlight() {
     // scrolling down never lifts it (the road only goes downhill, so neither does the glider)
     if (sy >= last.current.sy - 0.5) y = Math.max(y, last.current.y);
     last.current = { sy, y };
+
+    // never touch the bike: whatever else is going on, slide sideways out of its way
+    if (ready) {
+      const bx = trailBike.x.get(), byy = trailBike.y.get(), gap = 22;
+      const bike = narrow ? { l: bx - 40, r: bx + 56, t: byy - 64, b: byy + 8 } : { l: bx - 104, r: bx + 104, t: byy - 140, b: byy + 10 };
+      const half = narrow ? 50 : 64, top = narrow ? 108 : 140, bottom = narrow ? 4 : 6;
+      const stacked = y - bottom > bike.t - gap && y - top < bike.b + gap;
+      if (stacked && x + half > bike.l - gap && x - half < bike.r + gap) {
+        const leftX = bike.l - gap - half, rightX = bike.r + gap + half;
+        let right = dodge.current ? dodge.current > 0 : x >= bx;
+        if (right && rightX > offX + w - half - 6) right = false;
+        if (!right && leftX < offX + half + 6) right = true;
+        x = right ? rightX : leftX;
+        dodge.current = right ? 1 : -1;
+      } else if (!stacked) {
+        dodge.current = 0;
+      }
+    }
 
     x = Math.min(offX + w - 56, Math.max(offX + 56, x));
     gx.set(x - offX);
