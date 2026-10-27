@@ -18,6 +18,7 @@ const FloatingIcon = ({
     return (
         <motion.div
             className={`relative flex items-center justify-center shrink-0 ${size} ${className}`}
+            style={{ willChange: "transform" }}
             animate={{
                 y: [0, -15, 0],
             }}
@@ -48,6 +49,7 @@ export function BuiltForExplorers() {
                 <motion.div
                     className="flex lg:hidden w-full items-center justify-between px-2 sm:px-12 mb-4"
                     animate={{ x: [-15, 15, -15] }}
+                    style={{ willChange: "transform" }}
                     transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 >
                     <FloatingIcon src={CloudinaryIcons.lamp} alt="Lamp Icon" />
@@ -104,6 +106,7 @@ export function BuiltForExplorers() {
                 <motion.div
                     className="flex lg:hidden w-full items-center justify-between px-2 sm:px-12 mt-4"
                     animate={{ x: [15, -15, 15] }}
+                    style={{ willChange: "transform" }}
                     transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
                 >
                     <FloatingIcon src={CloudinaryIcons.kayake} alt="Kayak Icon" />

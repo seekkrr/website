@@ -1,6 +1,7 @@
 import { Lock, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { formatBrief, type Deliverable } from "@/lib/collabDraft";
+import { siteFeatures } from "@/lib/config/site";
 import { cn } from "@/lib/utils";
 
 interface CollabCardProps {
@@ -32,7 +33,8 @@ export function CollabCard({
   isNew = true,
   className,
 }: CollabCardProps) {
-  const brief = formatBrief(deliverables, disclosure);
+  // The disclosure label is hidden for now: the brief line lists deliverables only.
+  const brief = formatBrief(deliverables, siteFeatures.disclosureLabel ? disclosure : null);
   return (
     <article
       className={cn(

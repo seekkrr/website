@@ -25,11 +25,12 @@ export const MAX_DELIVERABLE_COUNT = 5;
 
 export const LIMITS = { want: 80, offer: 80, description: 300 } as const;
 
+// "video" is always a YouTube Short: businesses can't ask for long videos.
 const DELIVERABLE_LABELS: Record<DeliverableType, [string, string]> = {
   reel: ["reel", "reels"],
   post: ["post", "posts"],
   story: ["story", "stories"],
-  video: ["video", "videos"],
+  video: ["YouTube Short", "YouTube Shorts"],
   review: ["review", "reviews"],
 };
 

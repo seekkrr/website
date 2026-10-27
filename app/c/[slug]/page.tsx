@@ -7,7 +7,7 @@ import { buttonVariants } from "@/components/ui/Button";
 import { SafeImage } from "@/components/collabs/SafeImage";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { formatDate, getCreatorPortfolio, type CreatorPortfolio } from "@/lib/collabs";
-import { siteConfig } from "@/lib/config/site";
+import { siteConfig, siteFeatures } from "@/lib/config/site";
 
 export const revalidate = 600;
 
@@ -292,8 +292,18 @@ export default async function CreatorPage({ params }: { params: Params }) {
 
         <div className="flex flex-col items-start gap-4 rounded-[24px] border-[3px] border-black bg-theme-green p-6 text-theme-beige sm:flex-row sm:items-center sm:justify-between sm:p-8 xl:rounded-[32px]">
           <p className="max-w-[520px] text-[16px] leading-relaxed">
-            <span className="font-jakarta font-bold">Run a café, stay or adventure?</span> Businesses on SeekKrr
-            Pro can find and invite creators like {creator.display_name} with AI creator matching.
+            <span className="font-jakarta font-bold">Run a café, stay or adventure?</span>{" "}
+            {siteFeatures.matchmaking ? (
+              <>
+                Businesses on SeekKrr{siteFeatures.plans ? " Pro" : ""} can find and invite creators like{" "}
+                {creator.display_name} with AI creator matching.
+              </>
+            ) : (
+              <>
+                Post a UGC brief on SeekKrr and creators like {creator.display_name} can check in and make content
+                for your place.
+              </>
+            )}
           </p>
           <Link href="/business" className={buttonVariants({ variant: "light", size: "md" })}>
             SeekKrr for Business

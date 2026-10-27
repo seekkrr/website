@@ -12,14 +12,20 @@ import { PartnerWall } from "@/components/business/PartnerWall";
 import { CtaStrip } from "@/components/business/CtaStrip";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { getPlans } from "@/lib/collabs";
-import { siteConfig } from "@/lib/config/site";
+import { siteConfig, siteFeatures } from "@/lib/config/site";
 
 export const revalidate = 600;
 
+const description = [
+  siteFeatures.matchmaking
+    ? "Post a UGC brief, let travel creators check in and redeem it with your staff code, and find creators who fit your place with AI creator matching."
+    : "Post a UGC brief, let travel creators check in and redeem it with your staff code, and get content from creators who are already in town.",
+  siteFeatures.plans ? "Free to start, piloting in Bir." : "Piloting in Bir.",
+].join(" ");
+
 export const metadata: Metadata = {
-  title: "SeekKrr for Business | Creator collabs for cafés, stays & adventures",
-  description:
-    "Post a collab, let travel creators check in and redeem it with your staff code, and find creators who fit your place with AI creator matching. Free to start, piloting in Bir.",
+  title: "For Business | UGC from travel creators for cafés & stays",
+  description,
   alternates: { canonical: "/business" },
   openGraph: {
     title: "SeekKrr for Business",
@@ -30,7 +36,8 @@ export const metadata: Metadata = {
 };
 
 export default async function BusinessPage() {
-  const { plans } = await getPlans();
+  // GET /plans only feeds the pricing teaser and the matching section's plan row.
+  const plans = siteFeatures.plans ? (await getPlans()).plans : undefined;
 
   return (
     <div className="relative min-h-screen bg-theme-beige">
@@ -46,9 +53,9 @@ export default async function BusinessPage() {
       <PartnerWall />
       <CollabBuilder />
       <HowItWorks />
-      <MatchExplainer plans={plans} />
+      {siteFeatures.matchmaking && <MatchExplainer plans={plans} />}
       <TrustSafety />
-      <PricingTeaser plans={plans} />
+      {plans && <PricingTeaser plans={plans} />}
       <BusinessFaq />
       <CtaStrip />
       <StickyBusinessCta />

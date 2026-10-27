@@ -34,6 +34,12 @@ const nextConfig = {
                 hostname: "img.seekkrr.com",
                 pathname: "/**",
             },
+            {
+                // Marker / place photos uploaded through the app (SeekKrr's Cloudinary account only).
+                protocol: "https",
+                hostname: "res.cloudinary.com",
+                pathname: "/seekkrr/**",
+            },
         ],
     },
 };
