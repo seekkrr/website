@@ -19,6 +19,7 @@ import { CloudinaryIcons } from "@/lib/config/assets";
 import { portalLinks } from "@/lib/config/site";
 import { Cloud, Motorbike, Pines, PrayerFlags } from "./TrailArt";
 import { TrailScene, type SceneKey } from "./TrailScenes";
+import { trailBike } from "./trailBike";
 
 /*
  * "Your collab trail": a creator's journey after getting listed. On desktop
@@ -99,6 +100,9 @@ type Geo = {
   segs: Seg[];
   start: Pt;
   finish: Pt;
+  /** the road's container, in page coordinates */
+  pageLeft: number;
+  pageTop: number;
 };
 
 const ROAD_Y = 46; // road centre below the top of each desktop band
@@ -167,7 +171,7 @@ function switchbacks(w: number, bands: { top: number; bottom: number; cardX: num
   const anchors: { y: number; l: number }[] = [{ y: ys[0] - 400, l: PARK }];
   ys.forEach((y, i) => {
     const gapUp = i ? y - ys[i - 1] : 400, gapDown = i < ys.length - 1 ? ys[i + 1] - y : 400;
-    const a = Math.max(40, Math.min(150, gapUp / 2 - 20, gapDown / 2 - 20));
+    const a = Math.max(40, Math.min(110, gapUp / 2 - 20, gapDown / 2 - 20));
     anchors.push({ y: y - a, l: i === 0 ? PARK : passStart[i] }, { y: y + a, l: passEnd[i] });
   });
   return { d, len: l, pins, anchors, segs, start, finish: { x: w / 2, y: ys[ys.length - 1] } };
@@ -515,7 +519,7 @@ export function CollabTrail() {
       const cards = cardRefs.current.filter((c): c is HTMLDivElement => !!c);
       if (!path || bands.length !== STOPS.length || cards.length !== STOPS.length) return;
       const wide = window.matchMedia("(min-width: 1024px)").matches;
-      let built: Omit<Geo, "w" | "h" | "samples" | "wide">;
+      let built: Omit<Geo, "w" | "h" | "samples" | "wide" | "pageLeft" | "pageTop">;
       if (wide) {
         built = switchbacks(box.width, bands.map((b, i) => {
           const r = rel(b), c = rel(cards[i]);
@@ -543,7 +547,7 @@ export function CollabTrail() {
           return { ...p, l: best };
         });
       }
-      setGeo({ ...built, len: wide ? built.len : len, w: box.width, h: box.height, samples, wide });
+      setGeo({ ...built, len: wide ? built.len : len, w: box.width, h: box.height, samples, wide, pageLeft: box.left + window.scrollX, pageTop: box.top + window.scrollY });
     };
     const schedule = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(layout); };
     const ro = new ResizeObserver(schedule);
@@ -554,33 +558,38 @@ export function CollabTrail() {
 
   // Scroll moves the bike along the road.
   const travelled = useMotionValue(0);
-  const smooth = useSpring(travelled, { stiffness: 90, damping: 22, mass: 0.7 });
+  const smooth = useSpring(travelled, { stiffness: 170, damping: 32, mass: 0.7 });
+  // never let the bike fall more than a little behind the scroll, so it stays on screen
+  const keepUp = useMotionValue(0);
+  const ridden = useTransform([smooth, keepUp], ([a, b]: number[]) => Math.max(a, b));
   const { scrollY } = useScroll();
   const follow = useCallback(() => {
     const wrap = wrapRef.current;
     if (!wrap || !geo) return;
-    const line = window.innerHeight * 0.56 - wrap.getBoundingClientRect().top;
+    // the bike rides in the lower part of the screen, leaving sky above it for the paraglider
+    const line = window.innerHeight * (geo.wide ? 0.66 : 0.62) - wrap.getBoundingClientRect().top;
     const l = reduce ? geo.len : interp(geo.anchors, (a) => a.y, line, (a) => a.l);
     travelled.set(l);
+    keepUp.set(reduce ? geo.len : interp(geo.anchors, (a) => a.y, line - 60, (a) => a.l));
     const count = geo.pins.filter((p) => p.l <= l + 4).length;
     setReached((r) => (r === count ? r : count));
-  }, [geo, reduce, travelled]);
+  }, [geo, reduce, travelled, keepUp]);
   useMotionValueEvent(scrollY, "change", follow);
   useEffect(() => {
     const raf = requestAnimationFrame(follow);
     return () => cancelAnimationFrame(raf);
   }, [follow]);
 
-  const drawn = useTransform(smooth, (l) => (geo ? Math.min(1, l / geo.len) : 0));
-  const bikeX = useTransform(smooth, (l) => (geo ? pointAt(geo.samples, l).x : 0));
-  const bikeY = useTransform(smooth, (l) => (geo ? pointAt(geo.samples, l).y : 0));
-  const facing = useTransform(smooth, (l): number => {
+  const drawn = useTransform(ridden, (l) => (geo ? Math.min(1, l / geo.len) : 0));
+  const bikeX = useTransform(ridden, (l) => (geo ? pointAt(geo.samples, l).x : 0));
+  const bikeY = useTransform(ridden, (l) => (geo ? pointAt(geo.samples, l).y : 0));
+  const facing = useTransform(ridden, (l): number => {
     if (!geo || !geo.wide) return 1;
     const s = geo.segs.find((g) => l >= g.l0 && l < g.l1) ?? geo.segs[geo.segs.length - 1];
     return s?.dir ?? 1;
   });
   const flip = useSpring(facing, { stiffness: 300, damping: 26 });
-  const lean = useTransform(smooth, (l) => {
+  const lean = useTransform(ridden, (l) => {
     if (!geo) return 0;
     const a = pointAt(geo.samples, l - 6), b = pointAt(geo.samples, l + 6);
     const dx = b.x - a.x, dy = b.y - a.y;
@@ -590,7 +599,23 @@ export function CollabTrail() {
     const rot = dir > 0 ? th : th > 0 ? th - 180 : th + 180;
     return Math.max(-38, Math.min(38, rot));
   });
-  const spin = useTransform(smooth, (l) => l * 3.4);
+  const spin = useTransform(ridden, (l) => l * 3.4);
+
+  // Tell the paraglider where the bike is (page coordinates).
+  useEffect(() => {
+    if (!geo) return;
+    trailBike.startX.set(geo.pageLeft + geo.start.x);
+    trailBike.startY.set(geo.pageTop + geo.start.y);
+    trailBike.endX.set(geo.pageLeft + geo.finish.x);
+    trailBike.endY.set(geo.pageTop + geo.finish.y);
+    trailBike.x.set(geo.pageLeft + bikeX.get());
+    trailBike.y.set(geo.pageTop + bikeY.get());
+    trailBike.ready.set(1);
+    return () => trailBike.ready.set(0);
+  }, [geo, bikeX, bikeY]);
+  useMotionValueEvent(bikeX, "change", (v) => { if (geo) trailBike.x.set(geo.pageLeft + v); });
+  useMotionValueEvent(bikeY, "change", (v) => { if (geo) trailBike.y.set(geo.pageTop + v); });
+  useMotionValueEvent(facing, "change", (v) => trailBike.dir.set(v));
 
   return (
     <section aria-labelledby="collab-trail-title" className="relative w-full overflow-x-clip bg-theme-beige px-4 pb-6 pt-6 sm:px-6 md:px-12 lg:px-16">
