@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { HeroCreator, CreatorSteps, CreatorFeatures, CreatorCollabs } from "@/components/sections";
+import { HeroCreator, CreatorRegister, CreatorSteps, CreatorFeatures, CreatorCollabs } from "@/components/sections";
 import { siteConfig } from "@/lib/config/site";
 
 import { StructuredData } from "@/components/seo/StructuredData";
 
 export const metadata: Metadata = {
-    title: `Experts & Creators | Crafting Quests for ${siteConfig.name}`,
+    title: `Creators | Collab with local businesses on ${siteConfig.name}`,
     description:
-        `Meet the local experts and adventurers behind ${siteConfig.name} quests. Learn how creators are crafting unforgettable experiences and gamified travel stories.`,
+        `Get listed as a ${siteConfig.name} creator, then check in at local cafés, stays and experiences, redeem collabs with the staff's code and post your content. You can build quests and earn too.`,
     alternates: {
         canonical: "/creators",
     },
@@ -23,9 +23,10 @@ export default function CreatorsPage() {
                 ]}
             />
             <HeroCreator />
+            <CreatorRegister />
+            <CreatorCollabs />
             <CreatorSteps />
             <CreatorFeatures />
-            <CreatorCollabs />
         </div>
     );
 }

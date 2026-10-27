@@ -10,6 +10,7 @@ export { TheSeekKrrWay } from "./TheSeekKrrWay";
 export { TravelWithSeekKrr } from "./TravelWithSeekKrr";
 export { Footer } from "./Footer";
 export { HeroCreator } from "./HeroCreator";
+export { CreatorRegister } from "./CreatorRegister";
 export { CreatorSteps } from "./CreatorSteps";
 export { CreatorFeatures } from "./CreatorFeatures";
 export { CreatorCollabs } from "./CreatorCollabs";
