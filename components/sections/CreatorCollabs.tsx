@@ -6,6 +6,7 @@ import { Accordion } from "@/components/ui/Accordion";
 import { Reveal } from "@/components/collabs/Reveal";
 import { CollabTrail } from "@/components/creators/CollabTrail";
 import { TrailFinale } from "@/components/creators/TrailFinale";
+import type { TrailPlace } from "@/components/creators/PlacesTown";
 import { siteConfig, siteFeatures } from "@/lib/config/site";
 
 const FAQ = [
@@ -44,11 +45,11 @@ const FAQ = [
 ];
 
 /** Collabs on the /creators page: the trail you walk, how it ends, and the small print. */
-export function CreatorCollabs() {
+export function CreatorCollabs({ places = [] }: { places?: TrailPlace[] }) {
   return (
     <>
       <CollabTrail />
-      <TrailFinale />
+      <TrailFinale places={places} />
 
       <section
         aria-labelledby="creator-collabs-faq"

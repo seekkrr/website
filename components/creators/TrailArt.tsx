@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useId, type CSSProperties } from "react";
 import { motion, type MotionValue } from "framer-motion";
 
 /*
@@ -162,41 +162,115 @@ export function Motorbike({ spin, speed, className = "" }: { spin: MotionValue<n
   );
 }
 
-/** A paraglider: canopy, lines and a pilot whose legs swing. `landed` drops the wing behind them. */
+/** Bands of colour across the wing, left to right. */
+const CELLS = [ORANGE, YELLOW, ORANGE, "#FFFFFF", BLUE, "#FFFFFF", ORANGE, YELLOW, ORANGE];
+const WING = "M6 50C18 14 132 14 144 50C122 41 100 38 75 38C50 38 28 41 6 50Z";
+/** Where the suspension lines leave the wing (x on its lower edge). */
+const LINE_X = [12, 26, 40, 54, 96, 110, 124, 138];
+const edgeY = (x: number) => 50 - 12 * Math.sin((Math.PI * (x - 6)) / 138);
+
+/**
+ * Our paraglider: a striped, curved wing with cell openings and wingtip fins,
+ * suspension lines down to a pilot in a helmet and harness who works the
+ * brakes, legs swinging, scarf flying. `landed` drops and deflates the wing
+ * onto the grass and stands the pilot up.
+ */
 export function Paraglider({ landed = false, className = "" }: { landed?: boolean; className?: string }) {
+  const clip = useId().replace(/:/g, "");
   return (
     <svg viewBox="0 0 150 160" className={className} aria-hidden="true" overflow="visible">
+      <defs>
+        <clipPath id={`wing-${clip}`}>
+          <path d={WING} />
+        </clipPath>
+      </defs>
+
+      {/* the wing and its lines, dropping and folding away on landing */}
       <motion.g
-        animate={{ opacity: landed ? 0 : 1, y: landed ? 40 : 0, scaleY: landed ? 0.2 : 1 }}
-        transition={{ duration: 0.6, ease: "easeIn" }}
+        animate={{ opacity: landed ? 0 : 1, y: landed ? 48 : 0, scaleY: landed ? 0.15 : 1 }}
+        transition={{ duration: 0.55, ease: "easeIn" }}
         style={{ transformBox: "fill-box", transformOrigin: "50% 100%" }}
       >
+        {/* wind slipping past the tips */}
+        {!landed && [[0, 30, 0], [138, 26, 0.5], [70, 6, 1]].map(([x, y, delay]) => (
+          <path key={x} className="trail-wind" d={`M${x} ${y}h-18`} stroke={INK} strokeWidth={2} strokeLinecap="round" opacity={0.5} style={{ animationDelay: `${delay}s` }} />
+        ))}
+        {LINE_X.map((x) => (
+          <path key={x} d={`M${x} ${edgeY(x)} L${x < 75 ? 67 : 83} 106`} stroke={INK} strokeWidth={0.9} opacity={0.85} />
+        ))}
+        {/* brake lines from the trailing edge tips */}
+        <path d="M8 50 Q30 86 58 100M142 50 Q120 86 92 100" fill="none" stroke={INK} strokeWidth={0.8} opacity={0.6} />
         <g className={landed ? undefined : "trail-breathe"}>
-          <path d="M8 44C20 12 130 12 142 44c-14-6-34-9-67-9S22 38 8 44Z" fill={ORANGE} stroke={INK} strokeWidth={3} strokeLinejoin="round" />
-          <path d="M30 22c10-5 22-7 22-7l-1 21c-8 0-15 1-21 2Z" fill={YELLOW} stroke={INK} strokeWidth={2} strokeLinejoin="round" />
-          <path d="M98 15s12 2 22 7l0 21c-6-1-13-2-21-2Z" fill={YELLOW} stroke={INK} strokeWidth={2} strokeLinejoin="round" />
-          <path d="M66 13h18l1 22H65Z" fill={BLUE} stroke={INK} strokeWidth={2} strokeLinejoin="round" />
+          <g clipPath={`url(#wing-${clip})`}>
+            {CELLS.map((c, i) => (
+              <rect key={i} x={6 + (i * 138) / CELLS.length} y={10} width={138 / CELLS.length + 0.6} height={44} fill={c} />
+            ))}
+            {/* seams and the shaded underside */}
+            {CELLS.slice(1).map((_, i) => {
+              const x = 6 + ((i + 1) * 138) / CELLS.length;
+              return <path key={i} d={`M${x} 10V54`} stroke={INK} strokeWidth={1.2} opacity={0.45} />;
+            })}
+            <path d="M6 50C28 41 50 38 75 38C100 38 122 41 144 50L144 44C122 35 100 32 75 32C50 32 28 35 6 44Z" fill={INK} opacity={0.16} />
+          </g>
+          <path d={WING} fill="none" stroke={INK} strokeWidth={3} strokeLinejoin="round" />
+          {/* cell openings along the leading edge */}
+          {[20, 36, 52, 68, 82, 98, 114, 130].map((x) => (
+            <ellipse key={x} cx={x} cy={edgeY(x) - 2.5} rx={3.2} ry={1.5} fill={INK} opacity={0.75} />
+          ))}
+          {/* wingtip fins */}
+          <path d="M6 50l-3 9 9-6ZM144 50l3 9-9-6Z" fill={BLUE} stroke={INK} strokeWidth={2} strokeLinejoin="round" />
         </g>
-        <path d="M12 44 70 112M138 44 80 112M40 38l30 74M110 38l-30 74M75 35v77" stroke={INK} strokeWidth={1.1} />
       </motion.g>
+
+      {/* the wing lying on the grass once landed */}
       {landed && (
         <motion.path
-          d="M30 150c10-14 80-16 96-2 4 4-2 8-6 8H36c-6 0-8-3-6-6Z"
+          d="M26 158c8-16 88-18 102-2 3 4-1 9-6 9H32c-6 0-9-3-6-7Z"
           fill={ORANGE}
           stroke={INK}
           strokeWidth={2.5}
-          initial={{ opacity: 0, scaleX: 0.4 }}
+          initial={{ opacity: 0, scaleX: 0.3 }}
           animate={{ opacity: 1, scaleX: 1 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ type: "spring", stiffness: 160, damping: 14, delay: 0.25 }}
           style={{ transformBox: "fill-box", transformOrigin: "30% 100%" }}
         />
       )}
-      {/* pilot: drops onto their feet when landed, sways and swings their legs while flying */}
-      <motion.g animate={{ y: landed ? 26 : 0 }} transition={{ duration: 0.5 }}>
-        <g className={landed ? undefined : "trail-sway"}>
-          <circle cx={75} cy={108} r={7.5} fill={YELLOW} stroke={INK} strokeWidth={2.5} />
-          <path d="M66 116h18l2 14H64Z" fill={BLUE} stroke={INK} strokeWidth={2.5} strokeLinejoin="round" />
-          <path className={landed ? undefined : "trail-swing"} d="M70 130l-4 14M80 130l4 14" stroke="#2F3E7A" strokeWidth={4.5} strokeLinecap="round" />
+
+      {/* the pilot: drops onto their feet when landed */}
+      <motion.g animate={{ y: landed ? 22 : 0 }} transition={{ type: "spring", stiffness: 200, damping: 16 }}>
+        <g className={landed ? undefined : "trail-sway"} style={{ transformOrigin: "50% 0%" }}>
+          {/* risers to the shoulders */}
+          <path d="M67 106l2 10M83 106l-2 10" stroke={INK} strokeWidth={2} strokeLinecap="round" />
+          {/* scarf */}
+          <path className={landed ? undefined : "trail-wave"} d="M70 120c-8 1-14 5-20 3 4 4 12 4 20-1Z" fill="#E8467C" stroke={INK} strokeWidth={1.6} strokeLinejoin="round" style={{ transformOrigin: "100% 30%" }} />
+          {/* arms on the brakes */}
+          <g className={landed ? undefined : "trail-brake"} style={{ transformOrigin: "100% 100%" }}>
+            <path d="M68 120l-9-18" stroke={INK} strokeWidth={6} strokeLinecap="round" />
+            <path d="M68 120l-9-18" stroke={BLUE} strokeWidth={3.4} strokeLinecap="round" />
+            <circle cx={58} cy={100} r={3} fill={YELLOW} stroke={INK} strokeWidth={1.6} />
+          </g>
+          <g className={landed ? undefined : "trail-brake"} style={{ transformOrigin: "0% 100%", animationDelay: "-1.6s" }}>
+            <path d="M82 120l9-18" stroke={INK} strokeWidth={6} strokeLinecap="round" />
+            <path d="M82 120l9-18" stroke={BLUE} strokeWidth={3.4} strokeLinecap="round" />
+            <circle cx={92} cy={100} r={3} fill={YELLOW} stroke={INK} strokeWidth={1.6} />
+          </g>
+          {/* body, harness seat */}
+          <path d="M66 117h18c2 0 3 2 3 4v12H63v-12c0-2 1-4 3-4Z" fill={BLUE} stroke={INK} strokeWidth={2.4} strokeLinejoin="round" />
+          <path d="M60 131h30l-3 7H63Z" fill={ORANGE} stroke={INK} strokeWidth={2.2} strokeLinejoin="round" />
+          {/* legs and boots */}
+          <g className={landed ? undefined : "trail-swing"} style={{ transformOrigin: "50% 0%" }}>
+            <path d="M70 137l-2 11" stroke="#2F3E7A" strokeWidth={5} strokeLinecap="round" />
+            <ellipse cx={67} cy={150} rx={4} ry={2.4} fill={INK} />
+          </g>
+          <g className={landed ? undefined : "trail-swing"} style={{ transformOrigin: "50% 0%", animationDelay: "-0.6s" }}>
+            <path d="M80 137l2 11" stroke="#2F3E7A" strokeWidth={5} strokeLinecap="round" />
+            <ellipse cx={83} cy={150} rx={4} ry={2.4} fill={INK} />
+          </g>
+          {/* head: helmet with visor */}
+          <circle cx={75} cy={110} r={9} fill={SKIN} stroke={INK} strokeWidth={2.2} />
+          <path d="M66 109a9 9 0 0 1 18 0v1H66Z" fill={YELLOW} stroke={INK} strokeWidth={2.2} strokeLinejoin="round" />
+          <path d="M67.5 110h15" stroke={INK} strokeWidth={3} strokeLinecap="round" />
+          <path d="M72 115c2 1.4 4 1.4 6 0" fill="none" stroke={INK} strokeWidth={1.4} strokeLinecap="round" />
         </g>
       </motion.g>
     </svg>
@@ -204,11 +278,11 @@ export function Paraglider({ landed = false, className = "" }: { landed?: boolea
 }
 
 /** Tibetan prayer flags on a string, each one fluttering. */
-export function PrayerFlags({ className = "", count = 7 }: { className?: string; count?: number }) {
+export function PrayerFlags({ className = "", count = 7, style }: { className?: string; count?: number; style?: CSSProperties }) {
   const cols = ["#3B6FD8", "#FFFFFF", "#E5484D", "#2E9E5B", YELLOW];
   const w = 200, step = w / (count + 1);
   return (
-    <svg viewBox={`0 0 ${w} 70`} className={className} aria-hidden="true" overflow="visible">
+    <svg viewBox={`0 0 ${w} 70`} className={className} style={style} aria-hidden="true" overflow="visible">
       <path d={`M0 10 Q${w / 2} 34 ${w} 10`} fill="none" stroke={INK} strokeWidth={2} />
       {Array.from({ length: count }, (_, i) => {
         const x = step * (i + 1), t = x / w, y = 10 + 48 * t * (1 - t) - 1;
@@ -229,9 +303,9 @@ export function PrayerFlags({ className = "", count = 7 }: { className?: string;
   );
 }
 
-export function Pines({ className = "" }: { className?: string }) {
+export function Pines({ className = "", style }: { className?: string; style?: CSSProperties }) {
   return (
-    <svg viewBox="0 0 120 90" className={className} aria-hidden="true">
+    <svg viewBox="0 0 120 90" className={className} style={style} aria-hidden="true">
       {[[20, 1], [56, 1.35], [92, 1.1]].map(([x, s], i) => (
         <g key={i} transform={`translate(${x} ${90}) scale(${s})`}>
           <path d="M0-60 18-24H8L22 0H-22l14-24H-18Z" fill={i === 1 ? GREEN : "#2E5A43"} stroke={INK} strokeWidth={2.4} strokeLinejoin="round" />

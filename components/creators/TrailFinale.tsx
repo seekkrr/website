@@ -9,6 +9,7 @@ import { trackEvent } from "@/lib/analytics";
 import { CloudinaryIcons } from "@/lib/config/assets";
 import { portalLinks } from "@/lib/config/site";
 import { Cloud, PrayerFlags, Windsock } from "./TrailArt";
+import { PlacesRail, TownStrip, type TrailPlace } from "./PlacesTown";
 
 /*
  * The end of the collab trail, in Bir: the sun comes up over the mountains,
@@ -68,7 +69,7 @@ function Sun({ go }: { go: boolean }) {
   );
 }
 
-export function TrailFinale() {
+export function TrailFinale({ places }: { places: TrailPlace[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const go = useInView(ref, { once: true, amount: 0.25 });
   const reduce = useReducedMotion();
@@ -84,31 +85,35 @@ export function TrailFinale() {
               <Cloud className="h-auto w-full" />
             </div>
           ))}
-          <svg className="absolute bottom-[96px] left-0 h-[300px] w-full sm:h-[360px]" viewBox="0 0 1240 360" preserveAspectRatio="none">
+          <svg className="absolute bottom-[236px] left-0 h-[300px] w-full sm:h-[360px]" viewBox="0 0 1240 360" preserveAspectRatio="none">
             <path d="M0 360V190l120-90 110 70 150-130 140 110 110-60 170 130 130-90 120 60 190-120V360Z" fill="#8398FF" stroke="#000" strokeWidth="3" strokeLinejoin="round" />
             <path d="M330 110l50-40 50 34M760 150l40-30 40 26M1060 110l38-34 38 30" stroke="#fff" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M0 360V250l160-60 130 50 170-90 160 90 140-40 190 70 150-60 140 50V360Z" fill="#003634" stroke="#000" strokeWidth="3" strokeLinejoin="round" />
           </svg>
-          {/* the landing site */}
-          <div className="absolute inset-x-0 bottom-0 h-[110px] border-t-[3px] border-black bg-[#7CC36E]">
+          {/* the landing site, with Bir town: our places */}
+          <div className="absolute inset-x-0 bottom-0 h-[250px] border-t-[3px] border-black bg-[#7CC36E]">
             <div className="absolute inset-x-0 top-[22px] h-[3px] bg-black/10" />
-            <PrayerFlags className="absolute -top-[46px] left-[34%] w-[260px] sm:left-[40%] sm:w-[320px]" count={9} />
-            <Windsock className="absolute -top-[70px] left-[4%] w-[70px] sm:left-[6%] sm:w-[84px]" />
-            <div className="absolute right-[5%] top-[18px] -rotate-2 rounded-[10px] border-[3px] border-black bg-white px-3 py-1 text-center font-jakarta text-[11px] font-black uppercase leading-tight tracking-widest text-black [box-shadow:3px_3px_0_#000] sm:text-[13px]">
+            <div className="absolute inset-x-0 top-[150px] h-[3px] bg-black/10" />
+            <PrayerFlags className="absolute -top-[40px] left-[40%] w-[220px] sm:left-[46%] sm:w-[340px]" count={9} />
+            <Windsock className="absolute -top-[70px] left-[3%] w-[64px] sm:left-[5%] sm:w-[84px]" />
+            <div id="landing-site" className="absolute left-[18%] top-[64px] h-[34px] w-[104px] -translate-x-1/2 sm:left-[16%]">
+              <span className="absolute inset-0 rounded-[50%] border-[3px] border-dashed border-white" />
+              <span className="absolute inset-[9px] rounded-[50%] border-[3px] border-white" />
+            </div>
+            <div className="absolute left-[4%] top-[150px] -rotate-2 rounded-[10px] border-[3px] border-black bg-white px-3 py-1 text-center font-jakarta text-[11px] font-black uppercase leading-tight tracking-widest text-black [box-shadow:3px_3px_0_#000] sm:left-[9%] sm:text-[13px]">
               Landing site
               <br />
               <span className="text-theme-orange">Bir</span>
             </div>
-            <div id="landing-site" className="absolute left-[26%] top-[46px] h-[34px] w-[110px] -translate-x-1/2 sm:left-[22%]">
-              <span className="absolute inset-0 rounded-[50%] border-[3px] border-dashed border-white" />
-              <span className="absolute inset-[9px] rounded-[50%] border-[3px] border-white" />
+            <div className="pointer-events-auto absolute bottom-[26px] right-[3%]">
+              <TownStrip places={places} go={go} />
             </div>
           </div>
         </div>
 
         <Burst go={go} />
 
-        <div className="relative z-10 flex flex-col items-center px-5 pb-[190px] pt-12 text-center sm:px-10 sm:pt-16">
+        <div className="relative z-10 flex flex-col items-center px-5 pb-[330px] pt-12 text-center sm:px-10 sm:pt-16">
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={go ? { opacity: 1, y: 0 } : {}}
@@ -212,6 +217,7 @@ export function TrailFinale() {
           </motion.div>
         </div>
       </div>
+      <PlacesRail places={places} />
     </section>
   );
 }

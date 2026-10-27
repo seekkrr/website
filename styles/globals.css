@@ -243,3 +243,16 @@
   .trail-speed { animation: trail-speed 0.45s linear infinite; transform-box: fill-box; }
   .trail-breathe { animation: trail-breathe 2.8s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
 }
+@keyframes trail-brake {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(12deg); }
+}
+@keyframes trail-wind {
+  0% { transform: translateX(26px); opacity: 0; }
+  25% { opacity: 0.9; }
+  100% { transform: translateX(-46px); opacity: 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .trail-brake { animation: trail-brake 3.2s ease-in-out infinite; transform-box: fill-box; }
+  .trail-wind { animation: trail-wind 1.6s linear infinite; transform-box: fill-box; }
+}
