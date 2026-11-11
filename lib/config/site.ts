@@ -5,6 +5,13 @@ const partnerPortalUrl = (
   process.env.NEXT_PUBLIC_PARTNER_PORTAL_URL?.trim() || "https://creator.seekkrr.com"
 ).replace(/\/+$/, "");
 
+// The public address of this deployment. It ends up in the page's absolute URLs (link
+// previews, canonical, sitemap), and WhatsApp fetches the preview image from the
+// og:image URL in the page. So a non-production site must name itself, not production:
+// set NEXT_PUBLIC_SITE_URL (inlined at build time, no trailing slash) on dev, for
+// example https://dev.seekkrr.com. Production needs nothing.
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://seekkrr.com").replace(/\/+$/, "");
+
 export const siteConfig = {
   name: "SeekKrr",
   company: "SOLOQUEST PRIVATE LIMITED",
@@ -14,7 +21,7 @@ export const siteConfig = {
   disputeLocation: "Allahabad, Uttar Pradesh, India",
   email: "support@seekkrr.com",
   phone: "+91 9310785883",
-  url: "https://seekkrr.com",
+  url: siteUrl,
   playStoreUrl: "https://play.google.com/store/apps/details?id=com.seekkrr.app",
   appStoreUrl: "https://apps.apple.com/in/app/seekkrr/id6813190942",
   // The /app page: iOS -> App Store, Android -> Play Store, desktop -> both stores and a QR code.
@@ -37,9 +44,9 @@ export const siteConfig = {
     // icons are app/favicon.ico, app/icon.png and app/apple-icon.png.
     logoIconPath: "/assets/images/logo-round.png",
     logoIconLargePath: "/assets/images/icon-512.png",
-    // Link-preview image (1200x630). Bump ?v= whenever the image changes, so
-    // WhatsApp and others fetch the new one instead of a cached copy.
-    ogImagePath: "/assets/images/og-image.png?v=5",
+    // Link-preview image (1200x630): the round logo on yellow. Bump ?v= whenever the
+    // image changes, so WhatsApp and others fetch the new one instead of a cached copy.
+    ogImagePath: "/assets/images/og-image.png?v=6",
   },
   socials: {
     whatsapp: "https://chat.whatsapp.com/FZxZgnAoDdc2GpiXTW2ZWS",
