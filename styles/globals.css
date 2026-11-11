@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 60 100% 97.6%;
+    --background: 0 0% 99.2%; /* #FDFDFD, same as --color-beige */
     --foreground: 240 10% 3.9%;
     --primary: 240 5.9% 10%;
     --primary-foreground: 0 0% 98%;
@@ -21,7 +21,8 @@
     --radius: 0.75rem;
 
     /* Theme Colors (Hex based overrides) */
-    --color-beige: #FFFFF3;
+    /* the page background on every page (named beige; it was #FFFFF3) */
+    --color-beige: #FDFDFD;
     --color-blue-accent: #8398FF;
     --color-yellow-accent: #FECD36;
     --color-green-dark: #003634;

@@ -19,9 +19,41 @@ interface BirdCard {
   highlight?: boolean;
 }
 
+/**
+ * The four birds, in the order they follow round the orbit (clockwise):
+ * download the app, become a creator, find your next collab, travel and shoot.
+ */
 const BIRD_CARDS: BirdCard[] = [
   {
     angle: 0,
+    lines: (
+      <>
+        Find
+        <br />
+        Your Next
+        <br />
+        Collab
+      </>
+    ),
+    bg: "var(--color-beige)",
+    textColor: "var(--color-green-dark)",
+  },
+  {
+    angle: 90,
+    lines: (
+      <>
+        Travel
+        <br />
+        and
+        <br />
+        Shoot
+      </>
+    ),
+    bg: "var(--color-beige)",
+    textColor: "var(--color-green-dark)",
+  },
+  {
+    angle: 180,
     lines: (
       <>
         Download
@@ -33,42 +65,6 @@ const BIRD_CARDS: BirdCard[] = [
         App
       </>
     ),
-    bg: "var(--color-beige)",
-    textColor: "var(--color-green-dark)",
-  },
-  {
-    angle: 90,
-    lines: (
-      <>
-        Explore
-        <br />
-        Quests
-        <br />
-        With
-        <br />
-        Different
-        <br />
-        Themes
-      </>
-    ),
-    bg: "var(--color-beige)",
-    textColor: "var(--color-green-dark)",
-  },
-  {
-    angle: 180,
-    lines: (
-      <>
-        Purchase
-        <br />
-        Quests
-        <br />
-        <span className="line-through opacity-70">₹500</span> = 0₹
-        <br />
-        (Early Bird
-        <br />
-        Offer)
-      </>
-    ),
     bg: "var(--color-yellow-accent)",
     textColor: "var(--color-green-dark)",
     highlight: true,
@@ -77,15 +73,11 @@ const BIRD_CARDS: BirdCard[] = [
     angle: 270,
     lines: (
       <>
-        Travel
+        Become
         <br />
-        without
+        a
         <br />
-        the
-        <br />
-        Worry Of
-        <br />
-        Itinerary
+        Creator
       </>
     ),
     bg: "var(--color-beige)",
