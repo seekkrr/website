@@ -1,0 +1,26 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["HS7PMY749J.com.seekkrr.app"],
+        "components": [
+          {
+            "/": "/m/*",
+            "comment": "A shared place link opens that place in the app"
+          },
+          {
+            "/": "/markers/*",
+            "comment": "The same, as links shared by earlier builds spell it"
+          },
+          {
+            "/": "/t/*",
+            "comment": "A creator's tracking link opens the place it points at"
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["HS7PMY749J.com.seekkrr.app"]
+  }
+}

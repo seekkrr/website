@@ -2,21 +2,25 @@
   "applinks": {
     "details": [
       {
-        "appIDs": ["YOUR_TEAM_ID.com.seekkrr.app"],
+        "appIDs": ["HS7PMY749J.com.seekkrr.app"],
         "components": [
           {
-            "/": "/stories/*",
-            "comment": "Matches any story link"
+            "/": "/m/*",
+            "comment": "A shared place link opens that place in the app"
           },
           {
-            "/": "/creators/*",
-            "comment": "Matches any creator profile"
+            "/": "/markers/*",
+            "comment": "The same, as links shared by earlier builds spell it"
+          },
+          {
+            "/": "/t/*",
+            "comment": "A creator's tracking link opens the place it points at"
           }
         ]
       }
     ]
   },
   "webcredentials": {
-    "apps": ["YOUR_TEAM_ID.com.seekkrr.app"]
+    "apps": ["HS7PMY749J.com.seekkrr.app"]
   }
 }
