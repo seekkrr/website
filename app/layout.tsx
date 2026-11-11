@@ -38,19 +38,15 @@ export const metadata: Metadata = {
     default: `${siteConfig.name} — ${siteConfig.tagline}`,
     template: `%s | ${siteConfig.name}`,
   },
-  description: `${siteConfig.name} is the ultimate quest travel app connecting explorers with extraordinary adventures and gamified experiences. Discover, create, and share quests that push your boundaries.`,
+  description: siteConfig.description,
   keywords: [
     "SeekKrr",
-    "quest travel app",
-    "gamified travel",
-    "adventure quests",
-    "exploration platform",
-    "experiential travel",
-    "travel rewards",
-    "solo travel quests",
-    "immersive adventures",
-    "travel games",
-    "hidden gems exploration",
+    "word of mouth for businesses",
+    "travel creator collabs",
+    "UGC for cafés and stays",
+    "local business marketing",
+    "travel creators India",
+    "hidden gems in Bir",
     "creator economy travel",
   ],
   authors: [{ name: siteConfig.name, url: siteConfig.url }],
@@ -70,25 +66,23 @@ export const metadata: Metadata = {
     url: siteConfig.url,
     siteName: siteConfig.name,
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
-    description:
-      "Transform your travels into extraordinary quests. Discover the ultimate quest travel app for explorers and creators.",
+    description: siteConfig.description,
     images: [
       {
-        url: "/assets/images/og-image.png", // Branded 1200x630 default (public/assets/images)
+        url: siteConfig.assets.ogImagePath,
         width: 1200,
         height: 630,
-        alt: `${siteConfig.name} — Discover Your Next Adventure`,
+        alt: `${siteConfig.name} — ${siteConfig.tagline}`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
-    description:
-      "Transform your travels into extraordinary quests. Discover the ultimate quest travel app for explorers and creators.",
+    description: siteConfig.description,
     site: "@seek_krr",
     creator: "@seek_krr",
-    images: ["/assets/images/og-image.png"],
+    images: [siteConfig.assets.ogImagePath],
   },
   robots: {
     index: true,
@@ -110,10 +104,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
-  ],
+  // Phone browsers tint their address bar this colour: the page's own, so the
+  // open navbar runs straight up into it.
+  themeColor: "#FDFDFD",
   width: "device-width",
   initialScale: 1,
 };
@@ -149,7 +142,7 @@ export default function RootLayout({
                   "@type": "Organization",
                   name: siteConfig.name,
                   url: siteConfig.url,
-                  logo: `${siteConfig.url}${siteConfig.assets.logoTextPath}`,
+                  logo: `${siteConfig.url}${siteConfig.assets.logoIconLargePath}`,
                   sameAs: Object.values(siteConfig.socials),
                   contactPoint: {
                     "@type": "ContactPoint",

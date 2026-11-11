@@ -82,7 +82,7 @@ export function BuiltForExplorers() {
                     className="relative z-10 flex flex-col items-center justify-center text-center mx-auto w-full max-w-[600px]"
                 >
                     <h2 className="font-handwriting text-[44px] sm:text-[54px] lg:text-[64px] xl:text-[72px] leading-[1.1] text-black font-bold tracking-wide whitespace-pre-line">
-                        {"Built for Explorers,\nnot tourists"}
+                        {"Built for businesses,\npowered by creators"}
                     </h2>
                 </motion.div>
 

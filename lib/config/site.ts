@@ -27,11 +27,19 @@ export const siteConfig = {
   creatorPayoutLink: "/creator-terms",
   creatorTermsLink: "/creator-terms",
   businessTermsLink: "/business-terms",
-  tagline: "Discover Your Next Adventure",
+  // The line used in browser tab titles, link previews and the mobile menu.
+  tagline: "Word of Mouth for Businesses, Powered by Creators",
   description:
-    "SeekKrr is the ultimate quest travel app. Transform your journeys into extraordinary adventures with gamified quests, exploration challenges, and a community of creators.",
+    "Local cafés, stays and adventures host travel creators, and their stories get people talking. Clear briefs, verified check-ins and no cold DMs.",
   assets: {
     logoTextPath: "/assets/images/SeekKrr_Text.png",
+    // The round Seekकर mountain logo (navbar). The browser tab and home-screen
+    // icons are app/favicon.ico, app/icon.png and app/apple-icon.png.
+    logoIconPath: "/assets/images/logo-round.png",
+    logoIconLargePath: "/assets/images/icon-512.png",
+    // Link-preview image (1200x630). Bump ?v= whenever the image changes, so
+    // WhatsApp and others fetch the new one instead of a cached copy.
+    ogImagePath: "/assets/images/og-image.png?v=5",
   },
   socials: {
     whatsapp: "https://chat.whatsapp.com/FZxZgnAoDdc2GpiXTW2ZWS",

@@ -94,7 +94,7 @@ export function EarlyAccess() {
             </div>
           </div>
 
-          {/* Central Call to Action - Google Play Badge */}
+          {/* Central Call to Action: /app sends phones to their store, and shows computers both stores and a QR code */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -103,18 +103,13 @@ export function EarlyAccess() {
             className="relative z-10 flex items-center justify-center"
           >
             <Link
-              href={siteConfig.playStoreUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:opacity-90 transition-opacity block"
+              href="/app"
+              className="inline-flex items-center gap-3 rounded-full border-[3px] border-black bg-theme-green px-6 py-4 text-center font-jakarta text-[17px] font-bold leading-tight text-white [box-shadow:5px_5px_0_var(--color-yellow-accent)] transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:[box-shadow:7px_7px_0_var(--color-yellow-accent)] active:translate-x-[3px] active:translate-y-[3px] active:[box-shadow:2px_2px_0_var(--color-yellow-accent)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-theme-blue focus-visible:ring-offset-2 sm:px-8 sm:text-[20px] md:text-[22px]"
             >
-              <Image
-                src="/assets/images/GetItOnGooglePlay_Badge.svg"
-                alt="Get it on Google Play - Google Play is a trademark of Google LLC"
-                width={320}
-                height={94}
-                className="w-full sm:w-80 md:w-96 h-auto"
-              />
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 4v11M7 10l5 5 5-5M5 20h14" />
+              </svg>
+              Download the {siteConfig.name} app now
             </Link>
           </motion.div>
 

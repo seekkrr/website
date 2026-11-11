@@ -28,10 +28,10 @@ export const metadata: Metadata = {
   description,
   alternates: { canonical: "/business" },
   openGraph: {
-    title: "SeekKrr for Business",
-    description:
-      "Swap a stay, a meal or an experience for content from travel creators who are already in town.",
+    title: siteConfig.tagline,
+    description: `${siteConfig.name} for Business: swap a stay, a meal or an experience for content from travel creators who are already in town.`,
     url: `${siteConfig.url}/business`,
+    images: [{ url: siteConfig.assets.ogImagePath, width: 1200, height: 630, alt: `${siteConfig.name} — ${siteConfig.tagline}` }],
   },
 };
 

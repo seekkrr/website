@@ -4,17 +4,18 @@ import { siteConfig } from "@/lib/config/site";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { PartnerWall } from "@/components/business/PartnerWall";
 
+const description = siteConfig.description;
+
 export const metadata: Metadata = {
-  title: `${siteConfig.name} — Quest Travel App for Explorers`,
-  description:
-    "SeekKrr is the premier quest travel app. Transform your journeys into extraordinary adventures with gamified quests, exploration challenges, and a community of creators.",
+  title: `${siteConfig.name} — ${siteConfig.tagline}`,
+  description,
   keywords: [
-    "quest travel app",
-    "adventure games",
-    "gamified travel experience",
-    "travel quest platform",
-    "exploration app",
-    "experiential travel app",
+    "word of mouth for businesses",
+    "travel creator collabs",
+    "UGC for cafés and stays",
+    "hidden gems in Bir",
+    "Bir Billing cafés and stays",
+    "travel app India",
   ],
   alternates: {
     canonical: "/",
@@ -31,8 +32,8 @@ export default function HomePage() {
           "@type": "SoftwareApplication",
           name: siteConfig.name,
           operatingSystem: "Android, iOS",
-          applicationCategory: ["TravelApplication", "GameApplication"],
-          description: siteConfig.description,
+          applicationCategory: ["TravelApplication"],
+          description,
           offers: {
             "@type": "Offer",
             price: "0",
@@ -41,7 +42,7 @@ export default function HomePage() {
           downloadUrl: siteConfig.playStoreUrl,
           installUrl: siteConfig.playStoreUrl,
           featureList:
-            "Quest-based travel, Gamified exploration, Creator economy, AR challenges, Community quests",
+            "Places picked by locals, Map of cafés, stays and adventures, Stories from travel creators, Collabs between creators and local businesses, Reviewed listings",
           screenshot: `${siteConfig.url}/assets/images/og-image.png`,
         }}
       />

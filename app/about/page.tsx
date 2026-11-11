@@ -111,7 +111,7 @@ export default function AboutPage() {
 
               {/* Info Box */}
               <div
-                className="border border-black rounded-2xl bg-[#FFFFF3] py-5 px-6 w-full max-w-[260px] flex flex-col justify-center items-center"
+                className="border border-black rounded-2xl bg-theme-beige py-5 px-6 w-full max-w-[260px] flex flex-col justify-center items-center"
                 style={{ boxShadow: `4px 4px 0px 0px ${profile.shadowColor}` }}
               >
                 <h3 className="text-[22px] font-normal mb-2 text-black">
