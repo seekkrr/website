@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { HeroTripod, EarlyAccess, BuiltForExplorers, WhatYouGet, FreedomSection, TheSeekKrrWay, TravelWithSeekKrr } from "@/components/sections";
+import { HeroWhisperChain, EarlyAccess, BuiltForExplorers, WhatYouGet, FreedomSection, TheSeekKrrWay, TravelWithSeekKrr } from "@/components/sections";
 import { siteConfig } from "@/lib/config/site";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { PartnerWall } from "@/components/business/PartnerWall";
@@ -45,8 +45,8 @@ export default function HomePage() {
           screenshot: `${siteConfig.url}/assets/images/og-image.png`,
         }}
       />
-      {/* Hero Section */}
-      <HeroTripod />
+      {/* Hero Section: the whisper chain, one creator visit passed along until someone books */}
+      <HeroWhisperChain />
 
       {/* Early Access / Tools Section */}
       <EarlyAccess />
