@@ -1,7 +1,7 @@
 // Section components barrel export
 // Page-level sections (Hero, Features, Storytelling blocks) go here
 export { Navbar } from "./Navbar";
-export { HeroTripod } from "./HeroTripod";
+export { HeroWhisperChain } from "./HeroWhisperChain";
 export { EarlyAccess } from "./EarlyAccess";
 export { BuiltForExplorers } from "./BuiltForExplorers";
 export { WhatYouGet } from "./WhatYouGet";
