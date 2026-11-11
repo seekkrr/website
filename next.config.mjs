@@ -3,6 +3,24 @@ const nextConfig = {
     // Enable React Strict Mode to identify potential problems in development
     reactStrictMode: true,
 
+    // Apple fetches https://seekkrr.com/.well-known/apple-app-site-association and
+    // ignores anything not served as JSON. Files in public/ have no extension here,
+    // so Next would send application/octet-stream and iOS would drop the file --
+    // which is why universal links (seekkrr.com/markers/<id>) never opened the app.
+    async headers() {
+        return [
+            {
+                source: "/.well-known/apple-app-site-association",
+                headers: [{ key: "Content-Type", value: "application/json" }],
+            },
+            {
+                // Older clients still look for it at the site root.
+                source: "/apple-app-site-association",
+                headers: [{ key: "Content-Type", value: "application/json" }],
+            },
+        ];
+    },
+
     // Turbopack config (Next.js 16+) — used when running `next dev`
     turbopack: {
         rules: {
